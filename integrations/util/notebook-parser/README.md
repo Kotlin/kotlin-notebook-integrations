@@ -1,7 +1,7 @@
 # Jupyter Notebooks Parser
 
 [![Kotlin](https://img.shields.io/badge/kotlin-1.6.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
-[![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
+[![GitHub License](https://img.shields.io/github/license/ileasile/jupyter-notebooks-parser?color=blue)](http://www.apache.org/licenses/LICENSE-2.0)
 
 This library simply parses Jupyter Notebook files into POJOs using `kotlinx.serialization`.
 
