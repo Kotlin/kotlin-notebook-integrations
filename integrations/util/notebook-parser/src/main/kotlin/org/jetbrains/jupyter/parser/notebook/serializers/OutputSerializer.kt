@@ -18,12 +18,8 @@ import org.jetbrains.jupyter.parser.notebook.Error
 import org.jetbrains.jupyter.parser.notebook.ExecuteResult
 import org.jetbrains.jupyter.parser.notebook.Output
 import org.jetbrains.jupyter.parser.notebook.Stream
-import org.jetbrains.jupyter.parser.notebook.decode
-import org.jetbrains.jupyter.parser.notebook.decodeMultilineText
-import org.jetbrains.jupyter.parser.notebook.encodeMultilineText
-import org.jetbrains.jupyter.parser.notebook.orEmptyObject
 
-object OutputSerializer : KSerializer<Output> {
+public object OutputSerializer : KSerializer<Output> {
     override val descriptor: SerialDescriptor = serializer<JsonObject>().descriptor
 
     override fun deserialize(decoder: Decoder): Output {
@@ -33,13 +29,13 @@ object OutputSerializer : KSerializer<Output> {
 
         return when (val outputTypeString = element[OUTPUT_TYPE]?.decode<String>(format)) {
             "execute_result" -> {
-                val data = element[DATA]?.decode<JsonObject>(format).orEmptyObject()
+                val data = element[DATA].decodeDisplayMap(format)
                 val metadata = element[METADATA]?.decode<JsonObject>(format).orEmptyObject()
                 val executionCount = element[EXECUTION_COUNT]?.decode<Long>(format)
                 ExecuteResult(data, metadata, executionCount)
             }
             "display_data" -> {
-                val data = element[DATA]?.decode<JsonObject>(format).orEmptyObject()
+                val data = element[DATA].decodeDisplayMap(format)
                 val metadata = element[METADATA]?.decode<JsonObject>(format).orEmptyObject()
                 DisplayData(data, metadata)
             }
@@ -68,7 +64,7 @@ object OutputSerializer : KSerializer<Output> {
             put(OUTPUT_TYPE, JsonPrimitive(value.type.name.lowercase()))
             when (value) {
                 is DisplayData -> {
-                    put(DATA, format.encodeToJsonElement(value.data))
+                    put(DATA, format.encodeDisplayMap(value.data))
                     put(METADATA, format.encodeToJsonElement(value.metadata))
                     if (value is ExecuteResult) {
                         put(EXECUTION_COUNT, format.encodeToJsonElement(value.executionCount))

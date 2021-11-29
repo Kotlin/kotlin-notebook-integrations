@@ -5,10 +5,10 @@ import kotlinx.serialization.json.JsonObject
 import org.jetbrains.jupyter.parser.notebook.serializers.OutputSerializer
 
 @Serializable(OutputSerializer::class)
-sealed class Output {
-    abstract val type: Type
+public sealed class Output {
+    public abstract val type: Type
 
-    enum class Type {
+    public enum class Type {
         EXECUTE_RESULT,
         DISPLAY_DATA,
         STREAM,
@@ -16,11 +16,11 @@ sealed class Output {
     }
 }
 
-class ExecuteResult(
-    data: JsonObject,
+public class ExecuteResult(
+    data: Map<String, String>,
     metadata: JsonObject,
     /** A result's prompt number. */
-    val executionCount: Long?,
+    public val executionCount: Long?,
 ) : DisplayData(data, metadata) {
 
     override val type: Type get() = Type.EXECUTE_RESULT
@@ -31,29 +31,31 @@ class ExecuteResult(
     }
 }
 
-open class DisplayData(
-    val data: JsonObject,
-    val metadata: JsonObject,
+public open class DisplayData(
+    public val data: Map<String, String>,
+    public val metadata: JsonObject,
 ) : Output() {
     override val type: Type get() = Type.DISPLAY_DATA
+
+    public operator fun get(mimeType: String): String? = data[mimeType]
 }
 
-class Stream(
+public class Stream(
     /** The name of the stream (stdout, stderr). */
-    val name: String,
+    public val name: String,
     /** The stream's text output, represented as an array of strings. */
-    val text: String
+    public val text: String
 ) : Output() {
     override val type: Type get() = Type.STREAM
 }
 
-class Error(
+public class Error(
     /** The name of the error. */
-    val errorName: String,
+    public val errorName: String,
     /** The value, or message, of the error. */
-    val errorValue: String,
+    public val errorValue: String,
     /** The error's traceback, represented as an array of strings. */
-    val traceback: List<String>
+    public val traceback: List<String>
 ) : Output() {
     override val type: Type get() = Type.ERROR
 }

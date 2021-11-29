@@ -2,7 +2,7 @@ package org.jetbrains.jupyter.parser.notebook
 
 import kotlinx.serialization.json.JsonObject
 
-class RawCell(
+public class RawCell(
     override val id: String?,
     override val metadata: RawCellMetadata,
     override val source: String,

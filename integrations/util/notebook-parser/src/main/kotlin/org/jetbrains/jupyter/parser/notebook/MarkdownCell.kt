@@ -2,7 +2,7 @@ package org.jetbrains.jupyter.parser.notebook
 
 import kotlinx.serialization.json.JsonObject
 
-class MarkdownCell(
+public class MarkdownCell(
     override val id: String?,
     override val metadata: MarkdownCellMetadata,
     override val source: String,

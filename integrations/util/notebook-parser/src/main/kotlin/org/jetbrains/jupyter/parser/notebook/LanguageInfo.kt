@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonElement
  * Kernel information.
  */
 @Serializable
-data class LanguageInfo(
+public data class LanguageInfo(
     /** The programming language which this kernel runs. */
     val name: String,
     /** The codemirror mode to use for code in this language. */

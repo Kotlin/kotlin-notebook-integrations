@@ -7,7 +7,7 @@ import kotlinx.serialization.json.JsonObject
  * Cell-level metadata.
  */
 @Serializable
-class MarkdownCellMetadata(
+public class MarkdownCellMetadata(
     override val name: String? = null,
     override val tags: Set<String>? = null,
     override val jupyter: JsonObject? = null,

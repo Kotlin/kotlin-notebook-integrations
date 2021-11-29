@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
  * Notebook root-level metadata.
  */
 @Serializable
-data class Metadata(
+public data class Metadata(
     /** Kernel information. */
     @SerialName("kernelspec")
     val kernelSpec: KernelSpec? = null,

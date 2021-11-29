@@ -11,9 +11,8 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.serializer
 import org.jetbrains.jupyter.parser.notebook.Scrolled
-import org.jetbrains.jupyter.parser.notebook.decode
 
-object ScrolledSerializer : KSerializer<Scrolled> {
+public object ScrolledSerializer : KSerializer<Scrolled> {
     override val descriptor: SerialDescriptor get() = serializer<JsonPrimitive>().descriptor
 
     override fun deserialize(decoder: Decoder): Scrolled {

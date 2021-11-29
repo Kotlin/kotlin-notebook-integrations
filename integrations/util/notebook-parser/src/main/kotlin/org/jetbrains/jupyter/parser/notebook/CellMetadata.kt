@@ -2,12 +2,16 @@ package org.jetbrains.jupyter.parser.notebook
 
 import kotlinx.serialization.json.JsonObject
 
-abstract class CellMetadata {
-    abstract val name: String?
-    abstract val tags: Set<String>?
-    abstract val jupyter: JsonObject?
+public abstract class CellMetadata {
+    public abstract val name: String?
+    public abstract val tags: Set<String>?
+    public abstract val jupyter: JsonObject?
 
-    protected fun validate() {
+    init {
+        validate()
+    }
+
+    private fun validate() {
         name?.let {
             require(CELL_METADATA_NAME_REGEX.containsMatchIn(it)) { "name does not match pattern $CELL_METADATA_NAME_REGEX - $it" }
         }
@@ -18,7 +22,7 @@ abstract class CellMetadata {
         }
     }
 
-    companion object {
+    private companion object {
         private val CELL_METADATA_NAME_REGEX = Regex("^.+\$")
         private val CELL_METADATA_TAGS_REGEX = Regex("^[^,]+\$")
     }

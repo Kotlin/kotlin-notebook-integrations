@@ -9,20 +9,20 @@ import org.jetbrains.jupyter.parser.notebook.serializers.ScrolledSerializer
  * Cell-level metadata.
  */
 @Serializable
-class CodeCellMetadata(
+public class CodeCellMetadata(
     override val name: String? = null,
     override val tags: Set<String>? = null,
     override val jupyter: JsonObject? = null,
     /** Execution time for the code in the cell. This tracks time at which messages are received from iopub or shell channels */
-    val execution: Execution? = null,
+    public val execution: Execution? = null,
     /** Whether the cell's output is collapsed/expanded. */
-    val collapsed: Boolean? = null,
+    public val collapsed: Boolean? = null,
     /** Whether the cell's output is scrolled, unscrolled, or autoscrolled. */
-    val scrolled: Scrolled? = null,
+    public val scrolled: Scrolled? = null,
 ) : CellMetadata()
 
 @Serializable(ScrolledSerializer::class)
-enum class Scrolled {
+public enum class Scrolled {
     SCROLLED,
     UNSCROLLED,
     AUTOSCROLLED,
@@ -32,7 +32,7 @@ enum class Scrolled {
  * Execution time for the code in the cell. This tracks time at which messages are received from iopub or shell channels
  */
 @Serializable
-data class Execution(
+public data class Execution(
     /** header.date (in ISO 8601 format) of iopub channel's execute_input message. It indicates the time at which the kernel broadcasts an execute_input message to connected frontends */
     @SerialName("iopub.execute_input")
     val iopubExecuteInput: String? = null,

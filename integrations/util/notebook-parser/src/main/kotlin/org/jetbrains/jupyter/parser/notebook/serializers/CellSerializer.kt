@@ -22,11 +22,8 @@ import org.jetbrains.jupyter.parser.notebook.MarkdownCellMetadata
 import org.jetbrains.jupyter.parser.notebook.Output
 import org.jetbrains.jupyter.parser.notebook.RawCell
 import org.jetbrains.jupyter.parser.notebook.RawCellMetadata
-import org.jetbrains.jupyter.parser.notebook.decode
-import org.jetbrains.jupyter.parser.notebook.decodeMultilineText
-import org.jetbrains.jupyter.parser.notebook.encodeMultilineText
 
-object CellSerializer : KSerializer<Cell> {
+public object CellSerializer : KSerializer<Cell> {
     override val descriptor: SerialDescriptor = serializer<JsonObject>().descriptor
 
     override fun deserialize(decoder: Decoder): Cell {
@@ -74,10 +71,12 @@ object CellSerializer : KSerializer<Cell> {
             put(CELL_TYPE, JsonPrimitive(value.type.name.lowercase()))
             put(SOURCE, format.encodeMultilineText(value.source))
 
+            @Suppress("REDUNDANT_ELSE_IN_WHEN")
             val metadata = when (value) {
                 is CodeCell -> format.encodeToJsonElement(value.metadata)
                 is MarkdownCell -> format.encodeToJsonElement(value.metadata)
                 is RawCell -> format.encodeToJsonElement(value.metadata)
+                else -> throw IllegalStateException("Impossible situation: there are no more types of cells")
             }
             put(METADATA, metadata)
 

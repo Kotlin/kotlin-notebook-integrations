@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class JupyterNotebook(
+public data class JupyterNotebook(
     /** Notebook root-level metadata. */
     val metadata: Metadata,
     /** Notebook format (minor number). Incremented for backward compatible changes to the notebook format. */

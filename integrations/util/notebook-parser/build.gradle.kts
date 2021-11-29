@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 @Suppress("DSL_SCOPE_VIOLATION")
@@ -9,6 +10,10 @@ plugins {
 
 group = "org.jetbrains"
 version = "0.1.0"
+
+kotlin {
+    explicitApi = ExplicitApiMode.Strict
+}
 
 repositories {
     mavenCentral()

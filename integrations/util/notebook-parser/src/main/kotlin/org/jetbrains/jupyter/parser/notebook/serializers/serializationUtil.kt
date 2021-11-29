@@ -1,4 +1,4 @@
-package org.jetbrains.jupyter.parser.notebook
+package org.jetbrains.jupyter.parser.notebook.serializers
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -9,9 +9,9 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 
-inline fun <reified T> JsonElement.decode(format: Json) = format.decodeFromJsonElement<T>(this)
+internal inline fun <reified T> JsonElement.decode(format: Json) = format.decodeFromJsonElement<T>(this)
 
-fun JsonElement?.decodeMultilineText(format: Json): String {
+internal fun JsonElement?.decodeMultilineText(format: Json): String {
     return when (this) {
         is JsonArray -> {
             val lines = decode<List<String>>(format)
@@ -24,7 +24,7 @@ fun JsonElement?.decodeMultilineText(format: Json): String {
     }
 }
 
-fun Json.encodeMultilineText(text: String): JsonElement {
+internal fun Json.encodeMultilineText(text: String): JsonElement {
     return encodeToJsonElement(text.splitNoTrim('\n'))
 }
 
@@ -45,6 +45,27 @@ private fun String.splitNoTrim(delimiter: Char): List<String> {
     }
 }
 
-val emptyJsonObject = buildJsonObject {}
+internal val emptyJsonObject = buildJsonObject {}
 
-fun JsonObject?.orEmptyObject() = this ?: emptyJsonObject
+internal fun JsonObject?.orEmptyObject() = this ?: emptyJsonObject
+
+internal fun JsonElement?.decodeDisplayMap(format: Json): Map<String, String> {
+    if (this == null) return emptyMap()
+
+    val jsonObject = decode<JsonObject>(format)
+    return buildMap {
+        for ((key, value) in jsonObject) {
+            val textValue = value.decodeMultilineText(format)
+            put(key, textValue)
+        }
+    }
+}
+
+internal fun Json.encodeDisplayMap(map: Map<String, String>): JsonObject {
+    return buildJsonObject {
+        for ((key, textValue) in map) {
+            val value = encodeMultilineText(textValue)
+            put(key, value)
+        }
+    }
+}
