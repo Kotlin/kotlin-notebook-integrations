@@ -11,4 +11,5 @@ import org.jetbrains.jupyter.parser.JupyterParser
 import java.io.File
 
 val notebook = JupyterParser.parse(File("notebook.ipynb"))
+JupyterParser.save(notebook, File("newNotebook.ipynb"))
 ```
