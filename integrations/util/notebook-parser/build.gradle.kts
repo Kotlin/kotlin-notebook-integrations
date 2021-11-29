@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.versions)
 }
 
 group = "org.jetbrains"
@@ -13,6 +14,10 @@ version = "0.1.0"
 
 kotlin {
     explicitApi = ExplicitApiMode.Strict
+}
+
+ktlint {
+    version.set(libs.versions.ktlint)
 }
 
 repositories {

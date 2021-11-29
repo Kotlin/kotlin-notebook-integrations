@@ -3,10 +3,11 @@ kotlin = "1.6.0"
 kotlin-serialization = "1.3.1"
 
 junit = "5.8.2"
-kotlinTest = "4.6.2"
+kotlinTest = "5.0.0"
 
 ktlintGradle = "10.2.0"
-ktlint = "0.40.0"
+ktlint = "0.43.0"
+versionsPlugin = "0.39.0"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
@@ -22,3 +23,4 @@ test-kotlintest-assertions = { module = "io.kotest:kotest-assertions-core", vers
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
+versions = { id = "com.github.ben-manes.versions", version.ref= "versionsPlugin" }
