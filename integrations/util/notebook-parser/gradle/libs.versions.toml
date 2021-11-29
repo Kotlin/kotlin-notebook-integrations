@@ -9,6 +9,7 @@ kover = "0.4.2"
 ktlintGradle = "10.2.0"
 ktlint = "0.43.0"
 versionsPlugin = "0.39.0"
+publisher = "0.0.60-dev-32"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
@@ -26,3 +27,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
 versions = { id = "com.github.ben-manes.versions", version.ref= "versionsPlugin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "publisher" }
