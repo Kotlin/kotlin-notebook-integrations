@@ -6,7 +6,7 @@ class MarkdownCell(
     override val id: String?,
     override val metadata: MarkdownCellMetadata,
     override val source: String,
-    val attachments: JsonObject? = null,
-) : Cell() {
+    override val attachments: JsonObject? = null,
+) : CellWithAttachments() {
     override val type: Type get() = Type.MARKDOWN
 }
