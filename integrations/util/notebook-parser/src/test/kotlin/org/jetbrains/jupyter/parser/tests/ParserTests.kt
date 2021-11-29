@@ -1,6 +1,9 @@
 package org.jetbrains.jupyter.parser.tests
 
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import org.jetbrains.jupyter.parser.JupyterParser
+import org.jetbrains.jupyter.parser.notebook.Cell
 import org.jetbrains.jupyter.parser.notebook.JupyterNotebook
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -57,7 +60,11 @@ class ParserTests {
     fun movies() = doTest()
 
     @Test
-    fun netflix() = doTest()
+    fun netflix() = doTest { notebook ->
+        notebook.metadata.languageInfo?.name shouldBe "kotlin"
+        notebook.cells shouldHaveSize 109
+        notebook.cells.filter { it.type == Cell.Type.CODE } shouldHaveSize 57
+    }
 
     @Test
     fun WineNetWithKotlinDL() = doTest()
