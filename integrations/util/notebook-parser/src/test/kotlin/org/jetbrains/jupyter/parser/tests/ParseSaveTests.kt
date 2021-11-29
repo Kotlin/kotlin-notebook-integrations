@@ -2,20 +2,20 @@ package org.jetbrains.jupyter.parser.tests
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.jupyter.parser.JupyterParser
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInfo
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER
+import org.junit.jupiter.params.provider.MethodSource
+import java.nio.file.Files
+import java.util.stream.Stream
+import kotlin.io.path.extension
+import kotlin.io.path.nameWithoutExtension
 
 @Suppress("TestFunctionName")
 class ParseSaveTests {
-    private var testName: String? = null
-    @BeforeEach
-    fun setup(testInfo: TestInfo) {
-        testName = testInfo.testMethod.get().name
-    }
-
-    private fun doTest() {
-        val file = myData.resolve("$testName.ipynb")
+    @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)
+    @MethodSource("notebookNames")
+    fun doTest(notebookName: String) {
+        val file = myData.resolve("$notebookName.ipynb")
 
         val notebook1 = JupyterParser.parse(file)
         val json1 = JupyterParser.saveToJson(notebook1)
@@ -26,49 +26,14 @@ class ParseSaveTests {
         json1 shouldBe json2
     }
 
-    @Test
-    fun DeepLearning4j() = doTest()
-
-    @Test
-    fun `DeepLearning4j-Cuda`() = doTest()
-
-    @Test
-    fun Gral() = doTest()
-
-    @Test
-    fun KotlinNumpy() = doTest()
-
-    @Test
-    fun Krangl() = doTest()
-
-    @Test
-    fun LetsPlot() = doTest()
-
-    @Test
-    fun `Resources Example`() = doTest()
-
-    @Test
-    fun Titanic() = doTest()
-
-    @Test
-    fun Titanic2() = doTest()
-
-    @Test
-    fun `40 puzzles`() = doTest()
-
-    @Test
-    fun github() = doTest()
-
-    @Test
-    fun movies() = doTest()
-
-    @Test
-    fun netflix() = doTest()
-
-    @Test
-    fun WineNetWithKotlinDL() = doTest()
-
     companion object {
         private val myData = testDataDir<ParserTests>()
+
+        @JvmStatic
+        fun notebookNames(): Stream<String> {
+            return Files.walk(myData.toPath(), 1)
+                .filter { it.extension == "ipynb" }
+                .map { it.nameWithoutExtension }
+        }
     }
 }
