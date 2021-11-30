@@ -12,5 +12,8 @@ public data class KernelSpec(
     val name: String,
     /** Name to display in UI. */
     @SerialName("display_name")
-    val displayName: String
+    val displayName: String,
+
+    // unofficial fields
+    val language: String? = null,
 )

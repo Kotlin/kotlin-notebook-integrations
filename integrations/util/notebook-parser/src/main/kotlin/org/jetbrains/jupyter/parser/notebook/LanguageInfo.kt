@@ -11,7 +11,10 @@ import kotlinx.serialization.json.JsonElement
 public data class LanguageInfo(
     /** The programming language which this kernel runs. */
     val name: String,
-    /** The codemirror mode to use for code in this language. */
+    /**
+     * The codemirror mode to use for code in this language.
+     * Can be either string or JSON object
+     */
     @SerialName("codemirror_mode")
     val codemirrorMode: JsonElement? = null,
     /** The file extension for files in this language. */
@@ -21,5 +24,10 @@ public data class LanguageInfo(
     val mimetype: String? = null,
     /** The pygments lexer to use for code in this language. */
     @SerialName("pygments_lexer")
-    val pygmentsLexer: String? = null
+    val pygmentsLexer: String? = null,
+
+    // unofficial fields
+    @SerialName("nbconvert_exporter")
+    val nbConvertExporter: String? = null,
+    val version: String? = null,
 )
