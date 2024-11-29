@@ -23,7 +23,7 @@ public abstract class CellMetadata {
     }
 
     private companion object {
-        private val CELL_METADATA_NAME_REGEX = Regex("^.+\$")
-        private val CELL_METADATA_TAGS_REGEX = Regex("^[^,]+\$")
+        private val CELL_METADATA_NAME_REGEX = Regex("^.+$")
+        private val CELL_METADATA_TAGS_REGEX = Regex("^[^,]+$")
     }
 }

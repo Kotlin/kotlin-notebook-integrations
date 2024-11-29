@@ -28,6 +28,6 @@ public sealed class Cell {
     }
 
     private companion object {
-        private val CELL_ID_REGEX = Regex("^[a-zA-Z0-9-_]+\$")
+        private val CELL_ID_REGEX = Regex("^[a-zA-Z0-9-_]+$")
     }
 }

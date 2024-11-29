@@ -1,6 +1,6 @@
 [versions]
-kotlin = "1.6.0"
-kotlin-serialization = "1.3.1"
+kotlin = "2.1.0"
+kotlin-serialization = "1.7.3"
 
 junit = "5.8.2"
 kotlinTest = "5.0.0"
