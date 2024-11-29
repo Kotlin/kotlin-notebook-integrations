@@ -51,8 +51,8 @@ public class NotebookBuilder(
                     name = languageName,
                 ),
             ),
-            nbformatMinor = 4,
-            nbformat = 5,
+            nbformatMinor = 5,
+            nbformat = 4,
             cells = cells.map {
                 when (it) {
                     is CellBuilder.Code -> CodeCell(
