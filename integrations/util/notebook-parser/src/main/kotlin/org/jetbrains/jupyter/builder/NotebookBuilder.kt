@@ -46,6 +46,7 @@ public class NotebookBuilder(
                 kernelSpec = KernelSpec(
                     name = languageName,
                     displayName = languageDisplayName,
+                    language = languageName,
                 ),
                 languageInfo = LanguageInfo(
                     name = languageName,
