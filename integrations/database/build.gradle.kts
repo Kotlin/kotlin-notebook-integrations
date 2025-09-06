@@ -47,6 +47,8 @@ repositories {
 dependencies {
     // api(libs.kotlin.jupyter.lib)
     // api(libs.dataframe.core)
+    api(libs.hikari)
+    api(libs.kotlin.jupyter.lib)
     testImplementation(kotlin("test"))
 }
 

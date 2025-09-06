@@ -16,3 +16,6 @@
 /compiler.xml
 
 /libraries/
+/data_source_mapping.xml
+/dataSources.xml
+/kotlinNotebook.xml
