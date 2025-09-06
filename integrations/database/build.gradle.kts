@@ -45,8 +45,6 @@ repositories {
 }
 
 dependencies {
-    // api(libs.kotlin.jupyter.lib)
-    // api(libs.dataframe.core)
     api(libs.hikari)
     api(libs.kotlin.jupyter.lib)
     testImplementation(kotlin("test"))
@@ -83,6 +81,8 @@ kotlinPublications {
             name = "kotlin-ds-maven"
             url = uri("https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven")
             credentials {
+                logger.info("Space username: $spaceUsername")
+                logger.info("Space token: ${spaceToken.replace(".".toRegex(), "*")}")
                 username = spaceUsername
                 password = spaceToken
             }
