@@ -1,28 +1,40 @@
 package org.jetbrains.kotlinx.jupyter.database
 
 import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import jupyter.kotlin.ScriptTemplateWithDisplayHelpers
+import org.jetbrains.kotlinx.jupyter.api.Notebook
+import javax.sql.DataSource
 
 fun ScriptTemplateWithDisplayHelpers.createDataSrcBySpringAppProperties(
     path: String
-): DataSourceStub {
+): DataSource {
     val config = SpringHikari.fromFile(path)
-    return HikariDataSourceStub(config, notebook)
+    return createHikariDataSource(config, notebook)
 }
 
 fun ScriptTemplateWithDisplayHelpers.createDataSrc(
     configAction: HikariConfig.() -> Unit,
-): DataSourceStub {
+): DataSource {
     val config = HikariConfig().apply(configAction)
-    return HikariDataSourceStub(config, notebook)
+    return createHikariDataSource(config, notebook)
 }
 
 fun ScriptTemplateWithDisplayHelpers.createDataSrc(
     jdbcUrl: String,
     username: String? = null,
     password: String? = null,
-): DataSourceStub = createDataSrc {
+): DataSource = createDataSrc {
     this.jdbcUrl = jdbcUrl
     username?.let { this.username = it }
     password?.let { this.password = it }
+}
+
+private fun createHikariDataSource(
+    config: HikariConfig,
+    notebook: Notebook,
+): DataSource {
+    loadDriversIfNeeded(notebook, config.jdbcUrl)
+
+    return HikariDataSource(config)
 }
