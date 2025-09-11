@@ -1,21 +1,27 @@
 [versions]
+dataframe-core = "1.0.0-dev-7473"
+hikari = "7.0.2" # https://github.com/brettwooldridge/HikariCP
 # See this link for the minimum supported Java version IntelliJ can run with:
 # https://intellij-support.jetbrains.com/hc/en-us/articles/206544879-Selecting-the-JDK-version-the-IDE-will-run-under
 jvmTarget = "17"
 kotlin = "2.2.20-RC2"
 kotlin-jupyter = "0.15.0-614-1"
-dataframe-core = "1.0.0-dev-7473"
-publishPlugin = "2.2.0-dev-71"
 ktlintGradle = "12.3.0"
-hikari = "7.0.2"
+publishPlugin = "2.2.0-dev-71"
+snakeYaml = "2.10" # https://bitbucket.org/snakeyaml/snakeyaml-engine/src/master/
+testContainers = "1.21.3" # https://github.com/testcontainers/testcontainers-java
+testContainers-postgres = "1.20.0" # https://testcontainers.com/modules/postgresql
 
 [libraries]
+dataframe-core = { group = "org.jetbrains.kotlinx", name = "dataframe-core", version.ref = "dataframe-core"}
 hikari = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 kotlin-jupyter-lib = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-lib", version.ref = "kotlin-jupyter"}
-dataframe-core = { group = "org.jetbrains.kotlinx", name = "dataframe-core", version.ref = "dataframe-core"}
+snakeYaml = { group = "org.snakeyaml", name = "snakeyaml-engine", version.ref = "snakeYaml" }
+testContainers = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testContainers" }
+testContainers-postgres = { group = "org.testcontainers", name = "postgresql", version.ref = "testContainers-postgres" }
 
 [plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlin-jupyter" }
-publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "publishPlugin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
+publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "publishPlugin" }

@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.jupyter.database
+package org.jetbrains.kotlinx.jupyter.database.internal.drivers
 
 import org.jetbrains.kotlinx.jupyter.api.Notebook
 import org.jetbrains.kotlinx.jupyter.api.dependencies.DependencyDescription
@@ -8,42 +8,13 @@ import java.net.URLClassLoader
 import java.sql.Driver
 import java.util.ServiceLoader
 
-fun loadDriversIfNeeded(notebook: Notebook, jdbcUrl: String) {
-    val logger = notebook.loggerFactory.getLogger("DriverLoader")
-    for (loader in driverLoaders) {
-        logger.info("Checking if driver should be loaded by loader $loader for $jdbcUrl")
-        if (loader.shouldLoadDriver(jdbcUrl)) {
-            logger.info("Driver should be loaded by loader $loader")
-            loader.loadDriver(notebook)
-        }
-    }
-}
-
-// TODO: This list should be somehow user-configurable:
-//  it should be possible to specify more drivers or different versions of drivers
-val driverLoaders: List<DriverLoader> = listOf(
-    DriverLoaderImpl(listOf("postgres", "postgresql"), listOf(
-        "org.postgresql:postgresql:42.7.7"
-    )),
-    DriverLoaderImpl(listOf("mysql"), listOf(
-        "mysql:mysql-connector-java:8.0.33"
-    )),
-    DriverLoaderImpl(listOf("mssql"), listOf(
-        "com.microsoft.sqlserver:mssql-jdbc:11.4.14.jre11"
-    )),
-    DriverLoaderImpl(listOf("oracle"), listOf(
-        "com.oracle.database.jdbc:ojdbc11:23.3.0.23.09"
-    )),
-)
-
-interface DriverLoader {
-    fun loadDriver(notebook: Notebook)
-
-    fun shouldLoadDriver(jdbcUrl: String): Boolean
-}
-
-class DriverLoaderImpl(
-    private val names: List<String>, // i.e. "postgres" or "mysql"
+/**
+ * Loader for fetching drivers from an external Maven repository.
+ */
+internal class ExternalDependencyDriverLoader(
+    // database identifiers used in JDBC urls
+    override val names: List<String>,
+    // dependencies to be loaded for the driver in Gradle dependency format
     private val dependenciesToLoad: List<String>,
 ): DriverLoader {
     @Volatile

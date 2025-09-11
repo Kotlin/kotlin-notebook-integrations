@@ -37,7 +37,7 @@ kotlinJupyter {
 }
 
 tasks.processJupyterApiResources {
-    libraryProducers = listOf("org.jetbrains.kotlinx.jupyter.database.DatabaseJupyterIntegration")
+    libraryProducers = listOf("org.jetbrains.kotlinx.jupyter.database.internal.DatabaseJupyterIntegration")
 }
 
 repositories {
@@ -45,9 +45,12 @@ repositories {
 }
 
 dependencies {
+    implementation(libs.snakeYaml)
     api(libs.hikari)
     api(libs.kotlin.jupyter.lib)
     testImplementation(kotlin("test"))
+    testImplementation(libs.testContainers)
+    testImplementation(libs.testContainers.postgres)
 }
 
 tasks.test {
@@ -69,6 +72,7 @@ kotlinPublications {
         }
         developers {
             developer("ileasile", "Ilya Muradyan", "Ilya.Muradyan@jetbrains.com")
+            developer("cmelchior", "Christian Melchior", "Christian.Melchior@jetbrains.com")
         }
     }
 
