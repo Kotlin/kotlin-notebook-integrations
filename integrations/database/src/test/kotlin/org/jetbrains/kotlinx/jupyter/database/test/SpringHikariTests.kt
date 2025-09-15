@@ -7,6 +7,7 @@ import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.writeText
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 /**
@@ -56,16 +57,81 @@ class SpringHikariTests: JupyterReplTestCase() {
                 username: postgres
                 password: 
         """.trimIndent())
+
+        val config = SpringHikari.fromFile(file)
+        assertEquals("jdbc:postgresql://localhost:5432/postgres", config.jdbcUrl)
+        assertEquals("postgres", config.username)
+        assertEquals(null, config.password)
     }
 
     @Test
     fun parsePropertiesFile() {
+        val file= createTestFile("test.properties")
+        file.writeText("""
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.username=postgres
+        """.trimIndent())
 
+        val config = SpringHikari.fromFile(file)
+        assertEquals("jdbc:postgresql://localhost:5432/postgres", config.jdbcUrl)
+        assertEquals("postgres", config.username)
+        assertEquals(null, config.password)
     }
 
     @Test
     fun ignoreUnknownProperties() {
+        val file= createTestFile("test.properties")
+        file.writeText("""
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.username=postgres
+            spring.datasource.foo=bar
+        """.trimIndent())
 
+        val config = SpringHikari.fromFile(file)
+        assertEquals("jdbc:postgresql://localhost:5432/postgres", config.jdbcUrl)
+        assertEquals("postgres", config.username)
+        assertEquals(null, config.password)
+    }
+
+    @Test
+    fun resolveSystemPropertyVariable() {
+        System.setProperty("__JUPYTER_TEST_PROP", "hello")
+        try {
+            val file= createTestFile("test.properties")
+            file.writeText($$"""
+                spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+                spring.datasource.username=${__JUPYTER_TEST_PROP}
+                """.trimIndent()
+            )
+            val config = SpringHikari.fromFile(file)
+            assertEquals("hello", config.username)
+        } finally {
+            System.clearProperty("POSTGRES_USERNAME")
+        }
+    }
+
+    @Test
+    fun resolveSystemPropertyWithDefault() {
+        val file= createTestFile("test.properties")
+        file.writeText($$"""
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.username=${__JUPYTER_TEST_PROP_NOT_EXISTING:defaultUsername}
+            """.trimIndent()
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals("defaultUsername", config.username)
+    }
+
+    @Test
+    fun defaultValue_splitByFirstSeparator() {
+        val file= createTestFile("test.properties")
+        file.writeText($$"""
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.username=${__JUPYTER_TEST_PROP_NOT_EXISTING:default:username}
+            """.trimIndent()
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals("default:username", config.username)
     }
 
     private fun createTestFile(fileType: String): Path {
