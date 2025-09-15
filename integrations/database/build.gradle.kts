@@ -51,6 +51,11 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(libs.testContainers)
     testImplementation(libs.testContainers.postgres)
+
+    // Temporary work-around for Exposed not working
+    api("org.jetbrains.exposed:exposed-core:1.0.0-rc-1")
+    api("org.jetbrains.exposed:exposed-jdbc:1.0.0-rc-1")
+    api("org.jetbrains.exposed:exposed-dao:1.0.0-rc-1")
 }
 
 tasks.test {
