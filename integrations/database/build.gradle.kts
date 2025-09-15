@@ -70,6 +70,25 @@ kotlinPublications {
     defaultGroup.set(group.toString())
     fairDokkaJars.set(false)
 
+    // Maven Central publishing properties
+    val sonatypeUsername: String = System.getenv("SONATYPE_USER") ?: ""
+    val sonatypePassword: String = System.getenv("SONATYPE_PASSWORD") ?: ""
+    val signingKey: String? = System.getenv("SIGN_KEY_ID")
+    val signingPrivateKey: String? = System.getenv("SIGN_KEY_PRIVATE")
+    val signingKeyPassphrase: String? = System.getenv("SIGN_KEY_PASSPHRASE")
+
+    sonatypeSettings(
+        sonatypeUsername,
+        sonatypePassword,
+        "jupyter-database project, v. ${project.version}",
+    )
+
+    signingCredentials(
+        signingKey,
+        signingPrivateKey,
+        signingKeyPassphrase,
+    )
+
     pom {
         inceptionYear.set("2025")
         licenses {
