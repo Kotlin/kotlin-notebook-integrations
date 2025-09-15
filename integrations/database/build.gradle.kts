@@ -68,7 +68,6 @@ kotlin {
 }
 
 kotlinPublications {
-    githubRepo("Kotlin", "kotlin-jupyter-database")
     defaultGroup.set(group.toString())
     fairDokkaJars.set(false)
 
@@ -92,6 +91,7 @@ kotlinPublications {
     )
 
     pom {
+        githubRepo("Kotlin", "kotlin-jupyter-database")
         inceptionYear.set("2025")
         licenses {
             apache2()
