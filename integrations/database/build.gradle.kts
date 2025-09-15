@@ -1,5 +1,6 @@
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
+import org.jetbrains.kotlinx.publisher.githubRepo
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -67,6 +68,7 @@ kotlin {
 }
 
 kotlinPublications {
+    githubRepo("Kotlin", "kotlin-jupyter-database")
     defaultGroup.set(group.toString())
     fairDokkaJars.set(false)
 
