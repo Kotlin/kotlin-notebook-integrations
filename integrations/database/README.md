@@ -5,6 +5,10 @@
 
 This repository contains a collection of database connection helpers for Kotlin Notebooks.
 
+## Requirements
+
+* These APIs require JVM 17 or higher.
+
 ## Usage
 
 Use these API's through the `%use database` magic command in a Kotlin Notebook.
