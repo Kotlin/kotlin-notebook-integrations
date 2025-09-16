@@ -23,7 +23,7 @@ public object DataSourceDriverConfig {
         ),
         ExternalDependencyDriverLoader(
             listOf("mysql"), listOf(
-                "mysql:mysql-connector-java:8.0.33"
+                "com.mysql:mysql-connector-j:9.4.0"
             )
         ),
         ExternalDependencyDriverLoader(
