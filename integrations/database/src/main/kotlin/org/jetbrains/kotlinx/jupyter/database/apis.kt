@@ -16,7 +16,7 @@ import javax.sql.DataSource
  * @param path Path to the Spring applications property or yaml file. For relative paths, [Notebook.workingDir] will be
  * used as the base directory.
  */
-fun ScriptTemplateWithDisplayHelpers.createDataSrcFromSpring(
+fun ScriptTemplateWithDisplayHelpers.createDataSourceFromSpring(
     path: String
 ): DataSource {
     val config = SpringHikari.fromFile(path)
@@ -30,7 +30,7 @@ fun ScriptTemplateWithDisplayHelpers.createDataSrcFromSpring(
  * @param path Path to Springs application property file. For relative paths, [Notebook.workingDir] will be
  * used as the base directory.
  */
-fun ScriptTemplateWithDisplayHelpers.createDataSrcFromSpring(
+fun ScriptTemplateWithDisplayHelpers.createDataSourceFromSpring(
     path: Path
 ): DataSource {
     val config = SpringHikari.fromFile(path)
@@ -39,13 +39,13 @@ fun ScriptTemplateWithDisplayHelpers.createDataSrcFromSpring(
 
 /**
  * Create a simple [DataSource] using only the JDBC URL, username, and password.
- * For more complex use cases, use [createDataSrc] with a builder instead.
+ * For more complex use cases, use [createDataSource] with a builder instead.
  */
-fun ScriptTemplateWithDisplayHelpers.createDataSrc(
+fun ScriptTemplateWithDisplayHelpers.createDataSource(
     jdbcUrl: String,
     username: String? = null,
     password: String? = null,
-): DataSource = createDataSrc {
+): DataSource = createDataSource {
     this.jdbcUrl = jdbcUrl
     username?.let { this.username = it }
     password?.let { this.password = it }
@@ -54,7 +54,7 @@ fun ScriptTemplateWithDisplayHelpers.createDataSrc(
 /**
  * Create a [DataSource] using a [HikariConfig] builder.
  */
-fun ScriptTemplateWithDisplayHelpers.createDataSrc(
+fun ScriptTemplateWithDisplayHelpers.createDataSource(
     configAction: HikariConfig.() -> Unit,
 ): DataSource {
     val config = HikariConfig().apply(configAction)
@@ -65,7 +65,7 @@ fun ScriptTemplateWithDisplayHelpers.createDataSrc(
  * Object used to configure the drivers used to create a [DataSource] connection.
  */
 val Notebook.dataSourceDriverConfig: DataSourceDriverConfig
-    get() = org.jetbrains.kotlinx.jupyter.database.DataSourceDriverConfig
+    get() = DataSourceDriverConfig
 
 private fun createHikariDataSource(
     config: HikariConfig,
