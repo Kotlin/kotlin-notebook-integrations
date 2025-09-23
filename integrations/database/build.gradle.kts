@@ -64,7 +64,11 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jvmTarget.get().toInt())
+    jvmToolchain(
+        libs.versions.jvmTarget
+            .get()
+            .toInt(),
+    )
 }
 
 kotlinPublications {

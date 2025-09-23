@@ -5,7 +5,9 @@ import org.jetbrains.kotlinx.jupyter.api.Notebook
 /**
  * Loader representing drivers expected to already be on the classpath.
  */
-internal class ClasspathDriverLoader(override val names: List<String>): DriverLoader {
+internal class ClasspathDriverLoader(
+    override val names: List<String>,
+) : DriverLoader {
     override fun shouldLoadDriver(jdbcUrl: String): Boolean {
         return false // Always assume it is present
     }

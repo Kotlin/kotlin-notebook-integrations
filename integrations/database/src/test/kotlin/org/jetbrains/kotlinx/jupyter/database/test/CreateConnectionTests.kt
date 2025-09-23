@@ -17,17 +17,19 @@ import kotlin.test.Test
  * Note; we do not want to test the entire Hikari functionality here, only
  * the most relevant paths for creating connections and running statements.
  */
-class CreateConnectionTests: JupyterReplTestCase() {
-
+class CreateConnectionTests : JupyterReplTestCase() {
     companion object {
         lateinit var postgres: PostgreSQLContainer<*>
+
         @JvmStatic
         @BeforeAll
         fun beforeClass() {
-            postgres = PostgreSQLContainer(DockerImageName.parse("postgres:16-alpine"))
-                .withInitScript("init_postgres.sql")
+            postgres =
+                PostgreSQLContainer(DockerImageName.parse("postgres:16-alpine"))
+                    .withInitScript("init_postgres.sql")
             postgres.start()
         }
+
         @JvmStatic
         @AfterAll
         fun afterClass() {
@@ -37,25 +39,20 @@ class CreateConnectionTests: JupyterReplTestCase() {
 
     @Test
     fun connectUsingSpringApplicationFile_string() {
-
     }
 
     @Test
     fun connectUsingSpringApplicationFile_path() {
-
     }
 
     @Test
     fun connectUsingSpringApplicationFile_resource() {}
 
-
     @Test
     fun createDataSrcWithBuilder() {
-
     }
 
     @Test
     fun createSimpleDataSource() {
-
     }
 }

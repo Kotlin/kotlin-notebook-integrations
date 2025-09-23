@@ -16,7 +16,7 @@ internal class ExternalDependencyDriverLoader(
     override val names: List<String>,
     // dependencies to be loaded for the driver in Gradle dependency format
     private val dependenciesToLoad: List<String>,
-): DriverLoader {
+) : DriverLoader {
     @Volatile
     private var loaded = false
 
@@ -40,23 +40,28 @@ internal class ExternalDependencyDriverLoader(
         val logger = notebook.loggerFactory.getLogger(this::class.java)
         logger.info("Loading JDBC driver for ${names.first()}")
         val resolver = notebook.dependencyManager.resolver
-        val customizableClassLoader = notebook.intermediateClassLoader as? ModifiableParentsClassLoader ?: run {
-            logger.warn("Can't load JDBC driver for ${names.first()}: custom class loader is not modifiable (${notebook.intermediateClassLoader})")
-            return
-        }
-
-        val resolutionResult = resolver.resolve(
-            dependenciesToLoad.map { DependencyDescription(it) }
-        )
-
-        val resolvedJars = when (resolutionResult) {
-            is ResolutionResult.Success -> {
-                resolutionResult.binaryClasspath
+        val customizableClassLoader =
+            notebook.intermediateClassLoader as? ModifiableParentsClassLoader ?: run {
+                logger.warn(
+                    "Can't load JDBC driver for ${names.first()}: custom class loader is not modifiable (${notebook.intermediateClassLoader})",
+                )
+                return
             }
-            is ResolutionResult.Failure -> {
-                throw IllegalStateException("Failed to load JDBC driver for ${names.first()}: ${resolutionResult.message}")
+
+        val resolutionResult =
+            resolver.resolve(
+                dependenciesToLoad.map { DependencyDescription(it) },
+            )
+
+        val resolvedJars =
+            when (resolutionResult) {
+                is ResolutionResult.Success -> {
+                    resolutionResult.binaryClasspath
+                }
+                is ResolutionResult.Failure -> {
+                    throw IllegalStateException("Failed to load JDBC driver for ${names.first()}: ${resolutionResult.message}")
+                }
             }
-        }
 
         logger.info("Resolved JDBC driver for ${names.first()}: $resolvedJars")
 

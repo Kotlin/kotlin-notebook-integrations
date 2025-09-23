@@ -16,9 +16,7 @@ import javax.sql.DataSource
  * @param path Path to the Spring applications property or yaml file. For relative paths, [Notebook.workingDir] will be
  * used as the base directory.
  */
-fun ScriptTemplateWithDisplayHelpers.createDataSourceFromSpring(
-    path: String
-): DataSource {
+fun ScriptTemplateWithDisplayHelpers.createDataSourceFromSpring(path: String): DataSource {
     val config = SpringHikari.fromFile(path)
     return createHikariDataSource(config, notebook)
 }
@@ -30,9 +28,7 @@ fun ScriptTemplateWithDisplayHelpers.createDataSourceFromSpring(
  * @param path Path to Springs application property file. For relative paths, [Notebook.workingDir] will be
  * used as the base directory.
  */
-fun ScriptTemplateWithDisplayHelpers.createDataSourceFromSpring(
-    path: Path
-): DataSource {
+fun ScriptTemplateWithDisplayHelpers.createDataSourceFromSpring(path: Path): DataSource {
     val config = SpringHikari.fromFile(path)
     return createHikariDataSource(config, notebook)
 }
@@ -45,18 +41,17 @@ fun ScriptTemplateWithDisplayHelpers.createDataSource(
     jdbcUrl: String,
     username: String? = null,
     password: String? = null,
-): DataSource = createDataSource {
-    this.jdbcUrl = jdbcUrl
-    username?.let { this.username = it }
-    password?.let { this.password = it }
-}
+): DataSource =
+    createDataSource {
+        this.jdbcUrl = jdbcUrl
+        username?.let { this.username = it }
+        password?.let { this.password = it }
+    }
 
 /**
  * Create a [DataSource] using a [HikariConfig] builder.
  */
-fun ScriptTemplateWithDisplayHelpers.createDataSource(
-    configAction: HikariConfig.() -> Unit,
-): DataSource {
+fun ScriptTemplateWithDisplayHelpers.createDataSource(configAction: HikariConfig.() -> Unit): DataSource {
     val config = HikariConfig().apply(configAction)
     return createHikariDataSource(config, notebook)
 }

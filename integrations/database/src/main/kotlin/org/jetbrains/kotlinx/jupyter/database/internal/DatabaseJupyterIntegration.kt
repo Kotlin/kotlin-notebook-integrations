@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.jupyter.database.internal
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 
 @Suppress("unused")
-class DatabaseJupyterIntegration: JupyterIntegration() {
+class DatabaseJupyterIntegration : JupyterIntegration() {
     override fun Builder.onLoaded() {
         import(
             "java.sql.*",

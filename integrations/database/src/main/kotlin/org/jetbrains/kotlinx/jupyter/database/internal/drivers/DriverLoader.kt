@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.jupyter.api.Notebook
  * connect to a database.
  */
 internal interface DriverLoader {
-
     // List of JDBC database identifiers this loader is used for
     val names: List<String>
 
@@ -16,6 +15,7 @@ internal interface DriverLoader {
      * needs to be downloaded and loaded into the classpath.
      */
     fun shouldLoadDriver(jdbcUrl: String): Boolean
+
     /**
      * Download the required driver(s) and add them to the classpath of the current notebook.
      */

@@ -15,32 +15,36 @@ import kotlin.reflect.KClass
  * properties (.properties) and yaml formats (.yml, .yaml) are supported.
  */
 internal object SpringHikari {
-
     fun fromFile(path: String): HikariConfig = fromFile(Path.of(path))
 
     fun fromFile(path: Path): HikariConfig {
         if (!path.exists()) throw IllegalArgumentException("${path.absolutePathString()} does not exist")
-        require(path.exists()) { "File ${path.absolutePathString()} does not exist"}
+        require(path.exists()) { "File ${path.absolutePathString()} does not exist" }
         val fileType = path.absolutePathString().substringAfterLast(".").lowercase()
         return when (fileType) {
             "properties" -> {
-                val props = Files.newInputStream(path).use { inputStream ->
-                    Properties().apply {
-                        load(inputStream)
+                val props =
+                    Files.newInputStream(path).use { inputStream ->
+                        Properties().apply {
+                            load(inputStream)
+                        }
                     }
-                }
                 fromProperties(props)
             }
             "yml",
-            "yaml" -> {
+            "yaml",
+            -> {
                 val settings = LoadSettings.builder().build()
                 val load = Load(settings)
+
                 @Suppress("UNCHECKED_CAST")
-                val yaml = Files.newBufferedReader(path).use { r ->
-                    val result = load.loadFromReader(r) as? Map<String, Any?>
-                        ?: throw IllegalArgumentException("YAML file is not valid: ${path.absolutePathString()}")
-                    result
-                }
+                val yaml =
+                    Files.newBufferedReader(path).use { r ->
+                        val result =
+                            load.loadFromReader(r) as? Map<String, Any?>
+                                ?: throw IllegalArgumentException("YAML file is not valid: ${path.absolutePathString()}")
+                        result
+                    }
                 val props = Properties()
                 flattenToProps(yaml, props)
                 fromProperties(props)
@@ -52,7 +56,11 @@ internal object SpringHikari {
     /**
      * Flatten a nested map (from a Yaml file) to a [Properties] object.
      */
-    private fun flattenToProps(src: Map<String, Any?>, out: Properties, prefix: String = "") {
+    private fun flattenToProps(
+        src: Map<String, Any?>,
+        out: Properties,
+        prefix: String = "",
+    ) {
         val pre = if (prefix.isEmpty()) "" else "$prefix."
         src.forEach { (key: String, value: Any?) ->
             @Suppress("UNCHECKED_CAST")
@@ -83,7 +91,8 @@ internal object SpringHikari {
 
         // Set all base Hikari properties.
         val hikariPrefix = "spring.datasource.hikari."
-        p.stringPropertyNames()
+        p
+            .stringPropertyNames()
             .filter { it.startsWith(hikariPrefix) && !it.startsWith(hikariPrefix + "data-source-properties") }
             .forEach { fullKey ->
                 val raw = p.getProperty(fullKey)
@@ -105,13 +114,15 @@ internal object SpringHikari {
     private fun copyProperties(
         from: Properties,
         to: HikariConfig,
-        action: PropertiesCopyConfigurator.() -> Unit
+        action: PropertiesCopyConfigurator.() -> Unit,
     ) {
         PropertiesCopyConfigurator(from, to).apply(action)
     }
 
-    private fun get(p: Properties, key: String): String? =
-        p.getProperty(key)?.takeIf { it.isNotBlank() }?.let(::resolvePlaceholders)
+    private fun get(
+        p: Properties,
+        key: String,
+    ): String? = p.getProperty(key)?.takeIf { it.isNotBlank() }?.let(::resolvePlaceholders)
 
     // very simple resolver for ${ENV} and ${prop} (+ default via colon: ${ENV:default})
     private fun resolvePlaceholders(s: String): String {
@@ -121,17 +132,23 @@ internal object SpringHikari {
             val m = regex.find(out) ?: break
             val token = m.groupValues[1]
             val (name, def) = token.split(':', limit = 2).let { it[0] to it.getOrNull(1) }
-            val replacement = System.getenv(name)
-                ?: System.getProperty(name)
-                ?: def
-                ?: ""
+            val replacement =
+                System.getenv(name)
+                    ?: System.getProperty(name)
+                    ?: def
+                    ?: ""
             out = out.replaceRange(m.range, replacement)
         }
         return out
     }
 
-    private fun addDataSourceProperty(p: Properties, prefix: String, cfg: HikariConfig) {
-        p.stringPropertyNames()
+    private fun addDataSourceProperty(
+        p: Properties,
+        prefix: String,
+        cfg: HikariConfig,
+    ) {
+        p
+            .stringPropertyNames()
             .filter { it.startsWith(prefix) }
             .forEach { k ->
                 val propName = k.removePrefix(prefix)
@@ -142,17 +159,23 @@ internal object SpringHikari {
     // Convert naming schemes found in .properties files to camelCase naming
     // Only Ascii characters are supported.
     // E.g. "maximum-pool-size" -> "maximumPoolSize"
-    private fun toCamel(s: String): String {
-        return s.split('.', '-', '_')
+    private fun toCamel(s: String): String =
+        s
+            .split('.', '-', '_')
             .filter { it.isNotEmpty() }
             .mapIndexed { i, part ->
-                if (i == 0) part.replaceFirstChar { c -> c.lowercase() }
-                else part.replaceFirstChar { c -> c.uppercase() }
-            }
-            .joinToString("")
-    }
+                if (i == 0) {
+                    part.replaceFirstChar { c -> c.lowercase() }
+                } else {
+                    part.replaceFirstChar { c -> c.uppercase() }
+                }
+            }.joinToString("")
 
-    private fun setOnHikari(cfg: HikariConfig, prop: String, raw: String) {
+    private fun setOnHikari(
+        cfg: HikariConfig,
+        prop: String,
+        raw: String,
+    ) {
         // Try to find a setter like setXxx(value) by property name (camelCase).
         val setterName = "set" + prop.replaceFirstChar { it.uppercase() }
         val methods = cfg::class.java.methods.filter { it.name == setterName && it.parameterCount == 1 }
@@ -167,14 +190,18 @@ internal object SpringHikari {
         m.invoke(cfg, value)
     }
 
-    private fun coerce(raw: String, type: KClass<*>): Any = when (type) {
-        java.lang.Boolean::class, Boolean::class -> raw.equals("true", true) || raw == "1" || raw.equals("yes", true)
-        Integer::class, Int::class -> parseIntOrDuration(raw).toInt()
-        java.lang.Long::class, Long::class -> parseIntOrDuration(raw)
-        java.lang.Double::class, Double::class -> raw.toDouble()
-        String::class -> raw
-        else -> raw // fallback — let Hikari figure out what to do with it
-    }
+    private fun coerce(
+        raw: String,
+        type: KClass<*>,
+    ): Any =
+        when (type) {
+            java.lang.Boolean::class, Boolean::class -> raw.equals("true", true) || raw == "1" || raw.equals("yes", true)
+            Integer::class, Int::class -> parseIntOrDuration(raw).toInt()
+            java.lang.Long::class, Long::class -> parseIntOrDuration(raw)
+            java.lang.Double::class, Double::class -> raw.toDouble()
+            String::class -> raw
+            else -> raw // fallback — let Hikari figure out what to do with it
+        }
 
     // ms/s/m/h/d support (i.e., "30s", "5m"); otherwise — just long
     private fun parseIntOrDuration(s: String): Long {
@@ -186,21 +213,21 @@ internal object SpringHikari {
         return when (unit) {
             "" -> base
             "ms" -> base
-            "s"  -> base * 1_000
-            "m"  -> base * 60_000
-            "h"  -> base * 3_600_000
-            "d"  -> base * 86_400_000
+            "s" -> base * 1_000
+            "m" -> base * 60_000
+            "h" -> base * 3_600_000
+            "d" -> base * 86_400_000
             else -> trimmed.toLong()
         }
     }
 
     private class PropertiesCopyConfigurator(
         private val p: Properties,
-        private val cfg: HikariConfig
+        private val cfg: HikariConfig,
     ) {
         fun copy(
             propertyName: String,
-            propSetter: HikariConfig.(String) -> Unit
+            propSetter: HikariConfig.(String) -> Unit,
         ) {
             get(p, propertyName)?.let { propSetter(cfg, it) }
         }
