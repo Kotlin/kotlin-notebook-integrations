@@ -1,10 +1,14 @@
 package org.jetbrains.kotlinx.jupyter.database.internal
 
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
-import org.jetbrains.kotlinx.jupyter.database.DataSourceDriverConfig
 
+@Suppress("unused")
 class DatabaseJupyterIntegration: JupyterIntegration() {
     override fun Builder.onLoaded() {
-        importPackage<DataSourceDriverConfig>()
+        import(
+            "java.sql.*",
+            "javax.sql.*",
+            "org.jetbrains.kotlinx.jupyter.database.*",
+        )
     }
 }
