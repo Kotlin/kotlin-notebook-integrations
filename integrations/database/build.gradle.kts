@@ -52,6 +52,7 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(libs.testContainers)
     testImplementation(libs.testContainers.postgres)
+    testImplementation(libs.postgresDriver)
 
     // Temporary work-around for Exposed not working. Move to its own integration?
     api("org.jetbrains.exposed:exposed-core:1.0.0-rc-1")
