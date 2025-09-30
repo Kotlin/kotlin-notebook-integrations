@@ -5,8 +5,8 @@ hikari = "7.0.2" # https://github.com/brettwooldridge/HikariCP
 # https://intellij-support.jetbrains.com/hc/en-us/articles/206544879-Selecting-the-JDK-version-the-IDE-will-run-under
 jvmTarget = "17"
 kotlin = "2.2.20-RC2"
-kotlin-jupyter = "0.15.0-614-1"
-ktlintGradle = "13.1.0"
+kotlin-jupyter = "0.15.0-639"
+ktlintGradle = "12.3.0"
 publishPlugin = "2.2.0-rc3-dev-59"
 snakeYaml = "2.10" # https://bitbucket.org/snakeyaml/snakeyaml-engine/src/master/
 testContainers = "1.21.3" # https://github.com/testcontainers/testcontainers-java
