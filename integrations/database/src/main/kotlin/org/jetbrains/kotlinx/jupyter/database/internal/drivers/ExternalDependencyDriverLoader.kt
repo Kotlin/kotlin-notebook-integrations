@@ -43,7 +43,10 @@ internal class ExternalDependencyDriverLoader(
         val customizableClassLoader =
             notebook.intermediateClassLoader as? ModifiableParentsClassLoader ?: run {
                 logger.warn(
-                    "Can't load JDBC driver for ${names.first()}: custom class loader is not modifiable (${notebook.intermediateClassLoader})",
+                    """
+                    Can't load JDBC driver for ${names.first()}. 
+                    Custom class loader is not modifiable (${notebook.intermediateClassLoader})
+                    """.trimIndent(),
                 )
                 return
             }

@@ -15,38 +15,39 @@ import kotlin.collections.reversed
  * User-defined drivers will take precedence over pre-configured ones.
  */
 public object DataSourceDriverConfig {
-    private val platformDrivers: List<DriverLoader> = listOf(
-        ExternalDependencyDriverLoader(
-            listOf("postgres", "postgresql"),
-            listOf(
-                "org.postgresql:postgresql:42.7.8"
-            )
-        ),
-        ExternalDependencyDriverLoader(
-            listOf("mysql"),
-            listOf(
-                "com.mysql:mysql-connector-j:9.4.0"
-            )
-        ),
-        ExternalDependencyDriverLoader(
-            listOf("mssql"),
-            listOf(
-                "com.microsoft.sqlserver:mssql-jdbc:13.2.0.jre11"
-            )
-        ),
-        ExternalDependencyDriverLoader(
-            listOf("oracle"),
-            listOf(
-                "com.oracle.database.jdbc:ojdbc11:23.9.0.25.07"
-            )
-        ),
-        ExternalDependencyDriverLoader(
-            listOf("h2"),
-            listOf(
-                "com.h2database:h2:2.4.240"
-            )
-        ),
-    )
+    private val platformDrivers: List<DriverLoader> =
+        listOf(
+            ExternalDependencyDriverLoader(
+                listOf("postgres", "postgresql"),
+                listOf(
+                    "org.postgresql:postgresql:42.7.8",
+                ),
+            ),
+            ExternalDependencyDriverLoader(
+                listOf("mysql"),
+                listOf(
+                    "com.mysql:mysql-connector-j:9.4.0",
+                ),
+            ),
+            ExternalDependencyDriverLoader(
+                listOf("mssql"),
+                listOf(
+                    "com.microsoft.sqlserver:mssql-jdbc:13.2.0.jre11",
+                ),
+            ),
+            ExternalDependencyDriverLoader(
+                listOf("oracle"),
+                listOf(
+                    "com.oracle.database.jdbc:ojdbc11:23.9.0.25.07",
+                ),
+            ),
+            ExternalDependencyDriverLoader(
+                listOf("h2"),
+                listOf(
+                    "com.h2database:h2:2.4.240",
+                ),
+            ),
+        )
     private val userDrivers: MutableList<DriverLoader> = mutableListOf()
 
     // Returns a list of all driver loaders. User drivers are selected first
