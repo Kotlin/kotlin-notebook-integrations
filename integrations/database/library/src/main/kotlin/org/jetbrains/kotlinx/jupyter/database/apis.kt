@@ -48,7 +48,7 @@ fun ScriptTemplateWithDisplayHelpers.createDataSourceFromSpring(path: Path): Dat
  *
  * SQLite:
  * - File: "jdbc:sqlite:/path/to/my_database.db" // Absolute or relative path to the file.
- * - In-memory: "jdbc:sqlite::memory"
+ * - In-memory: "jdbc:sqlite::memory:"
  */
 fun ScriptTemplateWithDisplayHelpers.createDataSource(
     jdbcUrl: String,

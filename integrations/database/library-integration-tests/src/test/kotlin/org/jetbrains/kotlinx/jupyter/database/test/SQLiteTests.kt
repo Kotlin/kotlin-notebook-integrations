@@ -13,7 +13,7 @@ class SQLiteTests : DatabaseIntegrationTest() {
         execSuccess(
             """
             val src = createDataSource(
-                jdbcUrl = "jdbc:sqlite::memory",
+                jdbcUrl = "jdbc:sqlite::memory:",
             )
             src
             """.trimIndent(),
