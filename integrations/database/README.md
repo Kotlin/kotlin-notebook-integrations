@@ -3,7 +3,8 @@
 
 # Database Connection Helpers
 
-This repository contains a collection of database connection helpers for Kotlin Notebooks.
+This repository contains a collection of database connection helpers for Kotlin 
+Notebooks.
 
 ## Requirements
 
@@ -37,3 +38,23 @@ val dataSource2 = createDataSrc {
 val path = Path.of("/absolute/path/to/application.properties")
 val dataSource3 = createDataSrcFromSpring(path)
 ```
+
+## Module structure
+
+This project consists of the following modules:
+
+- `library`: Contains the core database connection helpers as well as basic unit 
+   tests.
+- `library-integration-tests`: Contains integration tests against all supported 
+   databases and ensure we can load JDBC drivers correctly.
+- `test-infrastructure`: A HTTP test server that allows integration tests to 
+   spin up database containers on demand. It is built and run from the 
+   integration test module.
+
+Running all tests and checks are done by running this command the root directory:
+
+```shell
+./gradlew check
+```
+
+Note, it requires that `docker` is available on the PATH of the system.
