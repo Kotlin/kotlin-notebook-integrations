@@ -1,0 +1,163 @@
+package org.jetbrains.kotlinx.jupyter.serialization
+
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.*
+import org.jetbrains.kotlinx.jupyter.api.*
+import org.jetbrains.kotlinx.jupyter.api.createRenderer
+import org.jetbrains.kotlinx.jupyter.api.declare
+import org.jetbrains.kotlinx.jupyter.api.libraries.FieldHandlerFactory
+import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
+import org.jetbrains.kotlinx.jupyter.api.libraries.TypeDetection
+import org.jetbrains.kotlinx.jupyter.json2kt.GeneratedCodeResult
+import org.jetbrains.kotlinx.jupyter.json2kt.JSON2KT_WRAPPER_FIELD_NAME
+import org.jetbrains.kotlinx.jupyter.json2kt.jsonDataToKotlinCode
+import kotlin.reflect.typeOf
+
+/**
+ * Variables that have this type get replaced by deserialized value **in the next cell**.
+ * [className] is a simple name of the class to be generated that [jsonString] will be deserialized into.
+ */
+public class DeserializeThis(public val jsonString: String, public val className: String?) {
+    override fun toString(): String = jsonString
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as DeserializeThis
+
+        return jsonString == other.jsonString && className == other.className
+    }
+
+    override fun hashCode(): Int = 31 * jsonString.hashCode() + className.hashCode()
+
+    /**
+     * Returns the generated data class(es) needed to serialize/deserialize the JSON data using Kotlin Serialization.
+     * The root class name is set to [className].
+     *
+     * If the JSON contains ambiguous values, i.e., a property that has both Strings and Int values, the returned
+     * code will use `Any` or `Any?` as the property type.
+     *
+     * These types are not supported by Kotlin Serialization by default, but since we cannot determine the schema
+     * for these properties, a manual serializer must be created and added to these properties.
+     */
+    public fun getCode(): String {
+        val generatedCode = getGeneratedCode(jsonString, className ?: "DeserializedClass")
+        return cleanupCode(generatedCode.code)
+    }
+}
+
+/**
+ * Variables with values returned by this function get replaced by deserialized value **in the next cell**.
+ * [className] is a simple name of the class to be generated that [this] will be deserialized into.
+ *
+ * Usage:
+ * ```kotlin
+ * val user = """{"address":{"street","Baker Street","number":"221B"}}""".deserializeJson()
+ * // IN THE NEXT CELL:
+ * println(user.address.number + " " + user.address.street)
+ * ```
+ */
+public fun String.deserializeJson(className: String? = null): DeserializeThis {
+    return DeserializeThis(jsonString = this, className = className)
+}
+
+/**
+ * Usage: declare a variable of [DeserializeThis] type, where some JSON is stored.
+ * In the next cell, this variable will contain the deserialized result.
+ * The classes for deserialization will be generated automatically based on the actual JSON.
+ *
+ * ```kotlin
+ * val user = """{"address":{"street","Baker Street","number":"221B"}}""".deserializeJson()
+ * // IN THE NEXT CELL:
+ * println(user.address.number + " " + user.address.street)
+ * ```
+ */
+public class SerializationIntegration : JupyterIntegration() {
+    override fun Builder.onLoaded() {
+        onLoaded {
+            val jsonDeserializer = Json {
+                @OptIn(ExperimentalSerializationApi::class)
+                explicitNulls = false
+            }
+            declare(VariableDeclaration("jsonDeserializer", jsonDeserializer, typeOf<Json>()))
+        }
+
+        import("kotlinx.serialization.*")
+        import("kotlinx.serialization.json.*")
+        import("org.jetbrains.kotlinx.jupyter.serialization.deserializeJson")
+
+        // required for auto-deserialization below
+        import("org.jetbrains.kotlinx.jupyter.serialization.UntypedAny")
+        import("org.jetbrains.kotlinx.jupyter.serialization.UntypedAnyNotNull")
+
+        addRenderer(
+            createRenderer(
+                renderCondition = {
+                    val value = it.value
+                    value is String && shouldHighlightAsJson(value) ||
+                        value is DeserializeThis && shouldHighlightAsJson(value.jsonString)
+                },
+                renderAction = {
+                    JSON(it.value as? String ?: (it.value as DeserializeThis).jsonString)
+                },
+            )
+        )
+
+        val fieldHandler = FieldHandlerFactory.createUpdateHandler<DeserializeThis>(TypeDetection.RUNTIME) { value, prop ->
+            try {
+                val className = value.className ?: prop.name.replaceFirstChar(Char::titlecaseChar)
+                val generatedCode = getGeneratedCode(value.jsonString, className)
+                val escapedJson = value.jsonString
+                    .replace("$", "\${'$'}")
+                    .let { if (generatedCode.isWrapped) "{\"value\": $it}" else it }
+
+                execute(
+                    generatedCode.code + "\n" +
+                        "jsonDeserializer.decodeFromString<${generatedCode.rootTypeName}>(\"\"\"$escapedJson\"\"\")" +
+                        if (generatedCode.isWrapped) ".$JSON2KT_WRAPPER_FIELD_NAME" else ""
+                ).name
+            } catch (e: Exception) {
+                display("Error during deserialization: ${e.cause?.message ?: e.message}", id = null)
+                null
+            }
+        }
+        notebook.fieldsHandlersProcessor.register(fieldHandler, ProcessingPriority.HIGHEST)
+    }
+}
+
+internal fun getGeneratedCode(jsonString: String, className: String): GeneratedCodeResult {
+    return jsonDataToKotlinCode(Json.parseToJsonElement(jsonString), requestedRootTypeName = className)
+}
+
+/**
+ * Clean up generated code so internal concepts do not leak to the user.
+ *
+ * Currently, this includes:
+ * - Swap `UntypedAnyNotNull` with `Any`
+ * - Swap `UntypedAny` with `Any?`
+ */
+internal fun cleanupCode(code: String): String {
+    // We do not expect generated code to be long, so just use kotlin
+    // standard functions for this. Even though it means iterating the string multiple times.
+    return code
+        .replace(": UntypedAnyNotNull", ": Any")
+        .replace("<UntypedAnyNotNull>", "<Any>")
+        .replace("import org.jetbrains.kotlinx.jupyter.serialization.UntypedAnyNotNull\n", "")
+        .replace(": UntypedAny?", ": Any?")
+        .replace("<UntypedAny?>", "<Any?>")
+        .replace("import org.jetbrains.kotlinx.jupyter.serialization.UntypedAny\n", "")
+        .trimStart()
+}
+
+private fun shouldHighlightAsJson(jsonOrNot: String): Boolean {
+    if (jsonOrNot.length > 3_000_000) return false
+    return try {
+        val element = Json.parseToJsonElement(jsonOrNot)
+        ((element as? JsonObject)?.entries?.isNotEmpty() == true ||
+            (element as? JsonArray)?.isNotEmpty() == true)
+    } catch (_: SerializationException) {
+        false // Invalid JSON
+    }
+}
