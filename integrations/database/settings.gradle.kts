@@ -3,6 +3,8 @@ plugins {
 }
 rootProject.name = "kotlin-jupyter-database"
 
-include("library")
-include("test-infrastructure")
-include("library-integration-tests")
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+include("database")
+include("database-test-infrastructure")
+include("database-integration-tests")

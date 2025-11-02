@@ -47,10 +47,10 @@ tasks.test {
  *
  * All containers are killed when the test suite is finished.
  */
-evaluationDependsOn(":test-infrastructure")
+evaluationDependsOn(projects.databaseTestInfrastructure.path)
 val testServerPort = project.findProperty("testServerPort") ?: error("Missing Gradle property: `testServerPort`")
-val libraryPublishTask = project(":library").tasks.named<DefaultTask>("publishToMavenLocal")
-val testServerJarTask = project(":test-infrastructure").tasks.named<Jar>("shadowJar")
+val libraryPublishTask = project(projects.database.path).tasks.named<DefaultTask>("publishToMavenLocal")
+val testServerJarTask = project(projects.databaseTestInfrastructure.path).tasks.named<Jar>("shadowJar")
 val testServerJarFile: Provider<RegularFile> = testServerJarTask.flatMap { it.archiveFile }
 val startTestServer by tasks.registering(Exec::class) {
     dependsOn(libraryPublishTask, testServerJarTask)
