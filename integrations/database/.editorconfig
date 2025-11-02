@@ -1,0 +1,5 @@
+[*.kt]
+ktlint_standard_filename = disabled
+
+[**/build/generated/**]
+ktlint = disabled

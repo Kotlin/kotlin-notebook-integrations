@@ -1,0 +1,48 @@
+[versions]
+buildconfig = "5.7.0" # https://github.com/gmazzo/gradle-buildconfig-plugin
+dataframe-core = "1.0.0-dev-7473"
+hikari = "7.0.2" # https://github.com/brettwooldridge/HikariCP
+# See this link for the minimum supported Java version IntelliJ can run with:
+# https://intellij-support.jetbrains.com/hc/en-us/articles/206544879-Selecting-the-JDK-version-the-IDE-will-run-under
+jvmTarget = "17"
+kotest = "6.0.4" # https://github.com/kotest/kotest
+kotlin = "2.2.20-RC2"
+kotlin-jupyter = "0.15.0-639"
+ktlintGradle = "13.1.0" # https://github.com/JLLeitschuh/ktlint-gradle
+ktor = "3.3.1" # https://github.com/ktorio/ktor
+logback = "1.5.20"
+postgresDriver = "42.7.7" # https://mvnrepository.com/artifact/org.postgresql/postgresql
+publishPlugin = "2.2.0-rc3-dev-59"
+shadow = "9.2.2" # https://github.com/GradleUp/shadow
+snakeYaml = "2.10" # https://bitbucket.org/snakeyaml/snakeyaml-engine/src/master/
+test-kotlintest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+testContainers = "2.0.1" # https://github.com/testcontainers/testcontainers-java
+testContainers-modules = "1.20.0" # https://testcontainers.com/modules/postgresql
+
+[libraries]
+dataframe-core = { group = "org.jetbrains.kotlinx", name = "dataframe-core", version.ref = "dataframe-core"}
+hikari = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
+kotlin-jupyter-lib = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-lib", version.ref = "kotlin-jupyter"}
+ktor-client-contentNegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-websockets = { group = "io.ktor", name = "ktor-client-websockets", version.ref = "ktor" }
+ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+postgresDriver = { group = "org.postgresql", name = "postgresql", version.ref = "postgresDriver" }
+snakeYaml = { group = "org.snakeyaml", name = "snakeyaml-engine", version.ref = "snakeYaml" }
+test-kotlintest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+testContainers = { group = "org.testcontainers", name = "testcontainers-junit-jupiter", version.ref = "testContainers" }
+testContainers-mysql = { group = "org.testcontainers", name = "mysql", version.ref = "testContainers-modules" }
+testContainers-postgres = { group = "org.testcontainers", name = "postgresql", version.ref = "testContainers-modules" }
+
+[plugins]
+buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
+kotlin-jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlin-jupyter" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
+publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "publishPlugin" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
