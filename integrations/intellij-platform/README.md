@@ -43,11 +43,11 @@ For comprehensive documentation, examples, and API reference, see:
 **Support**: [JetBrains Platform Forum - Kotlin Notebook](https://platform.jetbrains.com/c/intellij-platform/kotlin-notebook/25)
 
 ## Contributing
-Read the [Contributing Guidelines](CONTRIBUTING.md).
+Read the [Contributing Guidelines](../../CONTRIBUTING.md).
 
 ## Code of Conduct
 This project and the corresponding community are governed by the [JetBrains Open Source and Community Code of Conduct](https://github.com/jetbrains#code-of-conduct). Please make sure you read it.
 
 ## License
 
-This project is licensed under the [Apache License, Version 2.0](LICENSE).
+This project is licensed under the [Apache License, Version 2.0](../../LICENSE).

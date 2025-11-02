@@ -18,7 +18,7 @@ dependencies {
     api(libs.ktor.client.core)
     runtimeOnly(libs.ktor.client.cio)
     compileOnly(libs.dataframe)
-    api(libs.ktor.client.content.negotiation)
+    api(libs.ktor.client.contentNegotiation)
     api(libs.ktor.serialization.kotlinx.json)
 }
 

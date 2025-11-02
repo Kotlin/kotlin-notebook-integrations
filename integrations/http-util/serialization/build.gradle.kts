@@ -7,7 +7,7 @@ plugins {
 dependencies {
     compileOnly(libs.kotlinx.serialization.json)
     implementation(libs.kotlin.reflect)
-    implementation(project(":json2kt"))
+    implementation(projects.integrations.httpUtil.json2kt)
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlinx.serialization.json)

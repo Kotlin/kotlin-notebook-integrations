@@ -15,8 +15,8 @@ tasks.processJupyterApiResources {
 }
 
 dependencies {
-    api(project(":ktor-client-core"))
-    api(project(":serialization"))
+    api(projects.integrations.httpUtil.ktorClientCore)
+    api(projects.integrations.httpUtil.serialization)
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlinx.serialization.json)

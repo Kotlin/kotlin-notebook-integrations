@@ -1,5 +1,6 @@
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
+import org.jetbrains.kotlinx.publisher.githubRepo
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -12,25 +13,8 @@ plugins {
 val spaceUsername: String by properties
 val spaceToken: String by properties
 
-group = "org.jetbrains.kotlinx"
-version =
-    detectVersion().also { version ->
-        Logging.getLogger(this::class.java).warn("Detected version: $version")
-    }
-
 allprojects {
     version = rootProject.version
-}
-
-private fun detectVersion(): String {
-    val buildNumber = project.findProperty("build.number")
-    if (buildNumber != null) {
-        return buildNumber.toString()
-    } else {
-        val baseVersion = project.property("baseVersion").toString()
-        val devAddition = project.property("devAddition").toString()
-        return "$baseVersion-$devAddition-SNAPSHOT"
-    }
 }
 
 kotlinJupyter {
@@ -72,10 +56,9 @@ kotlin {
 }
 
 kotlinPublications {
-    defaultGroup.set(group.toString())
-    fairDokkaJars.set(false)
-
     pom {
+        githubRepo("Kotlin", "kotlin-notebook-libraries")
+
         inceptionYear.set("2024")
         licenses {
             apache2()
@@ -86,28 +69,8 @@ kotlinPublications {
         }
     }
 
-    localRepositories {
-        localMavenRepository(project.layout.buildDirectory.dir("maven"))
-    }
-
-    remoteRepositories {
-        maven {
-            name = "kotlin-ds-maven"
-            url = uri("https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven")
-            credentials {
-                username = spaceUsername
-                password = spaceToken
-            }
-        }
-    }
-
     publication {
         publicationName.set("kotlin-jupyter-intellij-platform")
         description.set("Kotlin Jupyter kernel integration for the IntelliJ Platform")
     }
-}
-
-tasks.wrapper {
-    gradleVersion = providers.gradleProperty("gradleVersion").get()
-    distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
