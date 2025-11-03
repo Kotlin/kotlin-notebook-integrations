@@ -6,6 +6,24 @@ plugins {
     alias(libs.plugins.publisher)
 }
 
+subprojects {
+    // Allow skipping DB integration tests via -PskipDbIntegrationTests=true
+    val skipDbIntegrationTests =
+        providers
+            .gradleProperty("skipDbIntegrationTests")
+            .orNull
+            ?.toBoolean() == true
+
+    if (skipDbIntegrationTests) {
+        tasks.withType<Test> {
+
+            // DB integration tests are placed under this package
+            exclude("org/jetbrains/kotlinx/jupyter/database/test/integration/**")
+            failOnNoDiscoveredTests = false
+        }
+    }
+}
+
 kotlinPublications {
     pom {
         githubRepo("Kotlin", "kotlin-notebook-libraries")
