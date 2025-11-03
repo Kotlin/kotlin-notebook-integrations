@@ -6,11 +6,13 @@ plugins {
     alias(libs.plugins.ktlint) apply false
 }
 
+version = detectVersion().also { version ->
+    Logging.getLogger(this::class.java).warn("Detected version: $version")
+}
+
 allprojects {
     group = "org.jetbrains.kotlinx"
-    version = detectVersion().also { version ->
-        Logging.getLogger(this::class.java).warn("Detected version: $version")
-    }
+    version = rootProject.version
 
     repositories {
         mavenCentral()
