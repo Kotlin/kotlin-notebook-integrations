@@ -37,7 +37,8 @@ fun error(message: String): Nothing = throw ReplUnwrappedExceptionImpl(message)
 fun ScriptTemplateWithDisplayHelpers.loadBundledPlugins(vararg pluginIds: String): Unit =
     USE {
         val jars =
-            pluginIds.asSequence()
+            pluginIds
+                .asSequence()
                 .mapNotNull { ide.findPluginById(it) ?: ide.findPluginByModule(it) }
                 .flatMap { it.classpath.paths }
                 .toSet()
@@ -72,8 +73,7 @@ fun ScriptTemplateWithDisplayHelpers.loadPlugins(
             requireNotNull(pluginManager.findEnabledPlugin(PluginId.getId(pluginId)) as? PluginMainDescriptor) {
                 "Plugin '$pluginId' is not found in the current IDE"
             }
-        }
-        .onEach { plugin ->
+        }.onEach { plugin ->
             if (loadClasses) {
                 USE {
                     dependencies {
@@ -83,8 +83,7 @@ fun ScriptTemplateWithDisplayHelpers.loadPlugins(
                     }
                 }
             }
-        }
-        .onEach { plugin ->
+        }.onEach { plugin ->
             if (loadClassLoader) {
                 val pluginClassloaders =
                     plugin.content.modules
@@ -92,8 +91,7 @@ fun ScriptTemplateWithDisplayHelpers.loadPlugins(
 
                 intelliJPlatformClassLoader.addParents(pluginClassloaders)
             }
-        }
-        .toList()
+        }.toList()
 }
 
 // /**

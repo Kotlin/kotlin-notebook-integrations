@@ -24,8 +24,11 @@ import kotlin.coroutines.CoroutineContext
  * A wrapper around [HttpResponse] ([ktorResponse]).
  * It has methods that allow accessing response body without requiring suspendable context.
  */
-public class NotebookHttpResponse(public val ktorResponse: HttpResponse) : HttpResponse() {
+public class NotebookHttpResponse(
+    public val ktorResponse: HttpResponse,
+) : HttpResponse() {
     override val call: HttpClientCall get() = ktorResponse.call
+
     @InternalAPI
     override val rawContent: ByteReadChannel get() = ktorResponse.rawContent
     override val coroutineContext: CoroutineContext get() = ktorResponse.coroutineContext
@@ -60,8 +63,7 @@ public class NotebookHttpResponse(public val ktorResponse: HttpResponse) : HttpR
      * Note that [fallbackCharset] parameter will be ignored if the response already has a charset.
      *      So it just acts as a fallback, honoring the server preference.
      */
-    public fun bodyAsText(fallbackCharset: Charset = Charsets.UTF_8): String =
-        runBlocking { ktorResponse.bodyAsText(fallbackCharset) }
+    public fun bodyAsText(fallbackCharset: Charset = Charsets.UTF_8): String = runBlocking { ktorResponse.bodyAsText(fallbackCharset) }
 
     /**
      * Reads the whole [HttpResponse.content] if `Content-Length` is specified.

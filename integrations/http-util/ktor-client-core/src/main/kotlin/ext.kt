@@ -15,12 +15,11 @@ import org.jetbrains.kotlinx.dataframe.io.readJsonStr
  * `%use dataframe`. Until KTNB-795 is fixed, it is required to load dataframes before the ktor-client,
  * i.e.,``%use dataframe, ktor-client`.
  */
-public fun NotebookHttpResponse.toDataFrame(): DataFrame<*> {
-    return runBlocking {
+public fun NotebookHttpResponse.toDataFrame(): DataFrame<*> =
+    runBlocking {
         if (ktorResponse.contentType() != ContentType.Application.Json) {
             throw IllegalStateException("HTTP request did not return JSON, but ${ktorResponse.contentType()}")
         }
         val json = ktorResponse.bodyAsText()
         DataFrame.readJsonStr(json)
     }
-}

@@ -32,11 +32,13 @@ val ScriptTemplateWithDisplayHelpers.notebookPluginDescriptor: PluginMainDescrip
     get() =
         PluginMainDescriptor(
             raw =
-                PluginDescriptorBuilder.builder().apply {
-                    id = "kotlin.notebook.plugin"
-                    name = "Kotlin Notebook Plugin"
-                    version = "1.0"
-                }.build(),
+                PluginDescriptorBuilder
+                    .builder()
+                    .apply {
+                        id = "kotlin.notebook.plugin"
+                        name = "Kotlin Notebook Plugin"
+                        version = "1.0"
+                    }.build(),
             pluginPath = notebook.workingDir,
             isBundled = false,
         ).apply {

@@ -70,9 +70,7 @@ inline fun <reified T : Any> createProxy(target: Any): T {
     } as T
 }
 
-fun argumentsOf(vararg args: Pair<Class<*>, Any?>): List<Argument> {
-    return args.map { Argument(it.first, it.second) }
-}
+fun argumentsOf(vararg args: Pair<Class<*>, Any?>): List<Argument> = args.map { Argument(it.first, it.second) }
 
 class Argument(
     val type: Class<*>,

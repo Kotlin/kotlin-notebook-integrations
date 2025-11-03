@@ -12,7 +12,11 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jvm.toolchain.get().toInt())
+    jvmToolchain(
+        libs.versions.jvm.toolchain
+            .get()
+            .toInt(),
+    )
     explicitApi()
 }
 

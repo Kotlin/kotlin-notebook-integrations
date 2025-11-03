@@ -10,9 +10,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-class KtorClientCoreIntegrationTest : JupyterReplTestCase(
-    replProvider = ReplProvider.Companion.withDefaultClasspathResolution(),
-) {
+class KtorClientCoreIntegrationTest :
+    JupyterReplTestCase(
+        replProvider = ReplProvider.Companion.withDefaultClasspathResolution(),
+    ) {
     @Test
     fun `default client engine`() {
         val engineName = execRaw("http.ktorClient.engine")?.javaClass?.simpleName
@@ -23,8 +24,9 @@ class KtorClientCoreIntegrationTest : JupyterReplTestCase(
 
     @Test
     fun `calls compilation`() {
-        val exec = execRaw(
-            """
+        val exec =
+            execRaw(
+                """
                 import io.ktor.client.request.*
                 
                 lazy { 
@@ -38,8 +40,8 @@ class KtorClientCoreIntegrationTest : JupyterReplTestCase(
                         setBody("body")
                     }.readBytes()
                 }
-            """.trimIndent()
-        )
+                """.trimIndent(),
+            )
         // checking only compilation, so that the test doesn't involve actual network calls
         assertIs<Lazy<*>>(exec)
     }
@@ -50,29 +52,29 @@ class KtorClientCoreIntegrationTest : JupyterReplTestCase(
         val json = """{"b":"b","a":{"b":"b","a":null}}"""
         execRaw(
             """
-                import io.ktor.client.engine.mock.*
-                import io.ktor.client.plugins.contentnegotiation.*
-                import io.ktor.http.*
-                import io.ktor.serialization.kotlinx.json.*
-                
-                @Serializable
-                data class A(val b: String, val a: A?)
-                
-                val client = NotebookHttpClient(MockEngine) {
-                    install(ContentNegotiation) {
-                        json()
-                    }
-                    engine {
-                        addHandler {
-                            respond(
-                                content = ""${'"'}$json""${'"'},
-                                status = HttpStatusCode.OK,
-                                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                            )
-                        }
+            import io.ktor.client.engine.mock.*
+            import io.ktor.client.plugins.contentnegotiation.*
+            import io.ktor.http.*
+            import io.ktor.serialization.kotlinx.json.*
+            
+            @Serializable
+            data class A(val b: String, val a: A?)
+            
+            val client = NotebookHttpClient(MockEngine) {
+                install(ContentNegotiation) {
+                    json()
+                }
+                engine {
+                    addHandler {
+                        respond(
+                            content = ""${'"'}$json""${'"'},
+                            status = HttpStatusCode.OK,
+                            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                        )
                     }
                 }
-            """.trimIndent()
+            }
+            """.trimIndent(),
         )
 
         val response1 = execRaw("""client.get("https://example.org").bodyAsText()""")
@@ -98,29 +100,29 @@ class KtorClientCoreIntegrationTest : JupyterReplTestCase(
         val json = """[{"a": 1}, {"a": 2}, {"a": 3}]"""
         execRaw(
             """
-                import io.ktor.client.engine.mock.*
-                import io.ktor.client.plugins.contentnegotiation.*
-                import io.ktor.http.*
-                import io.ktor.serialization.kotlinx.json.*
-                
-                @Serializable
-                data class A(val b: String, val a: A?)
-                
-                val client = NotebookHttpClient(MockEngine) {
-                    install(ContentNegotiation) {
-                        json()
-                    }
-                    engine {
-                        addHandler {
-                            respond(
-                                content = ""${'"'}$json""${'"'},
-                                status = HttpStatusCode.OK,
-                                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                            )
-                        }
+            import io.ktor.client.engine.mock.*
+            import io.ktor.client.plugins.contentnegotiation.*
+            import io.ktor.http.*
+            import io.ktor.serialization.kotlinx.json.*
+            
+            @Serializable
+            data class A(val b: String, val a: A?)
+            
+            val client = NotebookHttpClient(MockEngine) {
+                install(ContentNegotiation) {
+                    json()
+                }
+                engine {
+                    addHandler {
+                        respond(
+                            content = ""${'"'}$json""${'"'},
+                            status = HttpStatusCode.OK,
+                            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                        )
                     }
                 }
-            """.trimIndent()
+            }
+            """.trimIndent(),
         )
         val response = execRaw("""client.get("https://example.org").toDataFrame()""")
         assertIs<DataFrame<*>>(response)
@@ -130,25 +132,25 @@ class KtorClientCoreIntegrationTest : JupyterReplTestCase(
     fun `cannot create dataframe from response that doesn't return json`() {
         execRaw(
             """
-                import io.ktor.client.engine.mock.*
-                import io.ktor.client.plugins.contentnegotiation.*
-                import io.ktor.http.*
-                import io.ktor.serialization.kotlinx.json.*
-                
-                val client = NotebookHttpClient(MockEngine) {
-                    install(ContentNegotiation) {
-                        json()
-                    }
-                    engine {
-                        addHandler {
-                            respond(
-                                content = ""${'"'}error""${'"'},
-                                status = HttpStatusCode.InternalServerError,
-                            )
-                        }
+            import io.ktor.client.engine.mock.*
+            import io.ktor.client.plugins.contentnegotiation.*
+            import io.ktor.http.*
+            import io.ktor.serialization.kotlinx.json.*
+            
+            val client = NotebookHttpClient(MockEngine) {
+                install(ContentNegotiation) {
+                    json()
+                }
+                engine {
+                    addHandler {
+                        respond(
+                            content = ""${'"'}error""${'"'},
+                            status = HttpStatusCode.InternalServerError,
+                        )
                     }
                 }
-            """.trimIndent()
+            }
+            """.trimIndent(),
         )
         val res = execEx("""client.get("https://example.org").toDataFrame()""")
         assertIs<EvalResultEx.Error>(res)

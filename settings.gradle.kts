@@ -32,7 +32,10 @@ fun Settings.projectStructure(configuration: ProjectStructure.() -> Unit) {
 class ProjectStructure {
     private val folders = mutableListOf<Folder>()
 
-    fun folder(name: String, configuration: Folder.() -> Unit) {
+    fun folder(
+        name: String,
+        configuration: Folder.() -> Unit,
+    ) {
         val folder = Folder(name)
         folder.configuration()
         folders.add(folder)
@@ -48,7 +51,10 @@ class ProjectStructure {
         private val subFolders = mutableListOf<Folder>()
         private val projects = mutableListOf<String>()
 
-        fun folder(name: String, configuration: Folder.() -> Unit) {
+        fun folder(
+            name: String,
+            configuration: Folder.() -> Unit,
+        ) {
             val subFolder = Folder(name)
             subFolder.configuration()
             subFolders.add(subFolder)
@@ -58,7 +64,10 @@ class ProjectStructure {
             projects.add(name)
         }
 
-        fun applyTo(settings: Settings, path: String) {
+        fun applyTo(
+            settings: Settings,
+            path: String,
+        ) {
             val currentPath = if (path.isEmpty()) name else "$path:$name"
             projects.forEach { settings.include("$currentPath:$it") }
             subFolders.forEach { it.applyTo(settings, currentPath) }

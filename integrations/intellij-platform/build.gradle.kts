@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.jupyter.api)
     alias(libs.plugins.publisher)
-    alias(libs.plugins.ktlint)
     alias(libs.plugins.intellij.platform.base)
 }
 
@@ -52,7 +51,11 @@ tasks.test {
     useJUnitPlatform()
 }
 kotlin {
-    jvmToolchain(libs.versions.jvmTarget.get().toInt())
+    jvmToolchain(
+        libs.versions.jvmTarget
+            .get()
+            .toInt(),
+    )
 }
 
 kotlinPublications {

@@ -37,38 +37,43 @@ public class KtorClientCoreIntegration : JupyterIntegration() {
             add("io.ktor:ktor-client-$artifactName-jvm:$ktorVersion")
         }
 
-        dependencies(*buildList {
-            ktorClient("core")
+        dependencies(
+            *buildList {
+                ktorClient("core")
 
-            // ktor-client-cio is loaded as a transitive dependency of this artifact,
-            // so that it has priority in engine autoselection (it's currently the most popular engine).
-            ktorClient("apache")
-            ktorClient("apache5")
-            ktorClient("java")
+                // ktor-client-cio is loaded as a transitive dependency of this artifact,
+                // so that it has priority in engine autoselection (it's currently the most popular engine).
+                ktorClient("apache")
+                ktorClient("apache5")
+                ktorClient("java")
 
-            ktorClient("auth")
-            ktorClient("serialization")
-            ktorClient("encoding")
-            ktorClient("json")
-            ktorClient("gson")
-            ktorClient("jackson")
-            ktorClient("logging")
-            ktorClient("resources")
-            ktorClient("websockets")
+                ktorClient("auth")
+                ktorClient("serialization")
+                ktorClient("encoding")
+                ktorClient("json")
+                ktorClient("gson")
+                ktorClient("jackson")
+                ktorClient("logging")
+                ktorClient("resources")
+                ktorClient("websockets")
 
-            add("io.ktor:ktor-serialization-kotlinx-xml-jvm:$ktorVersion")
-        }.toTypedArray())
+                add("io.ktor:ktor-serialization-kotlinx-xml-jvm:$ktorVersion")
+            }.toTypedArray(),
+        )
 
         import("org.jetbrains.kotlinx.jupyter.ktor.client.core.*")
 
         onLoaded {
-            val httpClient = NotebookHttpClient {
-                install(ContentNegotiation) {
-                    json(Json {
-                        ignoreUnknownKeys = true
-                    })
+            val httpClient =
+                NotebookHttpClient {
+                    install(ContentNegotiation) {
+                        json(
+                            Json {
+                                ignoreUnknownKeys = true
+                            },
+                        )
+                    }
                 }
-            }
             declare("http" to httpClient)
         }
     }
@@ -90,13 +95,13 @@ private fun findModuleVersion(
     val autoModuleKey = Attributes.Name("Automatic-Module-Name")
     val implVersionKey = Attributes.Name.IMPLEMENTATION_VERSION
 
-    return classLoader.getResources("META-INF/MANIFEST.MF")
+    return classLoader
+        .getResources("META-INF/MANIFEST.MF")
         .asSequence()
         .mapNotNull { url ->
             runCatching {
                 url.openStream().use { Manifest(it) }
             }.getOrNull()?.mainAttributes
-        }
-        .firstOrNull { it.getValue(autoModuleKey) == moduleName }
+        }.firstOrNull { it.getValue(autoModuleKey) == moduleName }
         ?.getValue(implVersionKey)
 }

@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ktlint)
     alias(libs.plugins.shadow)
     application
 }

@@ -5,9 +5,7 @@ package org.jetbrains.kotlinx.jupyter.intellij.utils
 import java.nio.file.Path
 import java.nio.file.Paths
 
-fun getClassForName(className: String): Class<*> {
-    return Class.forName(className)
-}
+fun getClassForName(className: String): Class<*> = Class.forName(className)
 
 /**
  * Gets the path to the current IntelliJ Platform directory.

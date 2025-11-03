@@ -102,12 +102,11 @@ class IntelliJPlatformClassloader : ClassLoader() {
     private fun PluginClassLoader.calculateConsistency(
         name: String,
         force: Boolean = false,
-    ): String? {
-        return this.packagePrefix?.let {
+    ): String? =
+        this.packagePrefix?.let {
             (resolveScopeField.get(this) as ResolveScopeManager)
                 .isDefinitelyAlienClass(name = name, packagePrefix = it, force = force)
         }
-    }
 
     /**
      * ClassLoader A is before classloader B in the resulting list => classloader B doesn't have classloader A

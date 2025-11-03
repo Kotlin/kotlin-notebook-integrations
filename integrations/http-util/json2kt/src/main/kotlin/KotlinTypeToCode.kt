@@ -11,13 +11,14 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeAliasSpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import org.jetbrains.kotlinx.jupyter.json2kt.ReservedNames.Companion.simpleClassNames
 
 /** In addition to the [code] itself, we return [rootTypeName] — the name of the type to be deserialized. */
 public class GeneratedCodeResult(
     public val code: String,
     public val rootTypeName: String,
-
     /**
      * If true, deserialization input needs to be wrapped in a JSON object with a [JSON2KT_WRAPPER_FIELD_NAME] field,
      * and deserialization output will also contain the underlying value in a [JSON2KT_WRAPPER_FIELD_NAME] field.
@@ -31,18 +32,21 @@ public const val JSON2KT_WRAPPER_FIELD_NAME: String = "value"
  * @param requestedRootTypeName the preferred name for the type to be deserialized.
  * The actual name may turn out to be different and will be contained in [GeneratedCodeResult.rootTypeName].
  */
-public fun jsonDataToKotlinCode(json: JsonElement, requestedRootTypeName: String): GeneratedCodeResult {
+public fun jsonDataToKotlinCode(
+    json: JsonElement,
+    requestedRootTypeName: String,
+): GeneratedCodeResult {
     val requestedRootTypeKcn = KotlinClassName(requestedRootTypeName)
     return RootType(
         name = requestedRootTypeKcn,
-        type = inferOrConstructKotlinType(
-            name = requestedRootTypeKcn,
-            jsonSamples = listOf(json),
-            parentClassName = if (json is JsonObject) null else requestedRootTypeKcn,
-        ),
+        type =
+            inferOrConstructKotlinType(
+                name = requestedRootTypeKcn,
+                jsonSamples = listOf(json),
+                parentClassName = if (json is JsonObject) null else requestedRootTypeKcn,
+            ),
         isWrapped = false,
-    )
-        .wrapIfNecessary()
+    ).wrapIfNecessary()
         .let { deduplicate(rootType = it, it.collectAllClasses()) }
         .let { disambiguate(rootType = it, it.collectAllClasses()) }
         .let { GeneratedCodeResult(code = generateCodeString(it), rootTypeName = it.name.value, isWrapped = it.isWrapped) }
@@ -76,30 +80,36 @@ private object AllowedImports : ReservedNames {
     }
 }
 
-private fun KotlinType.toKotlinPoet(): TypeName {
-    return when (this) {
+private fun KotlinType.toKotlinPoet(): TypeName =
+    when (this) {
         is KotlinType.KtBoolean -> AllowedImports.Boolean.copy(nullable = nullable)
         is KotlinType.KtDouble -> AllowedImports.Double.copy(nullable = nullable)
         is KotlinType.KtInt -> AllowedImports.Int.copy(nullable = nullable)
         is KotlinType.KtLong -> AllowedImports.Long.copy(nullable = nullable)
         is KotlinType.KtString -> AllowedImports.String.copy(nullable = nullable)
         is KotlinType.KtClass -> ClassName("", clazz.name.value).copy(nullable = nullable)
-        is KotlinType.KtList -> AllowedImports.List.parameterizedBy(elementType.toKotlinPoet())
-            .copy(nullable = nullable)
+        is KotlinType.KtList ->
+            AllowedImports.List
+                .parameterizedBy(elementType.toKotlinPoet())
+                .copy(nullable = nullable)
 
-        is KotlinType.KtAny -> if (nullable) {
-            AllowedImports.UntypedAny.copy(nullable = true)
-        } else {
-            AllowedImports.UntypedAnyNotNull
-        }
+        is KotlinType.KtAny ->
+            if (nullable) {
+                AllowedImports.UntypedAny.copy(nullable = true)
+            } else {
+                AllowedImports.UntypedAnyNotNull
+            }
     }
-}
 
 /**
  * Returns a [FileSpec] with generated code for all [classes].
  * Additionally, if [rootType] isn't a class, generates a typealias [rootTypeName] for it.
  */
-private fun outputCodeForType(rootTypeName: String, rootType: KotlinType, classes: Iterable<KotlinClass>): FileSpec {
+private fun outputCodeForType(
+    rootTypeName: String,
+    rootType: KotlinType,
+    classes: Iterable<KotlinClass>,
+): FileSpec {
     val fileBuilder = FileSpec.builder("", rootTypeName)
 
     if (rootType !is KotlinType.KtClass || rootType.clazz.name.value != rootTypeName) {
@@ -109,17 +119,20 @@ private fun outputCodeForType(rootTypeName: String, rootType: KotlinType, classe
     for (clazz in classes) {
         if (clazz.properties.isEmpty()) {
             fileBuilder.addType(
-                TypeSpec.objectBuilder(clazz.name.value)
+                TypeSpec
+                    .objectBuilder(clazz.name.value)
                     .addModifiers(KModifier.DATA)
                     .addAnnotation(AllowedImports.Serializable)
-                    .build()
+                    .build(),
             )
             continue
         }
 
-        val classBuilder = TypeSpec.classBuilder(clazz.name.value)
-            .addModifiers(KModifier.DATA)
-            .addAnnotation(AllowedImports.Serializable)
+        val classBuilder =
+            TypeSpec
+                .classBuilder(clazz.name.value)
+                .addModifiers(KModifier.DATA)
+                .addAnnotation(AllowedImports.Serializable)
         val primaryConstructorBuilder = FunSpec.constructorBuilder()
 
         for (property in clazz.properties) {
@@ -127,16 +140,18 @@ private fun outputCodeForType(rootTypeName: String, rootType: KotlinType, classe
             val parameterBuilder = ParameterSpec.builder(property.kotlinName.value, propertyType)
             if (property.jsonName.value != property.kotlinName.value) {
                 parameterBuilder.addAnnotation(
-                    AnnotationSpec.builder(AllowedImports.SerialName)
+                    AnnotationSpec
+                        .builder(AllowedImports.SerialName)
                         .addMember("%S", property.jsonName.value)
-                        .build()
+                        .build(),
                 )
             }
             primaryConstructorBuilder.addParameter(parameterBuilder.build())
             classBuilder.addProperty(
-                PropertySpec.builder(property.kotlinName.value, propertyType)
+                PropertySpec
+                    .builder(property.kotlinName.value, propertyType)
                     .initializer(property.kotlinName.value)
-                    .build()
+                    .build(),
             )
         }
         classBuilder.primaryConstructor(primaryConstructorBuilder.build())
@@ -163,28 +178,33 @@ private fun RootType.wrapIfNecessary(): RootType {
     if (!type.shouldWrap()) return this
     return RootType(
         name = name,
-        type = KotlinType.KtClass(
-            clazz = KotlinClass(
-                name = name,
-                properties = listOf(
-                    KotlinProperty(
-                        kotlinName = KotlinPropertyName(JSON2KT_WRAPPER_FIELD_NAME),
-                        jsonName = JsonName(JSON2KT_WRAPPER_FIELD_NAME),
-                        type = type,
+        type =
+            KotlinType.KtClass(
+                clazz =
+                    KotlinClass(
+                        name = name,
+                        properties =
+                            listOf(
+                                KotlinProperty(
+                                    kotlinName = KotlinPropertyName(JSON2KT_WRAPPER_FIELD_NAME),
+                                    jsonName = JsonName(JSON2KT_WRAPPER_FIELD_NAME),
+                                    type = type,
+                                ),
+                            ),
                     ),
-                ),
+                nullable = false,
             ),
-            nullable = false,
-        ),
         isWrapped = true,
     )
 }
 
-private tailrec fun KotlinType.shouldWrap(): Boolean = when (this) {
-    is KotlinType.KtAny -> true
+private tailrec fun KotlinType.shouldWrap(): Boolean =
+    when (this) {
+        is KotlinType.KtAny -> true
 
-    is KotlinType.KtClass,
-    is KotlinType.Primitive -> false
+        is KotlinType.KtClass,
+        is KotlinType.Primitive,
+        -> false
 
-    is KotlinType.KtList -> this.elementType.shouldWrap()
-}
+        is KotlinType.KtList -> this.elementType.shouldWrap()
+    }

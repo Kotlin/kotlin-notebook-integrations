@@ -7,30 +7,44 @@ import java.util.stream.IntStream
  * lower case letter.
  */
 @JvmInline
-internal value class KotlinPropertyName(val value: String)
+internal value class KotlinPropertyName(
+    val value: String,
+)
 
 @JvmInline
-internal value class KotlinClassName(val value: String)
+internal value class KotlinClassName(
+    val value: String,
+)
 
 @JvmInline
-internal value class JsonName(val value: String)
+internal value class JsonName(
+    val value: String,
+)
 
-internal fun pluralToSingular(plural: KotlinClassName, parentClassName: KotlinClassName?): KotlinClassName {
+internal fun pluralToSingular(
+    plural: KotlinClassName,
+    parentClassName: KotlinClassName?,
+): KotlinClassName {
     if (plural.value.endsWith("List") && plural.value.length > 4) {
         return KotlinClassName(plural.value.removeSuffix("List"))
     }
-    val singularValue = when {
-        plural.value.endsWith("ies") -> plural.value.dropLast(3) + "y" // ignoring -ie and -iy words
-        plural.value.endsWith("es") -> plural.value.dropLast(2).takeIf {
-            it.endsWith('s') || it.endsWith("sh") || it.endsWith("ch") || it.endsWith('x')
-            // ignoring -se, -she, -che and -xe words
-        } ?: plural.value.dropLast(1) // ignoring -z words
-        plural.value.endsWith('s') && plural.value.length > 1 -> plural.value.dropLast(1)
-        else -> plural.value
-    }
-    val itemValue = if (singularValue == plural.value && plural == parentClassName) {
-        plural.value + "Item"
-    } else singularValue
+    val singularValue =
+        when {
+            plural.value.endsWith("ies") -> plural.value.dropLast(3) + "y" // ignoring -ie and -iy words
+            plural.value.endsWith("es") ->
+                plural.value.dropLast(2).takeIf {
+                    it.endsWith('s') || it.endsWith("sh") || it.endsWith("ch") || it.endsWith('x')
+                    // ignoring -se, -she, -che and -xe words
+                } ?: plural.value.dropLast(1) // ignoring -z words
+            plural.value.endsWith('s') && plural.value.length > 1 -> plural.value.dropLast(1)
+            else -> plural.value
+        }
+    val itemValue =
+        if (singularValue == plural.value && plural == parentClassName) {
+            plural.value + "Item"
+        } else {
+            singularValue
+        }
     return KotlinClassName(itemValue)
 }
 
@@ -38,6 +52,7 @@ internal fun pluralToSingular(plural: KotlinClassName, parentClassName: KotlinCl
 private fun IntStream.splitByCamelHumpsAndPunctuation(): List<String> {
     val currentToken = StringBuilder()
     val result = mutableListOf<String>()
+
     fun flushToken() {
         if (currentToken.isNotEmpty()) {
             result.add(currentToken.toString())
@@ -70,10 +85,12 @@ private inline fun String.replaceFirstCodePoint(transformCodePoint: (Int) -> Int
 }
 
 internal fun jsonNameToKotlin(jsonName: JsonName): KotlinClassName {
-    val camelCaseName = jsonName.value.codePoints()
-        .dropWhile { !Character.isLetter(it) }
-        .splitByCamelHumpsAndPunctuation()
-        .joinToString("") { it.replaceFirstCodePoint(Character::toTitleCase) }
+    val camelCaseName =
+        jsonName.value
+            .codePoints()
+            .dropWhile { !Character.isLetter(it) }
+            .splitByCamelHumpsAndPunctuation()
+            .joinToString("") { it.replaceFirstCodePoint(Character::toTitleCase) }
     return KotlinClassName(camelCaseName.takeIf { it.isNotEmpty() } ?: "Value")
 }
 
@@ -94,8 +111,12 @@ private inline fun <T> uniqueName(
     }
 }
 
-internal fun uniqueName(base: KotlinPropertyName, takenNames: MutableSet<in KotlinPropertyName>): KotlinPropertyName =
-    uniqueName(base, takenNames) { name, suffix -> KotlinPropertyName(name.value + suffix) }
+internal fun uniqueName(
+    base: KotlinPropertyName,
+    takenNames: MutableSet<in KotlinPropertyName>,
+): KotlinPropertyName = uniqueName(base, takenNames) { name, suffix -> KotlinPropertyName(name.value + suffix) }
 
-internal fun uniqueName(base: KotlinClassName, takenNames: MutableSet<in KotlinClassName>): KotlinClassName =
-    uniqueName(base, takenNames) { name, suffix -> KotlinClassName(name.value + suffix) }
+internal fun uniqueName(
+    base: KotlinClassName,
+    takenNames: MutableSet<in KotlinClassName>,
+): KotlinClassName = uniqueName(base, takenNames) { name, suffix -> KotlinClassName(name.value + suffix) }

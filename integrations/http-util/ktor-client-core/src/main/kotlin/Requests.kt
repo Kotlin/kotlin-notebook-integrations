@@ -1,20 +1,27 @@
 package org.jetbrains.kotlinx.jupyter.ktor.client.core
 
-import io.ktor.client.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
+import io.ktor.client.HttpClient
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.delete
+import io.ktor.client.request.get
+import io.ktor.client.request.head
+import io.ktor.client.request.options
+import io.ktor.client.request.patch
+import io.ktor.client.request.post
+import io.ktor.client.request.put
+import io.ktor.client.request.request
+import io.ktor.client.request.url
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.Url
 import kotlinx.coroutines.runBlocking
-
 
 /**
  * Executes an [HttpClient]'s request with the parameters specified using [builder].
  *
  * Learn more from [Making requests](https://ktor.io/docs/request.html).
  */
-public fun NotebookHttpClient.request(
-    builder: HttpRequestBuilder = HttpRequestBuilder()
-): NotebookHttpResponse = NotebookHttpResponse(runBlocking { ktorClient.request(builder) })
+public fun NotebookHttpClient.request(builder: HttpRequestBuilder = HttpRequestBuilder()): NotebookHttpResponse =
+    NotebookHttpResponse(runBlocking { ktorClient.request(builder) })
 
 /**
  * Executes an [HttpClient]'s request with the parameters specified in [block].
@@ -31,7 +38,7 @@ public inline fun NotebookHttpClient.request(crossinline block: HttpRequestBuild
  */
 public suspend inline fun NotebookHttpClient.request(
     urlString: String,
-    crossinline block: HttpRequestBuilder.() -> Unit = {}
+    crossinline block: HttpRequestBuilder.() -> Unit = {},
 ): NotebookHttpResponse = NotebookHttpResponse(runBlocking { ktorClient.request(urlString, block) })
 
 /**
@@ -41,7 +48,7 @@ public suspend inline fun NotebookHttpClient.request(
  */
 public suspend inline fun NotebookHttpClient.request(
     url: Url,
-    crossinline block: HttpRequestBuilder.() -> Unit = {}
+    crossinline block: HttpRequestBuilder.() -> Unit = {},
 ): NotebookHttpResponse = NotebookHttpResponse(runBlocking { ktorClient.request(url, block) })
 
 /**
@@ -51,7 +58,6 @@ public suspend inline fun NotebookHttpClient.request(
  */
 public fun NotebookHttpClient.get(builder: HttpRequestBuilder): NotebookHttpResponse =
     NotebookHttpResponse(runBlocking { ktorClient.get(builder) })
-
 
 /**
  * Executes an [HttpClient]'s POST request with the parameters configured in [builder].
@@ -66,8 +72,7 @@ public fun NotebookHttpClient.post(builder: HttpRequestBuilder): NotebookHttpRes
  *
  * Learn more from [Making requests](https://ktor.io/docs/request.html).
  */
-public fun NotebookHttpClient.put(builder: HttpRequestBuilder): HttpResponse  =
-    runBlocking { ktorClient.put(builder) }
+public fun NotebookHttpClient.put(builder: HttpRequestBuilder): HttpResponse = runBlocking { ktorClient.put(builder) }
 
 /**
  * Executes a [HttpClient] DELETE request with the parameters configured in [builder].
@@ -98,8 +103,7 @@ public fun NotebookHttpClient.patch(builder: HttpRequestBuilder): NotebookHttpRe
  *
  * Learn more from [Making requests](https://ktor.io/docs/request.html).
  */
-public fun NotebookHttpClient.head(builder: HttpRequestBuilder): HttpResponse  =
-    runBlocking { ktorClient.head(builder) }
+public fun NotebookHttpClient.head(builder: HttpRequestBuilder): HttpResponse = runBlocking { ktorClient.head(builder) }
 
 /**
  * Executes an [HttpClient]'s GET request with the parameters configured in [block].
@@ -165,7 +169,7 @@ public inline fun NotebookHttpClient.head(crossinline block: HttpRequestBuilder.
  */
 public inline fun NotebookHttpClient.get(
     urlString: String,
-    crossinline block: HttpRequestBuilder.() -> Unit = {}
+    crossinline block: HttpRequestBuilder.() -> Unit = {},
 ): NotebookHttpResponse = NotebookHttpResponse(runBlocking { ktorClient.get(urlString, block) })
 
 /**
@@ -176,7 +180,7 @@ public inline fun NotebookHttpClient.get(
  */
 public inline fun NotebookHttpClient.post(
     urlString: String,
-    crossinline block: HttpRequestBuilder.() -> Unit = {}
+    crossinline block: HttpRequestBuilder.() -> Unit = {},
 ): NotebookHttpResponse = NotebookHttpResponse(runBlocking { ktorClient.post(urlString, block) })
 
 /**
@@ -187,7 +191,7 @@ public inline fun NotebookHttpClient.post(
  */
 public inline fun NotebookHttpClient.put(
     urlString: String,
-    crossinline block: HttpRequestBuilder.() -> Unit = {}
+    crossinline block: HttpRequestBuilder.() -> Unit = {},
 ): NotebookHttpResponse = NotebookHttpResponse(runBlocking { ktorClient.put(urlString, block) })
 
 /**
@@ -198,7 +202,7 @@ public inline fun NotebookHttpClient.put(
  */
 public inline fun NotebookHttpClient.delete(
     urlString: String,
-    crossinline block: HttpRequestBuilder.() -> Unit = {}
+    crossinline block: HttpRequestBuilder.() -> Unit = {},
 ): NotebookHttpResponse = NotebookHttpResponse(runBlocking { ktorClient.delete(urlString, block) })
 
 /**
@@ -209,7 +213,7 @@ public inline fun NotebookHttpClient.delete(
  */
 public inline fun NotebookHttpClient.options(
     urlString: String,
-    crossinline block: HttpRequestBuilder.() -> Unit = {}
+    crossinline block: HttpRequestBuilder.() -> Unit = {},
 ): NotebookHttpResponse = NotebookHttpResponse(runBlocking { ktorClient.options(urlString, block) })
 
 /**
@@ -220,7 +224,7 @@ public inline fun NotebookHttpClient.options(
  */
 public suspend inline fun NotebookHttpClient.patch(
     urlString: String,
-    crossinline block: HttpRequestBuilder.() -> Unit = {}
+    crossinline block: HttpRequestBuilder.() -> Unit = {},
 ): NotebookHttpResponse = NotebookHttpResponse(runBlocking { ktorClient.patch(urlString, block) })
 
 /**
@@ -231,5 +235,5 @@ public suspend inline fun NotebookHttpClient.patch(
  */
 public suspend inline fun NotebookHttpClient.head(
     urlString: String,
-    crossinline block: HttpRequestBuilder.() -> Unit = {}
+    crossinline block: HttpRequestBuilder.() -> Unit = {},
 ): NotebookHttpResponse = NotebookHttpResponse(runBlocking { ktorClient.head(urlString, block) })

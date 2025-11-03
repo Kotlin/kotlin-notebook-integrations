@@ -18,13 +18,18 @@ kotlinJupyter {
 }
 
 tasks.processJupyterApiResources {
-    libraryProducers = listOf(
-        "org.jetbrains.kotlinx.jupyter.serialization.SerializationIntegration"
-    )
+    libraryProducers =
+        listOf(
+            "org.jetbrains.kotlinx.jupyter.serialization.SerializationIntegration",
+        )
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jvm.toolchain.get().toInt())
+    jvmToolchain(
+        libs.versions.jvm.toolchain
+            .get()
+            .toInt(),
+    )
     explicitApi()
 }
 

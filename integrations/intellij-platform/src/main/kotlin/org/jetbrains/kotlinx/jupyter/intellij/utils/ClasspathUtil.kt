@@ -13,11 +13,10 @@ private val unwantedClasspathEntryNameInfixes =
         "compilerPlugins.dataframe",
     )
 
-internal fun Iterable<Path>.excludeUnwantedClasspathEntries(): Set<Path> {
-    return filterTo(mutableSetOf()) {
+internal fun Iterable<Path>.excludeUnwantedClasspathEntries(): Set<Path> =
+    filterTo(mutableSetOf()) {
         val fileName = it.name
         unwantedClasspathEntryNameInfixes.none { infix ->
             fileName.contains(infix)
         }
     }
-}

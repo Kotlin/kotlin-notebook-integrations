@@ -1,17 +1,23 @@
 package org.jetbrains.kotlinx.jupyter.ktor.client.core
 
-import io.ktor.client.*
-import io.ktor.client.engine.*
+import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.HttpClientEngineContainer
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.HttpClientEngineConfig
+import io.ktor.client.engine.HttpClientEngineFactory
 import java.util.ServiceLoader
 
 /**
  * A wrapper around [HttpClient] ([ktorClient]).
  * It has extensions that allow making HTTP requests without requiring suspendable context.
  */
-public class NotebookHttpClient(public val ktorClient: HttpClient) {
+public class NotebookHttpClient(
+    public val ktorClient: HttpClient,
+) {
     public constructor(
         engine: HttpClientEngine,
-        userConfig: HttpClientConfig<out HttpClientEngineConfig> = HttpClientConfig()
+        userConfig: HttpClientConfig<out HttpClientEngineConfig> = HttpClientConfig(),
     ) : this(HttpClient(engine, userConfig))
 
     /**
@@ -34,13 +40,12 @@ public class NotebookHttpClient(public val ktorClient: HttpClient) {
  */
 public fun <T : HttpClientEngineConfig> NotebookHttpClient(
     engineFactory: HttpClientEngineFactory<T>,
-    block: HttpClientConfig<T>.() -> Unit = {}
+    block: HttpClientConfig<T>.() -> Unit = {},
 ): NotebookHttpClient = NotebookHttpClient(HttpClient(engineFactory, block))
 
 /**
  * Returns a new [NotebookHttpClient] by copying this client's configuration
  * and additionally configured by the [block] parameter.
  */
-public fun NotebookHttpClient.config(block: HttpClientConfig<*>.() -> Unit): NotebookHttpClient {
-    return NotebookHttpClient(ktorClient.config(block))
-}
+public fun NotebookHttpClient.config(block: HttpClientConfig<*>.() -> Unit): NotebookHttpClient =
+    NotebookHttpClient(ktorClient.config(block))

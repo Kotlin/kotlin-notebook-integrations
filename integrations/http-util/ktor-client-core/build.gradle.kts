@@ -9,9 +9,10 @@ kotlinJupyter {
 }
 
 tasks.processJupyterApiResources {
-    libraryProducers = listOf(
-        "org.jetbrains.kotlinx.jupyter.ktor.client.core.KtorClientCoreIntegration"
-    )
+    libraryProducers =
+        listOf(
+            "org.jetbrains.kotlinx.jupyter.ktor.client.core.KtorClientCoreIntegration",
+        )
 }
 
 dependencies {
@@ -23,7 +24,11 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jvm.toolchain.get().toInt())
+    jvmToolchain(
+        libs.versions.jvm.toolchain
+            .get()
+            .toInt(),
+    )
     explicitApi()
 }
 

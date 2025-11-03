@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.jupyter.json2kt
 
-import java.util.*
+import java.util.Collections
+import java.util.IdentityHashMap
 
 internal fun RootType.collectAllClasses(): Iterable<KotlinClass> {
     class IdentityHashSet<E> : MutableSet<E> by Collections.newSetFromMap(IdentityHashMap())
@@ -14,7 +15,7 @@ internal fun RootType.collectAllClasses(): Iterable<KotlinClass> {
         // used for fast checking if we already visited this class
         visited: IdentityHashSet<in KotlinClass>,
         // used for preserving visit order
-        allClasses: MutableList<in KotlinClass>
+        allClasses: MutableList<in KotlinClass>,
     ) {
         when (currentType) {
             is KotlinType.KtClass -> {
@@ -46,11 +47,11 @@ internal fun RootType.collectAllClasses(): Iterable<KotlinClass> {
 private fun renameAndReplace(
     type: KotlinType,
     /** As structural equality may be slow for [KotlinClass], use reference equality where it makes sense. */
-    replace: /* mutable */ IdentityHashMap<KotlinClass, KotlinClass> = IdentityHashMap(),
+    replace: IdentityHashMap<KotlinClass, KotlinClass> = IdentityHashMap(), // mutable
     rename: IdentityHashMap<KotlinClass, out KotlinClassName> = IdentityHashMap(),
-    resultCache: /* mutable */ IdentityHashMap<KotlinClass, KotlinClass>,
-): KotlinType {
-    return when (type) {
+    resultCache: IdentityHashMap<KotlinClass, KotlinClass>, // mutable
+): KotlinType =
+    when (type) {
         is KotlinType.Primitive, is KotlinType.KtAny -> type
 
         is KotlinType.KtClass -> {
@@ -63,13 +64,15 @@ private fun renameAndReplace(
             if (newElementType === type.elementType) type else type.copy(elementType = newElementType)
         }
     }
-}
 
 /**
  * Gets rid of duplicate classes. Classes are duplicates when they have the same name and structure.
  * In other words, when [KotlinClass.equals] (deep structural equality) returns `true`.
  */
-internal fun deduplicate(rootType: RootType, allClasses: Iterable<KotlinClass>): RootType {
+internal fun deduplicate(
+    rootType: RootType,
+    allClasses: Iterable<KotlinClass>,
+): RootType {
     val classesByName = allClasses.groupBy { it.name }
 
     val replace = IdentityHashMap<KotlinClass, KotlinClass>()
@@ -103,7 +106,11 @@ internal fun deduplicate(rootType: RootType, allClasses: Iterable<KotlinClass>):
  * This class describes the root type. If root type is a class, it should have [name] as its type.
  *  If root type is not a class, a type alias named [name] is generated.
  */
-internal class RootType(val name: KotlinClassName, val type: KotlinType, val isWrapped: Boolean)
+internal class RootType(
+    val name: KotlinClassName,
+    val type: KotlinType,
+    val isWrapped: Boolean,
+)
 
 /**
  * Renames classes that have the same name as some other classes, or names that are reserved.
@@ -112,7 +119,10 @@ internal class RootType(val name: KotlinClassName, val type: KotlinType, val isW
  * If [rootType] is not a class, we need to rename all classes named [rootType]`.name`,
  * so that we can generate a typealias with that name.
  */
-internal fun disambiguate(rootType: RootType, allClasses: Iterable<KotlinClass>): RootType {
+internal fun disambiguate(
+    rootType: RootType,
+    allClasses: Iterable<KotlinClass>,
+): RootType {
     var rootTypeName = rootType.name
 
     val takenNames = mutableSetOf<KotlinClassName>()
@@ -190,9 +200,9 @@ internal fun disambiguate(rootType: RootType, allClasses: Iterable<KotlinClass>)
  */
 private fun renameAndReplace(
     clazz: KotlinClass,
-    replace: /* mutable */ IdentityHashMap<KotlinClass, KotlinClass> = IdentityHashMap(),
+    replace: IdentityHashMap<KotlinClass, KotlinClass> = IdentityHashMap(), // mutable
     rename: IdentityHashMap<KotlinClass, out KotlinClassName> = IdentityHashMap(),
-    resultCache: /* mutable */ IdentityHashMap<KotlinClass, KotlinClass>,
+    resultCache: IdentityHashMap<KotlinClass, KotlinClass>, // mutable
 ): KotlinClass {
     // replace the class if needed
     val newClass = replace[clazz] ?: clazz
@@ -200,13 +210,17 @@ private fun renameAndReplace(
     val resultFromCache = resultCache[newClass]
     if (resultFromCache != null) return resultFromCache
 
-    val newProperties = newClass.properties.map { property ->
-        val newPropertyType = renameAndReplace(property.type, replace, rename, resultCache)
-        if (newPropertyType === property.type) property else property.copy(type = newPropertyType)
-    }
+    val newProperties =
+        newClass.properties.map { property ->
+            val newPropertyType = renameAndReplace(property.type, replace, rename, resultCache)
+            if (newPropertyType === property.type) property else property.copy(type = newPropertyType)
+        }
 
-    val propertiesChanged = newProperties.asSequence().zip(newClass.properties.asSequence())
-        .any { (new, old) -> old !== new }
+    val propertiesChanged =
+        newProperties
+            .asSequence()
+            .zip(newClass.properties.asSequence())
+            .any { (new, old) -> old !== new }
 
     if (!propertiesChanged && newClass !in rename) {
         // this way we can skip iterating over properties of this class in the future

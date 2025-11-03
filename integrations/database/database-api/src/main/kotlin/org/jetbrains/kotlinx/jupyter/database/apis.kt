@@ -54,13 +54,12 @@ fun ScriptTemplateWithDisplayHelpers.createDataSource(
     jdbcUrl: String,
     username: String? = null,
     password: String? = null,
-): DataSource {
-    return createDataSource {
+): DataSource =
+    createDataSource {
         this.jdbcUrl = jdbcUrl
         username?.let { this.username = it }
         password?.let { this.password = it }
     }
-}
 
 /**
  * Create a [DataSource] using a [HikariConfig] builder.

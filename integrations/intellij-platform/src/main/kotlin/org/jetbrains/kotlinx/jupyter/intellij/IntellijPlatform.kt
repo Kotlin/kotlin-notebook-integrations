@@ -27,9 +27,8 @@ fun ScriptTemplateWithDisplayHelpers.currentProject(): Project = requireNotNull(
 /**
  * Returns the current open [Project] instance or null if no projects are open.
  */
-internal fun currentProjectFromNotebook(notebook: Notebook): Project? {
-    return notebook.intellijDataProvider?.currentProject ?: currentProjectFromFocus()
-}
+internal fun currentProjectFromNotebook(notebook: Notebook): Project? =
+    notebook.intellijDataProvider?.currentProject ?: currentProjectFromFocus()
 
 /**
  * Returns the [IntellijDataProviderProxy] instance for the current notebook, if any.
@@ -40,12 +39,12 @@ val Notebook.intellijDataProvider: IntellijDataProviderProxy?
 /**
  * Returns the current open [Project] instance or null if no projects are open.
  */
-private fun currentProjectFromFocus(): Project? {
-    return DataManager.getInstance()
+private fun currentProjectFromFocus(): Project? =
+    DataManager
+        .getInstance()
         .dataContextFromFocusAsync
         .blockingGet(3000)
         ?.let(CommonDataKeys.PROJECT::getData)
-}
 
 /**
  * Returns the current [FileEditor] instance or null if no editor is open.
@@ -60,7 +59,8 @@ fun ScriptTemplateWithDisplayHelpers.currentEditor(): FileEditor? = FileEditorMa
 inline fun <reified T : Any> ScriptTemplateWithDisplayHelpers.registerExtension(
     extensionPointName: ExtensionPointName<T>,
     instance: T,
-) = ApplicationManager.getApplication()
+) = ApplicationManager
+    .getApplication()
     .extensionArea
     .getExtensionPoint(extensionPointName)
     .registerExtension(instance, notebookPluginDescriptor, notebookDisposable)
@@ -71,7 +71,8 @@ inline fun <reified T : Any> ScriptTemplateWithDisplayHelpers.registerExtension(
 inline fun <reified T : Any> ScriptTemplateWithDisplayHelpers.registerExtension(
     extensionPointName: String,
     instance: T,
-) = ApplicationManager.getApplication()
+) = ApplicationManager
+    .getApplication()
     .extensionArea
     .getExtensionPoint<T>(extensionPointName)
     .registerExtension(instance, notebookPluginDescriptor, notebookDisposable)
@@ -86,7 +87,8 @@ inline fun <reified T : Any> ScriptTemplateWithDisplayHelpers.registerProjectExt
     extensionPointName: String,
     instance: T,
 ) {
-    this.currentProject()
+    this
+        .currentProject()
         .extensionArea
         .getExtensionPoint<T>(extensionPointName)
         .registerExtension(instance, notebookPluginDescriptor, notebookDisposable)

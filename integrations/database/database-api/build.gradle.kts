@@ -7,7 +7,11 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jvmTarget.get().toInt())
+    jvmToolchain(
+        libs.versions.jvmTarget
+            .get()
+            .toInt(),
+    )
 }
 
 dependencies {
@@ -25,7 +29,6 @@ kotlinJupyter {
 tasks.processJupyterApiResources {
     libraryProducers = listOf("org.jetbrains.kotlinx.jupyter.database.internal.DatabaseJupyterIntegration")
 }
-
 
 tasks.test {
     useJUnitPlatform()

@@ -11,14 +11,31 @@ import kotlinx.serialization.descriptors.SerialKind
 import kotlinx.serialization.descriptors.buildSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.long
+import kotlinx.serialization.json.longOrNull
 import kotlinx.serialization.serializer
 
 @Suppress("unused")
-public typealias UntypedAny = @Serializable(with = UntypedSerialization::class) Any
+public typealias UntypedAny =
+    @Serializable(with = UntypedSerialization::class)
+    Any
 
 @Suppress("unused")
-public typealias UntypedAnyNotNull = @Serializable(with = UntypedSerializationNotNull::class) Any
+public typealias UntypedAnyNotNull =
+    @Serializable(with = UntypedSerializationNotNull::class)
+    Any
 
 /**
  * This serializer supports deserializing JSON primitives to corresponding Kotlin primitives,
@@ -36,33 +53,38 @@ public object UntypedSerialization : KSerializer<Any?> {
     override fun deserialize(decoder: Decoder): Any? {
         if (decoder !is JsonDecoder) error("This deserializer only supports JSON")
 
-        fun deserialize(element: JsonElement): Any? {
-            return when (element) {
-                is JsonArray -> buildList {
-                    element.forEach { add(deserialize(it)) }
-                }
+        fun deserialize(element: JsonElement): Any? =
+            when (element) {
+                is JsonArray ->
+                    buildList {
+                        element.forEach { add(deserialize(it)) }
+                    }
 
-                is JsonObject -> buildMap {
-                    element.forEach { put(it.key, deserialize(it.value)) }
-                }
+                is JsonObject ->
+                    buildMap {
+                        element.forEach { put(it.key, deserialize(it.value)) }
+                    }
 
-                is JsonPrimitive -> when {
-                    element.isString -> element.content
-                    element is JsonNull -> null
-                    element.booleanOrNull != null -> element.boolean
-                    element.intOrNull != null -> element.int
-                    element.longOrNull != null -> element.long
-                    element.doubleOrNull != null -> element.double
-                    else -> error("Unexpected JSON element during deserialization: $element")
-                }
+                is JsonPrimitive ->
+                    when {
+                        element.isString -> element.content
+                        element is JsonNull -> null
+                        element.booleanOrNull != null -> element.boolean
+                        element.intOrNull != null -> element.int
+                        element.longOrNull != null -> element.long
+                        element.doubleOrNull != null -> element.double
+                        else -> error("Unexpected JSON element during deserialization: $element")
+                    }
             }
-        }
 
         return deserialize(decoder.decodeJsonElement())
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    override fun serialize(encoder: Encoder, value: Any?) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Any?,
+    ) {
         when (value) {
             null -> encoder.encodeNull()
             is String -> encoder.encodeString(value)
@@ -93,11 +115,13 @@ public object UntypedSerializationNotNull : KSerializer<Any> {
     override val descriptor: SerialDescriptor
         get() = buildSerialDescriptor("UntypedSerialization", SerialKind.CONTEXTUAL)
 
-    override fun deserialize(decoder: Decoder): Any {
-        return UntypedSerialization.deserialize(decoder) ?: throw IllegalArgumentException("Unexpected null")
-    }
+    override fun deserialize(decoder: Decoder): Any =
+        UntypedSerialization.deserialize(decoder) ?: throw IllegalArgumentException("Unexpected null")
 
-    override fun serialize(encoder: Encoder, value: Any) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Any,
+    ) {
         UntypedSerialization.serialize(encoder, value)
     }
 }

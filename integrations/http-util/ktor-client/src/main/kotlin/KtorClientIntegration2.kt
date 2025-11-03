@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.jupyter.ktor.client
 
-import io.ktor.client.statement.*
+import io.ktor.client.statement.HttpResponse
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
-import org.jetbrains.kotlinx.jupyter.serialization.DeserializeThis
 import org.jetbrains.kotlinx.jupyter.ktor.client.core.NotebookHttpResponse
+import org.jetbrains.kotlinx.jupyter.serialization.DeserializeThis
 
 public object KtorClientIntegration2 : JupyterIntegration() {
     override fun Builder.onLoaded() {
@@ -11,10 +11,6 @@ public object KtorClientIntegration2 : JupyterIntegration() {
     }
 }
 
-public fun HttpResponse.deserializeJson(className: String? = null): DeserializeThis =
-    NotebookHttpResponse(this).deserializeJson(className)
+public fun HttpResponse.deserializeJson(className: String? = null): DeserializeThis = NotebookHttpResponse(this).deserializeJson(className)
 
-
-public fun NotebookHttpResponse.deserializeJson(className: String? = null): DeserializeThis {
-    return DeserializeThis(bodyAsText(), className)
-}
+public fun NotebookHttpResponse.deserializeJson(className: String? = null): DeserializeThis = DeserializeThis(bodyAsText(), className)

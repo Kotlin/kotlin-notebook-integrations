@@ -2,8 +2,12 @@ package org.jetbrains.kotlinx.jupyter.serialization
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.json.*
-import org.jetbrains.kotlinx.jupyter.api.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import org.jetbrains.kotlinx.jupyter.api.JSON
+import org.jetbrains.kotlinx.jupyter.api.ProcessingPriority
+import org.jetbrains.kotlinx.jupyter.api.VariableDeclaration
 import org.jetbrains.kotlinx.jupyter.api.createRenderer
 import org.jetbrains.kotlinx.jupyter.api.declare
 import org.jetbrains.kotlinx.jupyter.api.libraries.FieldHandlerFactory
@@ -18,7 +22,10 @@ import kotlin.reflect.typeOf
  * Variables that have this type get replaced by deserialized value **in the next cell**.
  * [className] is a simple name of the class to be generated that [jsonString] will be deserialized into.
  */
-public class DeserializeThis(public val jsonString: String, public val className: String?) {
+public class DeserializeThis(
+    public val jsonString: String,
+    public val className: String?,
+) {
     override fun toString(): String = jsonString
 
     override fun equals(other: Any?): Boolean {
@@ -59,9 +66,7 @@ public class DeserializeThis(public val jsonString: String, public val className
  * println(user.address.number + " " + user.address.street)
  * ```
  */
-public fun String.deserializeJson(className: String? = null): DeserializeThis {
-    return DeserializeThis(jsonString = this, className = className)
-}
+public fun String.deserializeJson(className: String? = null): DeserializeThis = DeserializeThis(jsonString = this, className = className)
 
 /**
  * Usage: declare a variable of [DeserializeThis] type, where some JSON is stored.
@@ -77,10 +82,11 @@ public fun String.deserializeJson(className: String? = null): DeserializeThis {
 public class SerializationIntegration : JupyterIntegration() {
     override fun Builder.onLoaded() {
         onLoaded {
-            val jsonDeserializer = Json {
-                @OptIn(ExperimentalSerializationApi::class)
-                explicitNulls = false
-            }
+            val jsonDeserializer =
+                Json {
+                    @OptIn(ExperimentalSerializationApi::class)
+                    explicitNulls = false
+                }
             declare(VariableDeclaration("jsonDeserializer", jsonDeserializer, typeOf<Json>()))
         }
 
@@ -96,40 +102,45 @@ public class SerializationIntegration : JupyterIntegration() {
             createRenderer(
                 renderCondition = {
                     val value = it.value
-                    value is String && shouldHighlightAsJson(value) ||
-                        value is DeserializeThis && shouldHighlightAsJson(value.jsonString)
+                    value is String &&
+                        shouldHighlightAsJson(value) ||
+                        value is DeserializeThis &&
+                        shouldHighlightAsJson(value.jsonString)
                 },
                 renderAction = {
                     JSON(it.value as? String ?: (it.value as DeserializeThis).jsonString)
                 },
-            )
+            ),
         )
 
-        val fieldHandler = FieldHandlerFactory.createUpdateHandler<DeserializeThis>(TypeDetection.RUNTIME) { value, prop ->
-            try {
-                val className = value.className ?: prop.name.replaceFirstChar(Char::titlecaseChar)
-                val generatedCode = getGeneratedCode(value.jsonString, className)
-                val escapedJson = value.jsonString
-                    .replace("$", "\${'$'}")
-                    .let { if (generatedCode.isWrapped) "{\"value\": $it}" else it }
+        val fieldHandler =
+            FieldHandlerFactory.createUpdateHandler<DeserializeThis>(TypeDetection.RUNTIME) { value, prop ->
+                try {
+                    val className = value.className ?: prop.name.replaceFirstChar(Char::titlecaseChar)
+                    val generatedCode = getGeneratedCode(value.jsonString, className)
+                    val escapedJson =
+                        value.jsonString
+                            .replace("$", "\${'$'}")
+                            .let { if (generatedCode.isWrapped) "{\"value\": $it}" else it }
 
-                execute(
-                    generatedCode.code + "\n" +
-                        "jsonDeserializer.decodeFromString<${generatedCode.rootTypeName}>(\"\"\"$escapedJson\"\"\")" +
-                        if (generatedCode.isWrapped) ".$JSON2KT_WRAPPER_FIELD_NAME" else ""
-                ).name
-            } catch (e: Exception) {
-                display("Error during deserialization: ${e.cause?.message ?: e.message}", id = null)
-                null
+                    execute(
+                        generatedCode.code + "\n" +
+                            "jsonDeserializer.decodeFromString<${generatedCode.rootTypeName}>(\"\"\"$escapedJson\"\"\")" +
+                            if (generatedCode.isWrapped) ".$JSON2KT_WRAPPER_FIELD_NAME" else "",
+                    ).name
+                } catch (e: Exception) {
+                    display("Error during deserialization: ${e.cause?.message ?: e.message}", id = null)
+                    null
+                }
             }
-        }
         notebook.fieldsHandlersProcessor.register(fieldHandler, ProcessingPriority.HIGHEST)
     }
 }
 
-internal fun getGeneratedCode(jsonString: String, className: String): GeneratedCodeResult {
-    return jsonDataToKotlinCode(Json.parseToJsonElement(jsonString), requestedRootTypeName = className)
-}
+internal fun getGeneratedCode(
+    jsonString: String,
+    className: String,
+): GeneratedCodeResult = jsonDataToKotlinCode(Json.parseToJsonElement(jsonString), requestedRootTypeName = className)
 
 /**
  * Clean up generated code so internal concepts do not leak to the user.
@@ -155,8 +166,10 @@ private fun shouldHighlightAsJson(jsonOrNot: String): Boolean {
     if (jsonOrNot.length > 3_000_000) return false
     return try {
         val element = Json.parseToJsonElement(jsonOrNot)
-        ((element as? JsonObject)?.entries?.isNotEmpty() == true ||
-            (element as? JsonArray)?.isNotEmpty() == true)
+        (
+            (element as? JsonObject)?.entries?.isNotEmpty() == true ||
+                (element as? JsonArray)?.isNotEmpty() == true
+        )
     } catch (_: SerializationException) {
         false // Invalid JSON
     }

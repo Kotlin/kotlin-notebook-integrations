@@ -6,7 +6,11 @@ import org.jetbrains.kotlinx.jupyter.intellij.pluginRepository
 
 private const val DEFAULT_CHANNEL = "default"
 
-internal data class PluginRequest(val id: String, var version: String? = null, val channel: String = DEFAULT_CHANNEL) {
+internal data class PluginRequest(
+    val id: String,
+    var version: String? = null,
+    val channel: String = DEFAULT_CHANNEL,
+) {
     companion object {
         /**
          * The [notation] can be specified in one of the following formats:
@@ -37,8 +41,10 @@ internal data class PluginRequest(val id: String, var version: String? = null, v
 internal fun PluginRequest.resolveCompatibleVersion(
     platformType: String,
     platformVersion: String,
-) = pluginRepository.pluginManager.searchCompatibleUpdates(
-    build = "$platformType-$platformVersion",
-    xmlIds = listOf(id),
-    channel = channel,
-).firstOrNull()?.version
+) = pluginRepository.pluginManager
+    .searchCompatibleUpdates(
+        build = "$platformType-$platformVersion",
+        xmlIds = listOf(id),
+        channel = channel,
+    ).firstOrNull()
+    ?.version

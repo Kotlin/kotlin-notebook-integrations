@@ -20,8 +20,7 @@ class Version(
                     !version.contains('-') && other.version.contains('-') -> 1
                     else -> version.compareTo(other.version, ignoreCase = true)
                 }
-            }
-            .or { version.compareTo(other.version, ignoreCase = true) }
+            }.or { version.compareTo(other.version, ignoreCase = true) }
 
     override fun toString() = version.takeIf(String::isNotEmpty) ?: "$major.$minor.$patch"
 
@@ -49,7 +48,8 @@ class Version(
 
     companion object {
         fun parse(versionString: String) =
-            versionString.split(' ', '.', '-', '"', '_')
+            versionString
+                .split(' ', '.', '-', '"', '_')
                 .map(String::toIntOrNull)
                 .dropWhile { it == null }
                 .takeWhile { it != null }
