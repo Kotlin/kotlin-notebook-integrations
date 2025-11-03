@@ -20,6 +20,11 @@ allprojects {
     repositories {
         mavenCentral()
     }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+        outputs.upToDateWhen { false }
+    }
 }
 
 val spaceUsername: String by properties

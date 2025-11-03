@@ -12,7 +12,7 @@ import kotlin.test.assertIs
 
 class KtorClientCoreIntegrationTest :
     JupyterReplTestCase(
-        replProvider = ReplProvider.Companion.withDefaultClasspathResolution(),
+        replProvider = ReplProvider.withDefaultClasspathResolution(),
     ) {
     @Test
     fun `default client engine`() {
