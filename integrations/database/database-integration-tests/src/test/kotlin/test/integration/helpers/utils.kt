@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.jupyter.database.org.jetbrains.kotlinx.jupyter.database.test.helpers
+package org.jetbrains.kotlinx.jupyter.database.test.integration.helpers
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.jupyter.api.EmbeddedKernelRunMode
 import org.jetbrains.kotlinx.jupyter.api.StandaloneKernelRunMode
 import org.jetbrains.kotlinx.jupyter.config.DefaultKernelLoggerFactory
 import org.jetbrains.kotlinx.jupyter.config.defaultRepositoriesCoordinates
+import org.jetbrains.kotlinx.jupyter.database.gen.BuildConfig
 import org.jetbrains.kotlinx.jupyter.libraries.DefaultResolutionInfoProviderFactory
 import org.jetbrains.kotlinx.jupyter.libraries.createLibraryHttpUtil
 import org.jetbrains.kotlinx.jupyter.libraries.getStandardResolver
@@ -42,7 +43,7 @@ fun createSpringApplicationFile(
 }
 
 fun startTestContainer(containerId: String): DatabaseInfo {
-    val testPort = org.jetbrains.kotlinx.jupyter.database.gen.BuildConfig.TEST_SERVER_PORT
+    val testPort = BuildConfig.TEST_SERVER_PORT
     return runBlocking {
         // Port is defined in `gradle.properties`
         val response = httpClient.get("http://127.0.0.1:$testPort/start/$containerId")
@@ -55,7 +56,7 @@ fun startTestContainer(containerId: String): DatabaseInfo {
 }
 
 fun stopTestContainer(containerId: String) {
-    val testPort = org.jetbrains.kotlinx.jupyter.database.gen.BuildConfig.TEST_SERVER_PORT
+    val testPort = BuildConfig.TEST_SERVER_PORT
     runBlocking {
         val response = httpClient.get("http://127.0.0.1:$testPort/stop/$containerId")
         if (!response.status.isSuccess()) {

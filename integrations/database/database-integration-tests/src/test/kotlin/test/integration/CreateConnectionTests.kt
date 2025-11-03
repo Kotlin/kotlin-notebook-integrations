@@ -1,11 +1,11 @@
-package org.jetbrains.kotlinx.jupyter.database.org.jetbrains.kotlinx.jupyter.database.test
+package org.jetbrains.kotlinx.jupyter.database.test.integration
 
 import io.kotest.matchers.should
-import org.jetbrains.kotlinx.jupyter.database.org.jetbrains.kotlinx.jupyter.database.test.helpers.DatabaseInfo
-import org.jetbrains.kotlinx.jupyter.database.org.jetbrains.kotlinx.jupyter.database.test.helpers.DatabaseIntegrationTest
-import org.jetbrains.kotlinx.jupyter.database.org.jetbrains.kotlinx.jupyter.database.test.helpers.createSpringApplicationFile
-import org.jetbrains.kotlinx.jupyter.database.org.jetbrains.kotlinx.jupyter.database.test.helpers.startTestContainer
-import org.jetbrains.kotlinx.jupyter.database.org.jetbrains.kotlinx.jupyter.database.test.helpers.stopTestContainer
+import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.DatabaseInfo
+import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.DatabaseIntegrationTest
+import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.createSpringApplicationFile
+import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.startTestContainer
+import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.stopTestContainer
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.io.TempDir

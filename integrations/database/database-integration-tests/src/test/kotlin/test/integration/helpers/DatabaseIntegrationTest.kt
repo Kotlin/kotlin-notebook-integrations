@@ -1,5 +1,6 @@
-package org.jetbrains.kotlinx.jupyter.database.org.jetbrains.kotlinx.jupyter.database.test.helpers
+package org.jetbrains.kotlinx.jupyter.database.test.integration.helpers
 
+import org.jetbrains.kotlinx.jupyter.database.gen.BuildConfig
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.jupiter.api.BeforeEach
 
@@ -15,7 +16,7 @@ open class DatabaseIntegrationTest :
     ) {
     @BeforeEach
     fun setUp() {
-        val libraryVersion = org.jetbrains.kotlinx.jupyter.database.gen.BuildConfig.LIBRARY_VERSION
+        val libraryVersion = BuildConfig.LIBRARY_VERSION
         execSuccess(
             """
             @file:Repository("*mavenLocal")
