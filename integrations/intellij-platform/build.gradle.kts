@@ -60,7 +60,7 @@ kotlin {
 
 kotlinPublications {
     pom {
-        githubRepo("Kotlin", "kotlin-notebook-libraries")
+        githubRepo("Kotlin", "kotlin-notebook-integrations")
 
         inceptionYear.set("2024")
         licenses {

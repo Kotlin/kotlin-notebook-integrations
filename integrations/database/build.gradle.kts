@@ -26,7 +26,7 @@ subprojects {
 
 kotlinPublications {
     pom {
-        githubRepo("Kotlin", "kotlin-notebook-libraries")
+        githubRepo("Kotlin", "kotlin-notebook-integrations")
         inceptionYear.set("2025")
         licenses {
             apache2()

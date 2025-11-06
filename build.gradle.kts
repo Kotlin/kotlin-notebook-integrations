@@ -44,7 +44,7 @@ kotlinPublications {
     sonatypeSettings(
         sonatypeUsername,
         sonatypePassword,
-        "kotlin-notebook-libraries project, v. ${project.version}",
+        "kotlin-notebook-integrations project, v. ${project.version}",
     )
 
     signingCredentials(

@@ -7,7 +7,7 @@ plugins {
 
 kotlinPublications {
     pom {
-        githubRepo("Kotlin", "kotlin-notebook-libraries")
+        githubRepo("Kotlin", "kotlin-notebook-integrations")
         inceptionYear = "2024"
         licenses {
             apache2()

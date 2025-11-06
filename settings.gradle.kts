@@ -1,4 +1,4 @@
-rootProject.name = "kotlin-notebook-libraries"
+rootProject.name = "kotlin-notebook-integrations"
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
