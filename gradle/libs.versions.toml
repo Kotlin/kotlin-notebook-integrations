@@ -24,6 +24,11 @@ snakeYaml = "2.10" # https://bitbucket.org/snakeyaml/snakeyaml-engine/src/master
 testContainers = "2.0.1" # https://github.com/testcontainers/testcontainers-java
 testContainers-modules = "1.20.0" # https://testcontainers.com/modules/postgresql
 
+# JDBC drivers for test infrastructure
+mysqlDriver = "9.4.0"
+mssqlDriver = "13.2.0.jre11"
+oracleDriver = "23.9.0.25.07"
+
 kotlinx-serialization = "1.9.0"
 jvm-toolchain = "11"
 kotlinpoet = "2.1.0"
@@ -54,6 +59,10 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor"
 ktor-client-mock = { module = "io.ktor:ktor-client-mock-jvm", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json-jvm", version.ref = "ktor" }
 
+# Ktor server artifacts used in database-test-infrastructure
+ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
+ktor-server-contentNegotiation = { module = "io.ktor:ktor-server-content-negotiation-jvm", version.ref = "ktor" }
+
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 postgresDriver = { group = "org.postgresql", name = "postgresql", version.ref = "postgresDriver" }
 snakeYaml = { group = "org.snakeyaml", name = "snakeyaml-engine", version.ref = "snakeYaml" }
@@ -61,6 +70,15 @@ test-kotlintest-assertions = { module = "io.kotest:kotest-assertions-core", vers
 testContainers = { group = "org.testcontainers", name = "testcontainers-junit-jupiter", version.ref = "testContainers" }
 testContainers-mysql = { group = "org.testcontainers", name = "mysql", version.ref = "testContainers-modules" }
 testContainers-postgres = { group = "org.testcontainers", name = "postgresql", version.ref = "testContainers-modules" }
+
+# Additional JDBC drivers
+mysqlDriver = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysqlDriver" }
+mssqlDriver = { group = "com.microsoft.sqlserver", name = "mssql-jdbc", version.ref = "mssqlDriver" }
+oracleDriver = { group = "com.oracle.database.jdbc", name = "ojdbc11", version.ref = "oracleDriver" }
+
+# Additional Testcontainers modules
+testContainers-mssqlserver = { group = "org.testcontainers", name = "mssqlserver", version.ref = "testContainers-modules" }
+testContainers-oracle-free = { group = "org.testcontainers", name = "oracle-free", version.ref = "testContainers-modules" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

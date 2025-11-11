@@ -15,27 +15,23 @@ kotlin {
 }
 
 dependencies {
-    val ktor = libs.versions.ktor.get()
-    implementation("io.ktor:ktor-server-cio:$ktor")
-    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor")
-    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor")
+    implementation(libs.ktor.server.cio)
+    implementation(libs.ktor.server.contentNegotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.logback)
 
     // JDBC Drivers for all supported databases
-    implementation("com.mysql:mysql-connector-j:9.4.0")
-    implementation("org.postgresql:postgresql:42.7.7")
-    implementation("com.microsoft.sqlserver:mssql-jdbc:13.2.0.jre11")
-    implementation("com.oracle.database.jdbc:ojdbc11:23.9.0.25.07")
+    implementation(libs.mysqlDriver)
+    implementation(libs.postgresDriver)
+    implementation(libs.mssqlDriver)
+    implementation(libs.oracleDriver)
 
     // Test containers for all supported databases
     implementation(libs.testContainers)
-    val testContainerVersion =
-        libs.versions.testContainers.modules
-            .get()
-    implementation("org.testcontainers:postgresql:$testContainerVersion")
-    implementation("org.testcontainers:mysql:$testContainerVersion")
-    implementation("org.testcontainers:mssqlserver:$testContainerVersion")
-    implementation("org.testcontainers:oracle-free:$testContainerVersion")
+    implementation(libs.testContainers.postgres)
+    implementation(libs.testContainers.mysql)
+    implementation(libs.testContainers.mssqlserver)
+    implementation(libs.testContainers.oracle.free)
 }
 
 application { mainClass = "org.jetbrains.kotlinx.jupyter.database.containers.MainKt" }
