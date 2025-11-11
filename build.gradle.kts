@@ -32,6 +32,7 @@ val spaceToken: String by properties
 
 kotlinPublications {
     defaultGroup.set(group.toString())
+    defaultArtifactIdPrefix.set("kotlin-jupyter-")
     fairDokkaJars.set(false)
 
     // Maven Central publishing properties

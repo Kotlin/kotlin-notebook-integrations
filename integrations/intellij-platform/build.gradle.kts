@@ -73,7 +73,7 @@ kotlinPublications {
     }
 
     publication {
-        publicationName.set("kotlin-jupyter-intellij-platform")
+        publicationName.set("intellij-platform")
         description.set("Kotlin Jupyter kernel integration for the IntelliJ Platform")
     }
 }

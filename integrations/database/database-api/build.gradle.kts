@@ -36,7 +36,7 @@ tasks.test {
 
 kotlinPublications {
     publication {
-        publicationName.set("kotlin-jupyter-database")
+        publicationName.set("database")
         description.set("Kotlin Jupyter kernel integration with DBMSs")
     }
 }
