@@ -2,7 +2,6 @@
 
 [![JetBrains official project](https://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin experimental stability](https://img.shields.io/badge/project-experimental-kotlin.svg?colorA=555555&colorB=AC29EC&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
-![GitHub](https://img.shields.io/github/license/Kotlin/kotlin-notebook-intellij-platform?color=blue&label=License)
 
 This integration enables direct experimentation with IntelliJ Platform APIs within the active IntelliJ IDEA runtime, eliminating traditional plugin development barriers.
 

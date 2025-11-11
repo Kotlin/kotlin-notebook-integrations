@@ -5,15 +5,13 @@
 # Kotlin Notebook Integrations
 
 This monorepo contains official JetBrains integrations for Kotlin Notebooks.
-Each integration lives in the `integrations/` directory and has its own README and Contributing guide.
+Each integration lives in the `integrations/` directory and has its own README.
 
 ## Integrations
 
 - [IntelliJ Platform](integrations/intellij-platform/README.md) — interactive access to IntelliJ Platform APIs from a running IDE process.
 - [HTTP Utilities](integrations/http-util/README.md) — JSON/serialization helpers and Ktor HTTP client wrappers for notebooks.
-- [Database](integrations/database/README.md) — helpers for configuring JDBC DataSources and working with common DBs.
-
-Tip: If you are looking for a specific integration, jump straight into the corresponding folder above.
+- [Database](integrations/database/README.md) — helpers for configuring JDBC DataSources and working with Databases.
 
 ## Contributing
 

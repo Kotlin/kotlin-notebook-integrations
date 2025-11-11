@@ -43,11 +43,11 @@ val dataSource3 = createDataSrcFromSpring(path)
 
 This project consists of the following modules:
 
-- `library`: Contains the core database connection helpers as well as basic unit 
+- `database-api`: Contains the core database connection helpers as well as basic unit 
    tests.
-- `library-integration-tests`: Contains integration tests against all supported 
+- `database-integration-tests`: Contains integration tests against all supported 
    databases and ensure we can load JDBC drivers correctly.
-- `test-infrastructure`: A HTTP test server that allows integration tests to 
+- `database-test-infrastructure`: A HTTP test server that allows integration tests to 
    spin up database containers on demand. It is built and run from the 
    integration test module.
 
