@@ -1,0 +1,5 @@
+org.jetbrains.kotlinx.jupyter.widget.library.HtmlWidget$Factory
+org.jetbrains.kotlinx.jupyter.widget.library.IntSliderWidget$Factory
+org.jetbrains.kotlinx.jupyter.widget.library.LabelWidget$Factory
+org.jetbrains.kotlinx.jupyter.widget.library.LayoutWidget$Factory
+org.jetbrains.kotlinx.jupyter.widget.library.OutputWidget$Factory

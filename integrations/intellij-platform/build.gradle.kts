@@ -12,10 +12,6 @@ plugins {
 val spaceUsername: String by properties
 val spaceToken: String by properties
 
-allprojects {
-    version = rootProject.version
-}
-
 tasks.processJupyterApiResources {
     libraryProducers = listOf("org.jetbrains.kotlinx.jupyter.intellij.IntelliJPlatformJupyterIntegration")
 }
