@@ -20,6 +20,9 @@ projectStructure {
             project("database-integration-tests")
         }
         project("intellij-platform")
+        folder("widgets") {
+            project("widgets-api")
+        }
     }
 }
 
