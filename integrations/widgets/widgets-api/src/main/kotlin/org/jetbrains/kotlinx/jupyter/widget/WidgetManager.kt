@@ -15,8 +15,8 @@ import org.jetbrains.kotlinx.jupyter.api.libraries.CommManager
 import org.jetbrains.kotlinx.jupyter.widget.model.DEFAULT_MAJOR_VERSION
 import org.jetbrains.kotlinx.jupyter.widget.model.DEFAULT_MINOR_VERSION
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
+import org.jetbrains.kotlinx.jupyter.widget.model.WidgetFactoryRegistry
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
-import org.jetbrains.kotlinx.jupyter.widget.model.loadWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.versionConstraintRegex
 import org.jetbrains.kotlinx.jupyter.widget.protocol.CustomMessage
 import org.jetbrains.kotlinx.jupyter.widget.protocol.RequestStateMessage
@@ -67,7 +67,7 @@ public class WidgetManager(
         commManager.registerCommTarget(widgetTarget) { comm, data, _, buffers ->
             val openMessage = Json.decodeFromJsonElement<WidgetOpenMessage>(data)
             val modelName = openMessage.state["_model_name"]?.jsonPrimitive?.content!!
-            val widgetFactory = loadWidgetFactory(modelName, classLoaderProvider())
+            val widgetFactory = WidgetFactoryRegistry.loadWidgetFactory(modelName, classLoaderProvider())
 
             val widget = widgetFactory.create()
             val patch = openMessage.toPatch(buffers)
