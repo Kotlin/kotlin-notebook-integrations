@@ -42,6 +42,8 @@ public class WidgetManager(
     private val widgetControlTarget = "jupyter.widget.control"
     private val widgets = mutableMapOf<String, WidgetModel>()
 
+    public val factoryRegistry: WidgetFactoryRegistry = WidgetFactoryRegistry()
+
     init {
         commManager.registerCommTarget(widgetControlTarget) { comm, _, _, _ ->
             comm.onMessage { msg, _, _ ->
@@ -67,9 +69,9 @@ public class WidgetManager(
         commManager.registerCommTarget(widgetTarget) { comm, data, _, buffers ->
             val openMessage = Json.decodeFromJsonElement<WidgetOpenMessage>(data)
             val modelName = openMessage.state["_model_name"]?.jsonPrimitive?.content!!
-            val widgetFactory = WidgetFactoryRegistry.loadWidgetFactory(modelName, classLoaderProvider())
+            val widgetFactory = factoryRegistry.loadWidgetFactory(modelName, classLoaderProvider())
 
-            val widget = widgetFactory.create()
+            val widget = widgetFactory.create(this)
             val patch = openMessage.toPatch(buffers)
             widget.applyPatch(patch, this)
 

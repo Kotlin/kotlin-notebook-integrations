@@ -4,22 +4,17 @@ import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.globalWidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
-import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.controlsSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 
-public fun WidgetManager.intSlider(): IntSliderWidget = createAndRegisterWidget(IntSliderWidget.Factory::class)
+public fun WidgetManager.intSlider(): IntSliderWidget = createAndRegisterWidget(IntSliderWidget.Factory)
 
 public fun intSliderWidget(): IntSliderWidget = globalWidgetManager.intSlider()
 
-public class IntSliderWidget internal constructor(
-    spec: WidgetSpec,
-) : DefaultWidgetModel(spec) {
-    internal class Factory :
-        DefaultWidgetFactory<IntSliderWidget>(
-            controlsSpec("IntSlider"),
-            ::IntSliderWidget,
-        )
+private val spec = controlsSpec("IntSlider")
+
+public class IntSliderWidget internal constructor() : DefaultWidgetModel(spec) {
+    internal object Factory : DefaultWidgetFactory<IntSliderWidget>(spec, ::IntSliderWidget)
 
     public var value: Int by intProp("value", 0)
     public var min: Int by intProp("min", 0)

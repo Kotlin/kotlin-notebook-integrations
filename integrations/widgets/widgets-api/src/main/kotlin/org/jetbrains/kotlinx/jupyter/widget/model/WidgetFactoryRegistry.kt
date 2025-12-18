@@ -1,10 +1,17 @@
 package org.jetbrains.kotlinx.jupyter.widget.model
 
+import org.jetbrains.kotlinx.jupyter.widget.library.registry.defaultWidgetFactories
 import java.util.ServiceLoader
 import java.util.concurrent.ConcurrentHashMap
 
-public object WidgetFactoryRegistry {
+public class WidgetFactoryRegistry {
     private val factoryCache = ConcurrentHashMap<String, WidgetFactory<*>>()
+
+    init {
+        for (factory in defaultWidgetFactories) {
+            registerWidgetFactory(factory)
+        }
+    }
 
     internal fun loadWidgetFactory(
         modelName: String,
