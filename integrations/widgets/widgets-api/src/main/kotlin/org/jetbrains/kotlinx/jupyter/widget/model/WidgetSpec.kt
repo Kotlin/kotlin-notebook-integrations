@@ -33,6 +33,11 @@ public fun baseSpec(
     versionConstraint: String = DEFAULT_VERSION_CONSTRAINT,
 ): WidgetSpec = iPyWidgetsSpec(controlName, "@jupyter-widgets/base", versionConstraint)
 
+public fun outputSpec(
+    controlName: String,
+    versionConstraint: String = DEFAULT_VERSION_CONSTRAINT,
+): WidgetSpec = iPyWidgetsSpec(controlName, "@jupyter-widgets/output", versionConstraint)
+
 public fun iPyWidgetsSpec(
     controlName: String,
     moduleName: String,

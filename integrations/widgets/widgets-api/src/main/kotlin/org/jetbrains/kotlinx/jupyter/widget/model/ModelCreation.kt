@@ -1,33 +1,26 @@
 package org.jetbrains.kotlinx.jupyter.widget.model
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
-import kotlin.reflect.KClass
 
-public fun <M : WidgetModel> WidgetManager.createAndRegisterWidget(widgetFactory: () -> M): M =
-    widgetFactory().also { widget -> registerWidget(widget) }
+public fun <M : WidgetModel> WidgetManager.createAndRegisterWidget(widgetFactory: (widgetManager: WidgetManager) -> M): M =
+    widgetFactory(this).also { widget -> registerWidget(widget) }
 
-public inline fun <reified F : WidgetFactory<M>, M : WidgetModel> WidgetManager.createAndRegisterWidget(factoryKClass: KClass<F>): M {
-    @Suppress("UNCHECKED_CAST")
-    val factory =
-        factoryKClass.java
-            .getDeclaredConstructor()
-            .apply { isAccessible = true }
-            .newInstance() as WidgetFactory<M>
-
-    return createAndRegisterWidget(factory::create)
-}
+public fun <M : WidgetModel> WidgetManager.createAndRegisterWidget(factory: WidgetFactory<M>): M = createAndRegisterWidget(factory::create)
 
 public interface WidgetFactory<M : WidgetModel> {
     public val spec: WidgetSpec
 
-    public fun create(): M
+    public fun create(widgetManager: WidgetManager): M
 }
 
 public abstract class DefaultWidgetFactory<M : DefaultWidgetModel>(
     override val spec: WidgetSpec,
-    private val factory: (spec: WidgetSpec) -> M,
+    private val factory: (widgetManager: WidgetManager) -> M,
 ) : WidgetFactory<M> {
-    override fun create(): M = factory(spec)
+    public constructor(spec: WidgetSpec, factory: () -> M) :
+        this(spec, { _ -> factory() })
+
+    override fun create(widgetManager: WidgetManager): M = factory(widgetManager)
 }
 
 public open class DefaultWidgetModel(

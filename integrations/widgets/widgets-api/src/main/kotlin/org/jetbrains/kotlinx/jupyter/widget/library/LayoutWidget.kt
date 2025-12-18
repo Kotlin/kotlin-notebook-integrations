@@ -4,22 +4,17 @@ import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.globalWidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
-import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.baseSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 
-public fun WidgetManager.layout(): LayoutWidget = createAndRegisterWidget(LayoutWidget.Factory::class)
+public fun WidgetManager.layout(): LayoutWidget = createAndRegisterWidget(LayoutWidget.Factory)
 
 public fun layoutWidget(): LayoutWidget = globalWidgetManager.layout()
 
-public class LayoutWidget private constructor(
-    spec: WidgetSpec,
-) : DefaultWidgetModel(spec) {
-    internal class Factory :
-        DefaultWidgetFactory<LayoutWidget>(
-            baseSpec("Layout"),
-            ::LayoutWidget,
-        )
+private val spec = baseSpec("Layout")
+
+public class LayoutWidget private constructor() : DefaultWidgetModel(spec) {
+    internal object Factory : DefaultWidgetFactory<LayoutWidget>(spec, ::LayoutWidget)
 
     public var layout: String by stringProp("layout", "")
 
