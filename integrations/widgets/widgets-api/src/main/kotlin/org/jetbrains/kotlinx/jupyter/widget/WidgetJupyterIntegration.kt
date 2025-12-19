@@ -14,7 +14,7 @@ public class WidgetJupyterIntegration : JupyterIntegration() {
         importPackage<IntSliderWidget>()
 
         var myLastClassLoader = WidgetJupyterIntegration::class.java.classLoader
-        val widgetManager = WidgetManager(notebook.commManager) { myLastClassLoader }
+        val widgetManager = WidgetManagerImpl(notebook.commManager) { myLastClassLoader }
         myWidgetManager = widgetManager
 
         onLoaded {
