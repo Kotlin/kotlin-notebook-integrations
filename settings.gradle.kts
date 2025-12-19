@@ -22,6 +22,7 @@ projectStructure {
         project("intellij-platform")
         folder("widgets") {
             project("widgets-api")
+            project("widgets-jupyter")
         }
     }
 }
