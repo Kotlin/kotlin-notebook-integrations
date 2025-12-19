@@ -14,11 +14,14 @@ public object DateType : AbstractWidgetModelPropertyType<LocalDate>("date") {
             .ofPattern("uuuu-MM-dd")
             .withResolverStyle(ResolverStyle.STRICT)
 
-    override fun serialize(propertyValue: LocalDate): Any? = propertyValue.format(formatter)
+    override fun serialize(
+        propertyValue: LocalDate,
+        widgetManager: WidgetManager,
+    ): Any? = propertyValue.format(formatter)
 
     override fun deserialize(
         patchValue: Any?,
-        widgetManager: WidgetManager?,
+        widgetManager: WidgetManager,
     ): LocalDate {
         require(patchValue is String) {
             "Expected String for date, got ${patchValue?.let { it::class.simpleName } ?: "null"}"

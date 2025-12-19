@@ -14,11 +14,14 @@ public object TimeType : AbstractWidgetModelPropertyType<LocalTime>("time") {
             .ofPattern("HH:mm:ss")
             .withResolverStyle(ResolverStyle.STRICT)
 
-    override fun serialize(propertyValue: LocalTime): Any? = propertyValue.format(formatter)
+    override fun serialize(
+        propertyValue: LocalTime,
+        widgetManager: WidgetManager,
+    ): Any? = propertyValue.format(formatter)
 
     override fun deserialize(
         patchValue: Any?,
-        widgetManager: WidgetManager?,
+        widgetManager: WidgetManager,
     ): LocalTime {
         require(patchValue is String) {
             "Expected String for time, got ${patchValue?.let { it::class.simpleName } ?: "null"}"

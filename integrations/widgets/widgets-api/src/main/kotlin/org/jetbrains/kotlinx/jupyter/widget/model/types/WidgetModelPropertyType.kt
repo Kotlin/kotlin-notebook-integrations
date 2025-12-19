@@ -6,10 +6,13 @@ public interface WidgetModelPropertyType<T> {
     public val name: String
     public val default: T
 
-    public fun serialize(propertyValue: T): Any?
+    public fun serialize(
+        propertyValue: T,
+        widgetManager: WidgetManager,
+    ): Any?
 
     public fun deserialize(
         patchValue: Any?,
-        widgetManager: WidgetManager?,
+        widgetManager: WidgetManager,
     ): T
 }

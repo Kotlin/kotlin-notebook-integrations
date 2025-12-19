@@ -9,10 +9,16 @@ public class NullableType<T>(
 ) : AbstractWidgetModelPropertyType<T?>("${inner.name}?") {
     override val default: T? = null
 
-    override fun serialize(propertyValue: T?): Any? = propertyValue?.let { inner.serialize(it) }
+    override fun serialize(
+        propertyValue: T?,
+        widgetManager: WidgetManager,
+    ): Any? =
+        propertyValue?.let {
+            inner.serialize(it, widgetManager)
+        }
 
     override fun deserialize(
         patchValue: Any?,
-        widgetManager: WidgetManager?,
+        widgetManager: WidgetManager,
     ): T? = if (patchValue == null) null else inner.deserialize(patchValue, widgetManager)
 }

@@ -7,11 +7,14 @@ public abstract class PrimitiveWidgetModelPropertyType<T>(
     name: String,
     override val default: T,
 ) : AbstractWidgetModelPropertyType<T>(name) {
-    override fun serialize(propertyValue: T): Any? = propertyValue
+    override fun serialize(
+        propertyValue: T,
+        widgetManager: WidgetManager,
+    ): Any? = propertyValue
 
     @Suppress("UNCHECKED_CAST")
     override fun deserialize(
         patchValue: Any?,
-        widgetManager: WidgetManager?,
+        widgetManager: WidgetManager,
     ): T = patchValue as T
 }

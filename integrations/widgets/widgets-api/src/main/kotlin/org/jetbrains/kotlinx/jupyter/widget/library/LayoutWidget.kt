@@ -13,7 +13,9 @@ public fun layoutWidget(): LayoutWidget = globalWidgetManager.layout()
 
 private val spec = baseSpec("Layout")
 
-public class LayoutWidget private constructor() : DefaultWidgetModel(spec) {
+public class LayoutWidget private constructor(
+    widgetManager: WidgetManager,
+) : DefaultWidgetModel(spec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LayoutWidget>(spec, ::LayoutWidget)
 
     public var layout: String by stringProp("layout", "")

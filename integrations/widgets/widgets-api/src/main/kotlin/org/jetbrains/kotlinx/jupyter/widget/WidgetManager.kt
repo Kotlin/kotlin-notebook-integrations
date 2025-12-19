@@ -41,6 +41,7 @@ public class WidgetManager(
     private val widgetTarget = "jupyter.widget"
     private val widgetControlTarget = "jupyter.widget.control"
     private val widgets = mutableMapOf<String, WidgetModel>()
+    private val widgetIdByWidget = mutableMapOf<WidgetModel, String>()
 
     public val factoryRegistry: WidgetFactoryRegistry = WidgetFactoryRegistry()
 
@@ -73,7 +74,7 @@ public class WidgetManager(
 
             val widget = widgetFactory.create(this)
             val patch = openMessage.toPatch(buffers)
-            widget.applyPatch(patch, this)
+            widget.applyPatch(patch)
 
             initializeWidget(comm, widget)
         }
@@ -81,8 +82,10 @@ public class WidgetManager(
 
     public fun getWidget(modelId: String): WidgetModel? = widgets[modelId]
 
+    public fun getWidgetId(widget: WidgetModel): String? = widgetIdByWidget[widget]
+
     public fun registerWidget(widget: WidgetModel) {
-        if (widget.id != null) return
+        if (widgetIdByWidget[widget] != null) return
 
         val fullState = widget.getFullState()
         val wireMessage = getWireMessage(fullState)
@@ -107,7 +110,7 @@ public class WidgetManager(
     public fun renderWidget(widget: WidgetModel): DisplayResult =
         MimeTypedResultEx(
             buildJsonObject {
-                val modelId = widget.id ?: error("Widget is not registered")
+                val modelId = widgetIdByWidget[widget] ?: error("Widget is not registered")
                 var versionMajor = DEFAULT_MAJOR_VERSION
                 var versionMinor = DEFAULT_MINOR_VERSION
                 var modelName: String? = null
@@ -140,7 +143,7 @@ public class WidgetManager(
         widget: WidgetModel,
     ) {
         val modelId = comm.id
-        widget.setModelId(modelId)
+        widgetIdByWidget[widget] = modelId
         widgets[modelId] = widget
 
         // Reflect kernel-side changes on the frontend
@@ -161,7 +164,7 @@ public class WidgetManager(
         comm.onMessage { msg, _, buffers ->
             when (val message = Json.decodeFromJsonElement<WidgetMessage>(msg)) {
                 is WidgetStateMessage -> {
-                    widget.applyPatch(message.toPatch(buffers), this)
+                    widget.applyPatch(message.toPatch(buffers))
                 }
 
                 is RequestStateMessage -> {

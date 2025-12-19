@@ -25,7 +25,8 @@ public abstract class DefaultWidgetFactory<M : DefaultWidgetModel>(
 
 public open class DefaultWidgetModel(
     spec: WidgetSpec,
-) : WidgetModel() {
+    widgetManager: WidgetManager,
+) : WidgetModel(widgetManager) {
     public val modelName: String by stringProp("_model_name", spec.modelName)
     public val modelModule: String by stringProp("_model_module", spec.modelModule)
     public val modelModuleVersion: String by stringProp("_model_module_version", spec.modelModuleVersion)

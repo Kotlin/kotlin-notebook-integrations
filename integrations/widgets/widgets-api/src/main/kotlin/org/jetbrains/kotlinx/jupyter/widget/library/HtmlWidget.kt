@@ -13,7 +13,9 @@ public fun htmlWidget(): HtmlWidget = globalWidgetManager.html()
 
 private val spec = controlsSpec("HTML")
 
-public class HtmlWidget internal constructor() : DefaultWidgetModel(spec) {
+public class HtmlWidget internal constructor(
+    widgetManager: WidgetManager,
+) : DefaultWidgetModel(spec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<HtmlWidget>(spec, ::HtmlWidget)
 
     public var value: String by stringProp("value")
