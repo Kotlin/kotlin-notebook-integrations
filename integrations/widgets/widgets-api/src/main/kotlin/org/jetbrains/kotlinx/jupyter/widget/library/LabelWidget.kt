@@ -13,7 +13,9 @@ public fun labelWidget(): LabelWidget = globalWidgetManager.label()
 
 private val spec = controlsSpec("Label")
 
-public class LabelWidget internal constructor() : DefaultWidgetModel(spec) {
+public class LabelWidget internal constructor(
+    widgetManager: WidgetManager,
+) : DefaultWidgetModel(spec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LabelWidget>(spec, ::LabelWidget)
 
     public var value: String by stringProp("value", "")

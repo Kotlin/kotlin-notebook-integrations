@@ -9,21 +9,21 @@ private const val WIDGET_REF_PREFIX = "IPY_MODEL_"
 public class WidgetReferenceType<M : WidgetModel> : AbstractWidgetModelPropertyType<M?>("widget-ref") {
     override val default: M? get() = null
 
-    override fun serialize(propertyValue: M?): String? =
+    override fun serialize(
+        propertyValue: M?,
+        widgetManager: WidgetManager,
+    ): String? =
         propertyValue?.let {
-            "$WIDGET_REF_PREFIX${it.id}"
+            "$WIDGET_REF_PREFIX${widgetManager.getWidgetId(it)}"
         }
 
     @Suppress("UNCHECKED_CAST")
     override fun deserialize(
         patchValue: Any?,
-        widgetManager: WidgetManager?,
+        widgetManager: WidgetManager,
     ): M? {
         if (patchValue == null) return null
 
-        requireNotNull(widgetManager) {
-            "Widget manager is required to deserialize widget-ref"
-        }
         require(patchValue is String) {
             "Expected String for widget-ref, got ${patchValue::class.simpleName}"
         }

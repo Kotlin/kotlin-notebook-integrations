@@ -17,11 +17,14 @@ public object DatetimeType : AbstractWidgetModelPropertyType<Instant>("datetime"
             .withResolverStyle(ResolverStyle.STRICT)
             .withZone(ZoneOffset.UTC)
 
-    override fun serialize(propertyValue: Instant): Any? = formatter.format(propertyValue) // respect 'Z'
+    override fun serialize(
+        propertyValue: Instant,
+        widgetManager: WidgetManager,
+    ): Any? = formatter.format(propertyValue) // respect 'Z'
 
     override fun deserialize(
         patchValue: Any?,
-        widgetManager: WidgetManager?,
+        widgetManager: WidgetManager,
     ): Instant {
         require(patchValue is String) {
             "Expected String for datetime, got ${patchValue?.let { it::class.simpleName } ?: "null"}"

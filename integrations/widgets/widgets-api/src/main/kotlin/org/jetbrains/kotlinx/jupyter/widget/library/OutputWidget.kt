@@ -15,7 +15,7 @@ private val spec = outputSpec("Output")
 
 public class OutputWidget internal constructor(
     widgetManager: WidgetManager,
-) : DefaultWidgetModel(spec) {
+) : DefaultWidgetModel(spec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<OutputWidget>(spec, ::OutputWidget)
 
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())

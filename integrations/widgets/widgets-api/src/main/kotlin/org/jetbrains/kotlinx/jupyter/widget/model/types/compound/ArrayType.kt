@@ -9,12 +9,18 @@ public class ArrayType<E>(
 ) : AbstractWidgetModelPropertyType<List<E>>("array<${elementType.name}>") {
     override val default: List<E> = emptyList()
 
-    override fun serialize(propertyValue: List<E>): List<Any?> = propertyValue.map { elementType.serialize(it) }
+    override fun serialize(
+        propertyValue: List<E>,
+        widgetManager: WidgetManager,
+    ): List<Any?> =
+        propertyValue.map {
+            elementType.serialize(it, widgetManager)
+        }
 
     @Suppress("UNCHECKED_CAST")
     override fun deserialize(
         patchValue: Any?,
-        widgetManager: WidgetManager?,
+        widgetManager: WidgetManager,
     ): List<E> {
         require(patchValue is List<*>) {
             "Expected List for $name, got ${patchValue?.let { it::class.simpleName } ?: "null"}"

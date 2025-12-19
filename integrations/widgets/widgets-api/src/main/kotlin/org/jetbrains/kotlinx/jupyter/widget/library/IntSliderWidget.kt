@@ -13,7 +13,9 @@ public fun intSliderWidget(): IntSliderWidget = globalWidgetManager.intSlider()
 
 private val spec = controlsSpec("IntSlider")
 
-public class IntSliderWidget internal constructor() : DefaultWidgetModel(spec) {
+public class IntSliderWidget internal constructor(
+    widgetManager: WidgetManager,
+) : DefaultWidgetModel(spec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<IntSliderWidget>(spec, ::IntSliderWidget)
 
     public var value: Int by intProp("value", 0)

@@ -12,26 +12,18 @@ import org.jetbrains.kotlinx.jupyter.widget.protocol.Patch
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-public abstract class WidgetModel {
+public abstract class WidgetModel(
+    protected val widgetManager: WidgetManager,
+) {
     private val properties = mutableMapOf<String, WidgetModelProperty<*>>()
     private val changeListeners = mutableListOf<(Patch) -> Unit>()
 
-    private var _id: String? = null
-    public val id: String? get() = _id
-
-    public fun setModelId(modelId: String) {
-        _id = modelId
-    }
-
     public fun getFullState(): Patch = properties.mapValues { (_, property) -> property.serializedValue }
 
-    public fun applyPatch(
-        patch: Patch,
-        widgetManager: WidgetManager?,
-    ) {
+    public fun applyPatch(patch: Patch) {
         for ((key, value) in patch) {
             val property = properties[key] ?: continue
-            property.applyPatch(value, widgetManager)
+            property.applyPatch(value)
         }
     }
 
@@ -92,7 +84,7 @@ public abstract class WidgetModel {
         private val property: WidgetModelProperty<T>,
     ) : ReadWriteProperty<WidgetModel, T> {
         internal constructor(name: String, type: WidgetModelPropertyType<T>, initialValue: T) :
-            this(WidgetModelPropertyImpl(name, type, initialValue))
+            this(WidgetModelPropertyImpl(name, type, initialValue, widgetManager))
 
         init {
             addProperty(property)
@@ -120,10 +112,7 @@ public interface WidgetModelProperty<T> {
 
     public val serializedValue: Any?
 
-    public fun applyPatch(
-        patch: Any?,
-        widgetManager: WidgetManager?,
-    )
+    public fun applyPatch(patch: Any?)
 
     public fun addChangeListener(listener: (Any?) -> Unit)
 }
@@ -132,6 +121,7 @@ internal class WidgetModelPropertyImpl<T>(
     override val name: String,
     override val type: WidgetModelPropertyType<T>,
     initialValue: T,
+    private val widgetManager: WidgetManager,
 ) : WidgetModelProperty<T> {
     private var _value: T = initialValue
     private val listeners = mutableListOf<(Any?) -> Unit>()
@@ -144,12 +134,9 @@ internal class WidgetModelPropertyImpl<T>(
             notifyListeners(newValue)
         }
 
-    override val serializedValue: Any? get() = type.serialize(value)
+    override val serializedValue: Any? get() = type.serialize(value, widgetManager)
 
-    override fun applyPatch(
-        patch: Any?,
-        widgetManager: WidgetManager?,
-    ) {
+    override fun applyPatch(patch: Any?) {
         value = type.deserialize(patch, widgetManager)
     }
 
@@ -158,7 +145,7 @@ internal class WidgetModelPropertyImpl<T>(
     }
 
     private fun notifyListeners(newValue: T) {
-        val serializedValue = type.serialize(newValue)
+        val serializedValue = type.serialize(newValue, widgetManager)
         for (listener in listeners) {
             listener(serializedValue)
         }
