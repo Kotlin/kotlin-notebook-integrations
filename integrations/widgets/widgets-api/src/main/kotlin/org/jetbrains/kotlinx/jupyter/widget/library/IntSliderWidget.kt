@@ -1,15 +1,12 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
-import org.jetbrains.kotlinx.jupyter.widget.globalWidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.controlsSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 
 public fun WidgetManager.intSlider(): IntSliderWidget = createAndRegisterWidget(IntSliderWidget.Factory)
-
-public fun intSliderWidget(): IntSliderWidget = globalWidgetManager.intSlider()
 
 private val spec = controlsSpec("IntSlider")
 

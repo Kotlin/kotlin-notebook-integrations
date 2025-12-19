@@ -12,6 +12,7 @@ Each integration lives in the `integrations/` directory and has its own README.
 - [IntelliJ Platform](integrations/intellij-platform/README.md) — interactive access to IntelliJ Platform APIs from a running IDE process.
 - [HTTP Utilities](integrations/http-util/README.md) — JSON/serialization helpers and Ktor HTTP client wrappers for notebooks.
 - [Database](integrations/database/README.md) — helpers for configuring JDBC DataSources and working with Databases.
+- [Widgets](integrations/widgets/README.md) — ipywidgets API for Kotlin notebooks.
 
 ## Contributing
 

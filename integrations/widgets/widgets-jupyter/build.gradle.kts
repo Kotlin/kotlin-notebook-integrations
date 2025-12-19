@@ -6,8 +6,7 @@ plugins {
 }
 
 dependencies {
-    compileOnly(libs.kotlinx.serialization.json)
-    implementation(libs.kotlin.reflect)
+    implementation(projects.integrations.widgets.widgetsApi)
 }
 
 kotlin {
@@ -19,8 +18,12 @@ kotlin {
     explicitApi()
 }
 
+tasks.processJupyterApiResources {
+    libraryProducers = listOf("org.jetbrains.kotlinx.jupyter.widget.integration.WidgetJupyterIntegration")
+}
+
 kotlinPublications {
     publication {
-        description.set("Kotlin APIs for IPython Widgets")
+        description.set("Kotlin Jupyter kernel integration for IPython Widgets")
     }
 }
