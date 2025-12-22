@@ -9,6 +9,7 @@ import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.intOrNull
 import kotlin.collections.iterator
 
 internal fun serializeJsonMap(map: Patch): JsonElement = serialize(map)
@@ -57,7 +58,10 @@ private fun deserializePrimitive(json: JsonPrimitive): Any? =
         json is JsonNull -> null
         json.isString -> json.content
         else -> {
-            json.booleanOrNull ?: json.doubleOrNull ?: error("Unknown JSON primitive type: [$json]")
+            json.booleanOrNull
+                ?: json.intOrNull
+                ?: json.doubleOrNull
+                ?: error("Unknown JSON primitive type: [$json]")
         }
     }
 
