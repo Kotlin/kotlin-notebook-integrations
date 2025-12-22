@@ -27,25 +27,31 @@ public class WidgetModelSchemaParser(
         val definition = element.jsonObject
         val properties = definition["properties"]?.jsonObject ?: return null
         val required = definition["required"]?.asStringSet()
+        val spec = parseSpec(properties) ?: return null
         val parsedProperties =
-            properties.map { (propertyName, propertyElement) ->
+            properties.mapNotNull { (propertyName, propertyElement) ->
                 parseProperty(propertyName, propertyElement, required)
             }
-        return WidgetModelDescription(name, parsedProperties)
+        return WidgetModelDescription(spec.controlName, spec.description, parsedProperties)
     }
 
     private fun parseProperty(
         name: String,
         element: JsonElement,
         required: Set<String>?,
-    ): WidgetPropertyDescription {
-        val description = parseType(element.jsonObject)
-        val raw = json.encodeToString(JsonElement.serializer(), element)
+    ): WidgetPropertyDescription? {
+        if (name.startsWith("_")) return null
+
+        val objectElement = element.jsonObject
+        val description = parseType(objectElement)
+        val ref = objectElement["\$ref"]?.jsonPrimitive?.content
+        val default = objectElement["default"]
         return WidgetPropertyDescription(
             name = name,
             type = description,
             required = required?.contains(name) == true,
-            rawSchema = raw,
+            ref = ref,
+            defaultValue = default,
         )
     }
 
@@ -92,6 +98,55 @@ public class WidgetModelSchemaParser(
         }
             ?.toSet()
             .orEmpty()
+
+    private fun parseSpec(properties: JsonObject): WidgetSpecComponents? {
+        val modelName = properties["_model_name"].asStringDefault()
+        val modelModule = properties["_model_module"].asStringDefault()
+        val modelModuleVersion = properties["_model_module_version"].asStringDefault()
+        val viewName = properties["_view_name"].asStringDefault()
+        val viewModule = properties["_view_module"].asStringDefault()
+        val viewModuleVersion = properties["_view_module_version"].asStringDefault()
+
+        if (
+            modelName == null ||
+            modelModule == null ||
+            modelModuleVersion == null ||
+            viewName == null ||
+            viewModule == null ||
+            viewModuleVersion == null
+        ) return null
+
+        val controlName = modelName.removeSuffix("Model")
+        return WidgetSpecComponents(
+            controlName = controlName,
+            description = WidgetSpecDescription(
+                modelName = modelName,
+                modelModule = modelModule,
+                modelModuleVersion = modelModuleVersion,
+                viewName = viewName,
+                viewModule = viewModule,
+                viewModuleVersion = viewModuleVersion,
+            ),
+        )
+    }
+
+    private fun JsonElement?.asStringDefault(): String? {
+        val element = this ?: return null
+        val obj = element as? JsonObject ?: return null
+        val defaultValue = obj["default"]
+        if (defaultValue is JsonPrimitive && defaultValue.isString) return defaultValue.content
+        val enumValues = obj["enum"] as? JsonArray
+        val firstEnum = enumValues?.firstOrNull() as? JsonPrimitive
+        if (firstEnum != null && firstEnum.isString) return firstEnum.content
+        val constValue = obj["const"] as? JsonPrimitive
+        if (constValue != null && constValue.isString) return constValue.content
+        return null
+    }
+
+    private data class WidgetSpecComponents(
+        val controlName: String,
+        val description: WidgetSpecDescription,
+    )
 
     private fun parseSimpleType(value: String): WidgetSchemaTypeDescription =
         when (value) {
