@@ -59,7 +59,7 @@ public class WidgetManagerImpl(
                         val message = UpdateStatesMessage(wireMessage.state, wireMessage.bufferPaths)
 
                         val data = Json.encodeToJsonElement<WidgetMessage>(message).jsonObject
-                        comm.send(data, null, emptyList())
+                        comm.send(data, null, wireMessage.buffers)
                     }
 
                     else -> {}
