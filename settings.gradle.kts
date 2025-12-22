@@ -23,6 +23,7 @@ projectStructure {
         folder("widgets") {
             project("widgets-api")
             project("widgets-jupyter")
+            project("widgets-generator")
         }
     }
 }
