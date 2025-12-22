@@ -7,6 +7,8 @@ import java.net.URL
 import java.nio.file.Path
 import kotlin.io.path.inputStream
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 
@@ -33,7 +35,8 @@ public class WidgetModelGenerator(
         outputDir: Path,
     ): Path =
         schemaStream.bufferedReader().use { reader ->
-            val schema = defaultJson.parseToJsonElement(reader.readText()).jsonObject
+            val root = defaultJson.parseToJsonElement(reader.readText())
+            val schema = root.asSchemaObject()
             generate(schema, outputDir)
         }
 
@@ -55,6 +58,15 @@ public class WidgetModelGenerator(
             Json {
                 ignoreUnknownKeys = true
                 prettyPrint = false
+            }
+
+        private fun JsonElement.asSchemaObject(): JsonObject =
+            when (this) {
+                is JsonObject -> this
+                is JsonArray -> firstNotNullOfOrNull { element ->
+                    (element as? JsonObject)?.takeIf { "definitions" in it }
+                }
+                    ?: error("Schema root must be a JsonObject or contain an object with 'definitions'")
             }
     }
 }
