@@ -61,7 +61,7 @@ internal object BufferPathsSerializer : KSerializer<List<List<Any>>> {
             pathEl.map { element ->
                 element as? JsonPrimitive ?: error("Expected JSON primitive inside buffer_paths, got: $element")
                 if (element.isString) return@map element.content
-                element.doubleOrNull ?: element.intOrNull ?: error("Unsupported buffer path element: $element")
+                element.intOrNull ?: element.doubleOrNull ?: error("Unsupported buffer path element: $element")
             }
         }
     }
