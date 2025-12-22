@@ -13,18 +13,24 @@ import kotlinx.serialization.json.jsonPrimitive
 public class WidgetModelSchemaParser(
     private val json: Json,
 ) {
-    public fun parse(schema: JsonObject): List<WidgetModelDescription> {
-        val definitions = schema["definitions"]?.jsonObject ?: return emptyList()
-        return definitions.mapNotNull { (name, element) ->
-            parseDefinition(name, element)
+    public fun parse(schema: JsonElement): List<WidgetModelDescription> =
+        when (schema) {
+            is JsonObject -> parseObject(schema)
+            is JsonArray -> schema.flatMap { element -> parseObject(element.jsonObjectOrNull()) }
+            else -> emptyList()
         }
+
+    private fun parseObject(element: JsonObject?): List<WidgetModelDescription> {
+        val definitions = element?.get("definitions")?.jsonObject
+        if (definitions != null) {
+            return definitions.mapNotNull { (_, value) -> parseDefinition(value) }
+        }
+
+        return parseDefinition(element)?.let(::listOf).orEmpty()
     }
 
-    private fun parseDefinition(
-        name: String,
-        element: JsonElement,
-    ): WidgetModelDescription? {
-        val definition = element.jsonObject
+    private fun parseDefinition(element: JsonElement?): WidgetModelDescription? {
+        val definition = element?.jsonObject ?: return null
         val properties = definition["properties"]?.jsonObject ?: return null
         val required = definition["required"]?.asStringSet()
         val spec = parseSpec(properties) ?: return null
@@ -159,4 +165,6 @@ public class WidgetModelSchemaParser(
             "null" -> WidgetSchemaTypeDescription.NULL
             else -> WidgetSchemaTypeDescription.UNKNOWN
         }
+
+    private fun JsonElement.jsonObjectOrNull(): JsonObject? = this as? JsonObject
 }
