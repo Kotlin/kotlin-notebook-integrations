@@ -10,7 +10,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonObject
 
 public class WidgetModelGenerator(
     private val schemaParser: WidgetModelSchemaParser = WidgetModelSchemaParser(defaultJson),
@@ -64,9 +63,16 @@ public class WidgetModelGenerator(
             when (this) {
                 is JsonObject -> this
                 is JsonArray -> firstNotNullOfOrNull { element ->
-                    (element as? JsonObject)?.takeIf { "definitions" in it }
+                    element.asSchemaObjectOrNull()
                 }
                     ?: error("Schema root must be a JsonObject or contain an object with 'definitions'")
+            }
+
+        private fun JsonElement.asSchemaObjectOrNull(): JsonObject? =
+            when (this) {
+                is JsonObject -> takeIf { "definitions" in this }
+                is JsonArray -> firstNotNullOfOrNull { element -> element.asSchemaObjectOrNull() }
+                else -> null
             }
     }
 }
