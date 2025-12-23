@@ -19,6 +19,12 @@ kotlin {
     explicitApi()
 }
 
+sourceSets {
+    main {
+        kotlin.srcDir("src/generated/kotlin")
+    }
+}
+
 kotlinPublications {
     publication {
         description.set("Kotlin APIs for IPython Widgets")

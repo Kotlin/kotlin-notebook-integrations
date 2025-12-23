@@ -18,6 +18,12 @@ kotlin {
     explicitApi()
 }
 
+sourceSets {
+    main {
+        kotlin.srcDir("src/generated/kotlin")
+    }
+}
+
 tasks.processJupyterApiResources {
     libraryProducers = listOf("org.jetbrains.kotlinx.jupyter.widget.integration.WidgetJupyterIntegration")
 }
