@@ -11,16 +11,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.RawObjectType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val outputSpec =
-    WidgetSpec(
-        modelName = "OutputModel",
-        modelModule = "@jupyter-widgets/output",
-        modelModuleVersion = "1.0.0",
-        viewName = "OutputView",
-        viewModule = "@jupyter-widgets/output",
-        viewModuleVersion = "1.0.0",
-    )
+private val outputSpec = WidgetSpec(
+    modelName = "OutputModel",
+    modelModule = "@jupyter-widgets/output",
+    modelModuleVersion = "1.0.0",
+    viewName = "OutputView",
+    viewModule = "@jupyter-widgets/output",
+    viewModuleVersion = "1.0.0",
+)
 
 public fun WidgetManager.output(): OutputWidget = createAndRegisterWidget(OutputWidget.Factory)
 

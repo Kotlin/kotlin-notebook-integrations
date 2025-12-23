@@ -5,6 +5,14 @@ plugins {
     alias(libs.plugins.publisher)
 }
 
+subprojects {
+    ktlint {
+        filter {
+            exclude("**/src/generated/**")
+        }
+    }
+}
+
 kotlinPublications {
     pom {
         githubRepo("Kotlin", "kotlin-notebook-integrations")

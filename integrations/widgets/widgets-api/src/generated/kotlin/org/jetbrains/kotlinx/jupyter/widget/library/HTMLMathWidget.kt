@@ -10,30 +10,30 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val htmlmathSpec =
-    WidgetSpec(
-        modelName = "HTMLMathModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "HTMLMathView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val htmlMathSpec = WidgetSpec(
+    modelName = "HTMLMathModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "HTMLMathView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
-public fun WidgetManager.htmlmath(): HTMLMathWidget = createAndRegisterWidget(HTMLMathWidget.Factory)
+public fun WidgetManager.htmlMath(): HTMLMathWidget = createAndRegisterWidget(HTMLMathWidget.Factory)
 
 public class HTMLMathWidget internal constructor(
     widgetManager: WidgetManager,
-) : DefaultWidgetModel(htmlmathSpec, widgetManager) {
-    internal object Factory : DefaultWidgetFactory<HTMLMathWidget>(htmlmathSpec, ::HTMLMathWidget)
+) : DefaultWidgetModel(htmlMathSpec, widgetManager) {
+    internal object Factory : DefaultWidgetFactory<HTMLMathWidget>(htmlMathSpec, ::HTMLMathWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var description: String by stringProp("description", "")
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: HTMLMathStyleWidget? by widgetProp("style", widgetManager.htmlmathStyle())
+    public var style: HTMLMathStyleWidget? by widgetProp("style", widgetManager.htmlMathStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: String by stringProp("value", "")

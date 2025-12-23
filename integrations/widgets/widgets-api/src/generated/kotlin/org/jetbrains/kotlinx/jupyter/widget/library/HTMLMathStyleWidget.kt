@@ -9,22 +9,21 @@ import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 
-private val htmlmathStyleSpec =
-    WidgetSpec(
-        modelName = "HTMLMathStyleModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "StyleView",
-        viewModule = "@jupyter-widgets/base",
-        viewModuleVersion = "2.0.0",
-    )
+private val htmlMathStyleSpec = WidgetSpec(
+    modelName = "HTMLMathStyleModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "StyleView",
+    viewModule = "@jupyter-widgets/base",
+    viewModuleVersion = "2.0.0",
+)
 
-public fun WidgetManager.htmlmathStyle(): HTMLMathStyleWidget = createAndRegisterWidget(HTMLMathStyleWidget.Factory)
+public fun WidgetManager.htmlMathStyle(): HTMLMathStyleWidget = createAndRegisterWidget(HTMLMathStyleWidget.Factory)
 
 public class HTMLMathStyleWidget internal constructor(
     widgetManager: WidgetManager,
-) : DefaultWidgetModel(htmlmathStyleSpec, widgetManager) {
-    internal object Factory : DefaultWidgetFactory<HTMLMathStyleWidget>(htmlmathStyleSpec, ::HTMLMathStyleWidget)
+) : DefaultWidgetModel(htmlMathStyleSpec, widgetManager) {
+    internal object Factory : DefaultWidgetFactory<HTMLMathStyleWidget>(htmlMathStyleSpec, ::HTMLMathStyleWidget)
 
     public var background: String? by prop("background", NullableType(StringType), null)
     public var descriptionWidth: String by stringProp("description_width", "")

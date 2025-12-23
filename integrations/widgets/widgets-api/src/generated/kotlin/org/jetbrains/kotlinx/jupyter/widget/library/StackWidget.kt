@@ -25,15 +25,14 @@ public object StackWidgetBoxStyleEnum : WidgetEnum<StackWidgetBoxStyleEnum>() {
     public val Default: WidgetEnumEntry<StackWidgetBoxStyleEnum> by entry("")
 }
 
-private val stackSpec =
-    WidgetSpec(
-        modelName = "StackModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "StackView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val stackSpec = WidgetSpec(
+    modelName = "StackModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "StackView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.stack(): StackWidget = createAndRegisterWidget(StackWidget.Factory)
 
@@ -43,11 +42,7 @@ public class StackWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<StackWidget>(stackSpec, ::StackWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<StackWidgetBoxStyleEnum> by prop(
-        "box_style",
-        WidgetEnumType(StackWidgetBoxStyleEnum, StackWidgetBoxStyleEnum.Default),
-        StackWidgetBoxStyleEnum.Default,
-    )
+    public var boxStyle: WidgetEnumEntry<StackWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(StackWidgetBoxStyleEnum, StackWidgetBoxStyleEnum.Default), StackWidgetBoxStyleEnum.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)

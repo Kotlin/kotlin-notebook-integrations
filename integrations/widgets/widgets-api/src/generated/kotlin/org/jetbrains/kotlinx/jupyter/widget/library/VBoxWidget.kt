@@ -24,15 +24,14 @@ public object VBoxWidgetBoxStyleEnum : WidgetEnum<VBoxWidgetBoxStyleEnum>() {
     public val Default: WidgetEnumEntry<VBoxWidgetBoxStyleEnum> by entry("")
 }
 
-private val vboxSpec =
-    WidgetSpec(
-        modelName = "VBoxModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "VBoxView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val vboxSpec = WidgetSpec(
+    modelName = "VBoxModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "VBoxView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.vbox(): VBoxWidget = createAndRegisterWidget(VBoxWidget.Factory)
 
@@ -42,11 +41,7 @@ public class VBoxWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<VBoxWidget>(vboxSpec, ::VBoxWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<VBoxWidgetBoxStyleEnum> by prop(
-        "box_style",
-        WidgetEnumType(VBoxWidgetBoxStyleEnum, VBoxWidgetBoxStyleEnum.Default),
-        VBoxWidgetBoxStyleEnum.Default,
-    )
+    public var boxStyle: WidgetEnumEntry<VBoxWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(VBoxWidgetBoxStyleEnum, VBoxWidgetBoxStyleEnum.Default), VBoxWidgetBoxStyleEnum.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)

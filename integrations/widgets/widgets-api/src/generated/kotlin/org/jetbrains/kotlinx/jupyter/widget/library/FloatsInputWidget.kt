@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object FloatsInputWidgetTagStyleEnum : WidgetEnum<FloatsInputWidgetTagStyleEnum>() {
     public val Primary: WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by entry("primary")
@@ -25,15 +26,14 @@ public object FloatsInputWidgetTagStyleEnum : WidgetEnum<FloatsInputWidgetTagSty
     public val Default: WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by entry("")
 }
 
-private val floatsInputSpec =
-    WidgetSpec(
-        modelName = "FloatsInputModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "FloatsInputView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val floatsInputSpec = WidgetSpec(
+    modelName = "FloatsInputModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "FloatsInputView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.floatsInput(): FloatsInputWidget = createAndRegisterWidget(FloatsInputWidget.Factory)
 
@@ -54,11 +54,7 @@ public class FloatsInputWidget internal constructor(
     public var placeholder: String by stringProp("placeholder", "​")
     public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
-    public var tagStyle: WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by prop(
-        "tag_style",
-        WidgetEnumType(FloatsInputWidgetTagStyleEnum, FloatsInputWidgetTagStyleEnum.Default),
-        FloatsInputWidgetTagStyleEnum.Default,
-    )
+    public var tagStyle: WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by prop("tag_style", WidgetEnumType(FloatsInputWidgetTagStyleEnum, FloatsInputWidgetTagStyleEnum.Default), FloatsInputWidgetTagStyleEnum.Default)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
 }

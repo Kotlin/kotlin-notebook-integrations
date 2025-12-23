@@ -9,15 +9,14 @@ import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
 
-private val linkSpec =
-    WidgetSpec(
-        modelName = "LinkModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "null",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val linkSpec = WidgetSpec(
+    modelName = "LinkModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "null",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.link(): LinkWidget = createAndRegisterWidget(LinkWidget.Factory)
 

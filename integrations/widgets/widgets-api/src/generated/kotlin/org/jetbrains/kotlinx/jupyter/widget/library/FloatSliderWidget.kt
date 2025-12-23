@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object FloatSliderWidgetBehaviorEnum : WidgetEnum<FloatSliderWidgetBehaviorEnum>() {
     public val DragTap: WidgetEnumEntry<FloatSliderWidgetBehaviorEnum> by entry("drag-tap")
@@ -28,15 +29,14 @@ public object FloatSliderWidgetOrientationEnum : WidgetEnum<FloatSliderWidgetOri
     public val Vertical: WidgetEnumEntry<FloatSliderWidgetOrientationEnum> by entry("vertical")
 }
 
-private val floatSliderSpec =
-    WidgetSpec(
-        modelName = "FloatSliderModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "FloatSliderView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val floatSliderSpec = WidgetSpec(
+    modelName = "FloatSliderModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "FloatSliderView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.floatSlider(): FloatSliderWidget = createAndRegisterWidget(FloatSliderWidget.Factory)
 
@@ -46,11 +46,7 @@ public class FloatSliderWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<FloatSliderWidget>(floatSliderSpec, ::FloatSliderWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var behavior: WidgetEnumEntry<FloatSliderWidgetBehaviorEnum> by prop(
-        "behavior",
-        WidgetEnumType(FloatSliderWidgetBehaviorEnum, FloatSliderWidgetBehaviorEnum.DragTap),
-        FloatSliderWidgetBehaviorEnum.DragTap,
-    )
+    public var behavior: WidgetEnumEntry<FloatSliderWidgetBehaviorEnum> by prop("behavior", WidgetEnumType(FloatSliderWidgetBehaviorEnum, FloatSliderWidgetBehaviorEnum.DragTap), FloatSliderWidgetBehaviorEnum.DragTap)
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
     public var description: String by stringProp("description", "")
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
@@ -58,11 +54,7 @@ public class FloatSliderWidget internal constructor(
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var max: Double by doubleProp("max", 100.0)
     public var min: Double by doubleProp("min", 0.0)
-    public var orientation: WidgetEnumEntry<FloatSliderWidgetOrientationEnum> by prop(
-        "orientation",
-        WidgetEnumType(FloatSliderWidgetOrientationEnum, FloatSliderWidgetOrientationEnum.Horizontal),
-        FloatSliderWidgetOrientationEnum.Horizontal,
-    )
+    public var orientation: WidgetEnumEntry<FloatSliderWidgetOrientationEnum> by prop("orientation", WidgetEnumType(FloatSliderWidgetOrientationEnum, FloatSliderWidgetOrientationEnum.Horizontal), FloatSliderWidgetOrientationEnum.Horizontal)
     public var readout: Boolean by boolProp("readout", true)
     public var readoutFormat: String by stringProp("readout_format", ".2f")
     public var step: Double? by prop("step", NullableType(FloatType), 0.1)

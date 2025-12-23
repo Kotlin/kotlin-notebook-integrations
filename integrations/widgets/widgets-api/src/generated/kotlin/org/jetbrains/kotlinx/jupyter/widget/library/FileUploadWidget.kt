@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object FileUploadWidgetButtonStyleEnum : WidgetEnum<FileUploadWidgetButtonStyleEnum>() {
     public val Primary: WidgetEnumEntry<FileUploadWidgetButtonStyleEnum> by entry("primary")
@@ -24,15 +25,14 @@ public object FileUploadWidgetButtonStyleEnum : WidgetEnum<FileUploadWidgetButto
     public val Default: WidgetEnumEntry<FileUploadWidgetButtonStyleEnum> by entry("")
 }
 
-private val fileUploadSpec =
-    WidgetSpec(
-        modelName = "FileUploadModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "FileUploadView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val fileUploadSpec = WidgetSpec(
+    modelName = "FileUploadModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "FileUploadView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.fileUpload(): FileUploadWidget = createAndRegisterWidget(FileUploadWidget.Factory)
 
@@ -43,11 +43,7 @@ public class FileUploadWidget internal constructor(
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var accept: String by stringProp("accept", "")
-    public var buttonStyle: WidgetEnumEntry<FileUploadWidgetButtonStyleEnum> by prop(
-        "button_style",
-        WidgetEnumType(FileUploadWidgetButtonStyleEnum, FileUploadWidgetButtonStyleEnum.Default),
-        FileUploadWidgetButtonStyleEnum.Default,
-    )
+    public var buttonStyle: WidgetEnumEntry<FileUploadWidgetButtonStyleEnum> by prop("button_style", WidgetEnumType(FileUploadWidgetButtonStyleEnum, FileUploadWidgetButtonStyleEnum.Default), FileUploadWidgetButtonStyleEnum.Default)
     public var description: String by stringProp("description", "")
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)

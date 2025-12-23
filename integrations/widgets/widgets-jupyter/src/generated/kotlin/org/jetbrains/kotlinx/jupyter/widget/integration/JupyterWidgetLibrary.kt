@@ -101,9 +101,9 @@ import org.jetbrains.kotlinx.jupyter.widget.library.floatsInput
 import org.jetbrains.kotlinx.jupyter.widget.library.gridBox
 import org.jetbrains.kotlinx.jupyter.widget.library.hbox
 import org.jetbrains.kotlinx.jupyter.widget.library.html
-import org.jetbrains.kotlinx.jupyter.widget.library.htmlmath
-import org.jetbrains.kotlinx.jupyter.widget.library.htmlmathStyle
-import org.jetbrains.kotlinx.jupyter.widget.library.htmlstyle
+import org.jetbrains.kotlinx.jupyter.widget.library.htmlMath
+import org.jetbrains.kotlinx.jupyter.widget.library.htmlMathStyle
+import org.jetbrains.kotlinx.jupyter.widget.library.htmlStyle
 import org.jetbrains.kotlinx.jupyter.widget.library.image
 import org.jetbrains.kotlinx.jupyter.widget.library.intProgress
 import org.jetbrains.kotlinx.jupyter.widget.library.intRangeSlider
@@ -150,13 +150,13 @@ public fun boundedIntTextWidget(): BoundedIntTextWidget = globalWidgetManager.bo
 
 public fun boxWidget(): BoxWidget = globalWidgetManager.box()
 
-public fun buttonStyleWidget(): ButtonStyleWidget = globalWidgetManager.buttonStyle()
-
 public fun buttonWidget(): ButtonWidget = globalWidgetManager.button()
 
-public fun checkboxStyleWidget(): CheckboxStyleWidget = globalWidgetManager.checkboxStyle()
+public fun buttonStyleWidget(): ButtonStyleWidget = globalWidgetManager.buttonStyle()
 
 public fun checkboxWidget(): CheckboxWidget = globalWidgetManager.checkbox()
+
+public fun checkboxStyleWidget(): CheckboxStyleWidget = globalWidgetManager.checkboxStyle()
 
 public fun colorPickerWidget(): ColorPickerWidget = globalWidgetManager.colorPicker()
 
@@ -164,13 +164,11 @@ public fun colorsInputWidget(): ColorsInputWidget = globalWidgetManager.colorsIn
 
 public fun comboboxWidget(): ComboboxWidget = globalWidgetManager.combobox()
 
+public fun controllerWidget(): ControllerWidget = globalWidgetManager.controller()
+
 public fun controllerAxisWidget(): ControllerAxisWidget = globalWidgetManager.controllerAxis()
 
 public fun controllerButtonWidget(): ControllerButtonWidget = globalWidgetManager.controllerButton()
-
-public fun controllerWidget(): ControllerWidget = globalWidgetManager.controller()
-
-public fun domwidgetWidget(): DOMWidget = globalWidgetManager.domwidget()
 
 public fun datePickerWidget(): DatePickerWidget = globalWidgetManager.datePicker()
 
@@ -179,6 +177,8 @@ public fun datetimeWidget(): DatetimeWidget = globalWidgetManager.datetime()
 public fun descriptionStyleWidget(): DescriptionStyleWidget = globalWidgetManager.descriptionStyle()
 
 public fun directionalLinkWidget(): DirectionalLinkWidget = globalWidgetManager.directionalLink()
+
+public fun domwidgetWidget(): DOMWidget = globalWidgetManager.domwidget()
 
 public fun dropdownWidget(): DropdownWidget = globalWidgetManager.dropdown()
 
@@ -200,13 +200,13 @@ public fun gridBoxWidget(): GridBoxWidget = globalWidgetManager.gridBox()
 
 public fun hboxWidget(): HBoxWidget = globalWidgetManager.hbox()
 
-public fun htmlmathStyleWidget(): HTMLMathStyleWidget = globalWidgetManager.htmlmathStyle()
-
-public fun htmlmathWidget(): HTMLMathWidget = globalWidgetManager.htmlmath()
-
-public fun htmlstyleWidget(): HTMLStyleWidget = globalWidgetManager.htmlstyle()
-
 public fun htmlWidget(): HTMLWidget = globalWidgetManager.html()
+
+public fun htmlMathWidget(): HTMLMathWidget = globalWidgetManager.htmlMath()
+
+public fun htmlMathStyleWidget(): HTMLMathStyleWidget = globalWidgetManager.htmlMathStyle()
+
+public fun htmlStyleWidget(): HTMLStyleWidget = globalWidgetManager.htmlStyle()
 
 public fun imageWidget(): ImageWidget = globalWidgetManager.image()
 
@@ -220,9 +220,9 @@ public fun intTextWidget(): IntTextWidget = globalWidgetManager.intText()
 
 public fun intsInputWidget(): IntsInputWidget = globalWidgetManager.intsInput()
 
-public fun labelStyleWidget(): LabelStyleWidget = globalWidgetManager.labelStyle()
-
 public fun labelWidget(): LabelWidget = globalWidgetManager.label()
+
+public fun labelStyleWidget(): LabelStyleWidget = globalWidgetManager.labelStyle()
 
 public fun layoutWidget(): LayoutWidget = globalWidgetManager.layout()
 
@@ -240,9 +240,9 @@ public fun progressStyleWidget(): ProgressStyleWidget = globalWidgetManager.prog
 
 public fun radioButtonsWidget(): RadioButtonsWidget = globalWidgetManager.radioButtons()
 
-public fun selectMultipleWidget(): SelectMultipleWidget = globalWidgetManager.selectMultiple()
-
 public fun selectWidget(): SelectWidget = globalWidgetManager.select()
+
+public fun selectMultipleWidget(): SelectMultipleWidget = globalWidgetManager.selectMultiple()
 
 public fun selectionRangeSliderWidget(): SelectionRangeSliderWidget = globalWidgetManager.selectionRangeSlider()
 
@@ -256,24 +256,25 @@ public fun tabWidget(): TabWidget = globalWidgetManager.tab()
 
 public fun tagsInputWidget(): TagsInputWidget = globalWidgetManager.tagsInput()
 
-public fun textStyleWidget(): TextStyleWidget = globalWidgetManager.textStyle()
-
 public fun textWidget(): TextWidget = globalWidgetManager.text()
+
+public fun textStyleWidget(): TextStyleWidget = globalWidgetManager.textStyle()
 
 public fun textareaWidget(): TextareaWidget = globalWidgetManager.textarea()
 
 public fun timeWidget(): TimeWidget = globalWidgetManager.time()
 
-public fun toggleButtonStyleWidget(): ToggleButtonStyleWidget = globalWidgetManager.toggleButtonStyle()
-
 public fun toggleButtonWidget(): ToggleButtonWidget = globalWidgetManager.toggleButton()
 
-public fun toggleButtonsStyleWidget(): ToggleButtonsStyleWidget = globalWidgetManager.toggleButtonsStyle()
+public fun toggleButtonStyleWidget(): ToggleButtonStyleWidget = globalWidgetManager.toggleButtonStyle()
 
 public fun toggleButtonsWidget(): ToggleButtonsWidget = globalWidgetManager.toggleButtons()
 
-public fun vboxWidget(): VBoxWidget = globalWidgetManager.vbox()
+public fun toggleButtonsStyleWidget(): ToggleButtonsStyleWidget = globalWidgetManager.toggleButtonsStyle()
 
 public fun validWidget(): ValidWidget = globalWidgetManager.valid()
 
+public fun vboxWidget(): VBoxWidget = globalWidgetManager.vbox()
+
 public fun videoWidget(): VideoWidget = globalWidgetManager.video()
+

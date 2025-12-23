@@ -9,18 +9,19 @@ import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val controllerSpec =
-    WidgetSpec(
-        modelName = "ControllerModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "ControllerView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val controllerSpec = WidgetSpec(
+    modelName = "ControllerModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "ControllerView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.controller(): ControllerWidget = createAndRegisterWidget(ControllerWidget.Factory)
 

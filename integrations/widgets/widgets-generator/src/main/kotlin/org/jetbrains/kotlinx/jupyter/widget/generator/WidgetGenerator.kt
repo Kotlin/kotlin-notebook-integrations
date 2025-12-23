@@ -529,7 +529,7 @@ private class WidgetGenerator(
         val filePath = apiOutput / packageName.replace('.', '/') / "DefaultWidgetFactories.kt"
         filePath.parent.createDirectories()
 
-        val sortedInfos = widgetInfos.sortedBy { it.className }
+        val sortedInfos = widgetInfos.sortedInImportsOrder { it.className }
         val content =
             buildString {
                 appendLine(GENERATED_NOTICE)
@@ -555,14 +555,16 @@ private class WidgetGenerator(
         val filePath = jupyterOutput / packageName.replace('.', '/') / "JupyterWidgetLibrary.kt"
         filePath.parent.createDirectories()
 
-        val sortedInfos = widgetInfos.sortedBy { it.className }
+        val sortedInfos = widgetInfos.sortedInImportsOrder { it.functionName }
         val content =
             buildString {
                 appendLine(GENERATED_NOTICE)
                 appendLine("package $packageName")
                 appendLine()
-                for (info in sortedInfos) {
+                for (info in widgetInfos.sortedInImportsOrder { it.className }) {
                     appendLine("import $WIDGET_LIBRARY_PACKAGE.${info.className}")
+                }
+                for (info in sortedInfos) {
                     appendLine("import $WIDGET_LIBRARY_PACKAGE.${info.functionName}")
                 }
                 appendLine()
@@ -574,6 +576,15 @@ private class WidgetGenerator(
 
         filePath.writeText(content)
     }
+
+    private fun <T> List<T>.sortedInImportsOrder(representAsString: (T) -> String): List<T> =
+        sortedWith { a, b ->
+            when {
+                representAsString(a).startsWith(representAsString(b)) -> 1
+                representAsString(b).startsWith(representAsString(a)) -> -1
+                else -> representAsString(a).compareTo(representAsString(b))
+            }
+        }
 
     private fun recreateDirectory(path: Path) {
         if (path.exists()) {
@@ -593,15 +604,28 @@ private data class WidgetInfo(
     val schema: WidgetSchema,
 )
 
+private val commonAbbreviations =
+    setOf(
+        "html",
+    )
+
 private fun String.toCamelCase(): String {
     if (isEmpty()) return this
     if (length == 1) return lowercase()
-    var index = 1
-    while (index < length && this[index].isUpperCase()) {
-        index++
-    }
-    val prefix = substring(0, index)
-    val rest = substring(index)
+    val abbreviation = commonAbbreviations.find { startsWith(it, ignoreCase = true) }
+    val suffixStartIndex =
+        if (abbreviation == null) {
+            var index = 1
+            while (index < length && this[index].isUpperCase()) {
+                index++
+            }
+            index
+        } else {
+            abbreviation.length
+        }
+
+    val prefix = substring(0, suffixStartIndex)
+    val rest = substring(suffixStartIndex)
     return prefix.lowercase() + rest
 }
 

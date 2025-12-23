@@ -6,16 +6,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
+import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 
-private val descriptionStyleSpec =
-    WidgetSpec(
-        modelName = "DescriptionStyleModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "StyleView",
-        viewModule = "@jupyter-widgets/base",
-        viewModuleVersion = "2.0.0",
-    )
+private val descriptionStyleSpec = WidgetSpec(
+    modelName = "DescriptionStyleModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "StyleView",
+    viewModule = "@jupyter-widgets/base",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.descriptionStyle(): DescriptionStyleWidget = createAndRegisterWidget(DescriptionStyleWidget.Factory)
 

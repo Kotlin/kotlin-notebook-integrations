@@ -25,15 +25,14 @@ public object TabWidgetBoxStyleEnum : WidgetEnum<TabWidgetBoxStyleEnum>() {
     public val Default: WidgetEnumEntry<TabWidgetBoxStyleEnum> by entry("")
 }
 
-private val tabSpec =
-    WidgetSpec(
-        modelName = "TabModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "TabView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val tabSpec = WidgetSpec(
+    modelName = "TabModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "TabView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.tab(): TabWidget = createAndRegisterWidget(TabWidget.Factory)
 
@@ -43,11 +42,7 @@ public class TabWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<TabWidget>(tabSpec, ::TabWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<TabWidgetBoxStyleEnum> by prop(
-        "box_style",
-        WidgetEnumType(TabWidgetBoxStyleEnum, TabWidgetBoxStyleEnum.Default),
-        TabWidgetBoxStyleEnum.Default,
-    )
+    public var boxStyle: WidgetEnumEntry<TabWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(TabWidgetBoxStyleEnum, TabWidgetBoxStyleEnum.Default), TabWidgetBoxStyleEnum.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)

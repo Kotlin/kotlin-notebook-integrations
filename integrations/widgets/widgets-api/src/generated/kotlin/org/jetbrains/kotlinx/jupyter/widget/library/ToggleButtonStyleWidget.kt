@@ -9,15 +9,14 @@ import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 
-private val toggleButtonStyleSpec =
-    WidgetSpec(
-        modelName = "ToggleButtonStyleModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "StyleView",
-        viewModule = "@jupyter-widgets/base",
-        viewModuleVersion = "2.0.0",
-    )
+private val toggleButtonStyleSpec = WidgetSpec(
+    modelName = "ToggleButtonStyleModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "StyleView",
+    viewModule = "@jupyter-widgets/base",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.toggleButtonStyle(): ToggleButtonStyleWidget = createAndRegisterWidget(ToggleButtonStyleWidget.Factory)
 

@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object ButtonWidgetButtonStyleEnum : WidgetEnum<ButtonWidgetButtonStyleEnum>() {
     public val Primary: WidgetEnumEntry<ButtonWidgetButtonStyleEnum> by entry("primary")
@@ -23,15 +24,14 @@ public object ButtonWidgetButtonStyleEnum : WidgetEnum<ButtonWidgetButtonStyleEn
     public val Default: WidgetEnumEntry<ButtonWidgetButtonStyleEnum> by entry("")
 }
 
-private val buttonSpec =
-    WidgetSpec(
-        modelName = "ButtonModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "ButtonView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val buttonSpec = WidgetSpec(
+    modelName = "ButtonModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "ButtonView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.button(): ButtonWidget = createAndRegisterWidget(ButtonWidget.Factory)
 
@@ -41,11 +41,7 @@ public class ButtonWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<ButtonWidget>(buttonSpec, ::ButtonWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var buttonStyle: WidgetEnumEntry<ButtonWidgetButtonStyleEnum> by prop(
-        "button_style",
-        WidgetEnumType(ButtonWidgetButtonStyleEnum, ButtonWidgetButtonStyleEnum.Default),
-        ButtonWidgetButtonStyleEnum.Default,
-    )
+    public var buttonStyle: WidgetEnumEntry<ButtonWidgetButtonStyleEnum> by prop("button_style", WidgetEnumType(ButtonWidgetButtonStyleEnum, ButtonWidgetButtonStyleEnum.Default), ButtonWidgetButtonStyleEnum.Default)
     public var description: String by stringProp("description", "")
     public var disabled: Boolean by boolProp("disabled", false)
     public var icon: String by stringProp("icon", "")

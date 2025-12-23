@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object IntsInputWidgetTagStyleEnum : WidgetEnum<IntsInputWidgetTagStyleEnum>() {
     public val Primary: WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by entry("primary")
@@ -25,15 +26,14 @@ public object IntsInputWidgetTagStyleEnum : WidgetEnum<IntsInputWidgetTagStyleEn
     public val Default: WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by entry("")
 }
 
-private val intsInputSpec =
-    WidgetSpec(
-        modelName = "IntsInputModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "IntsInputView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val intsInputSpec = WidgetSpec(
+    modelName = "IntsInputModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "IntsInputView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.intsInput(): IntsInputWidget = createAndRegisterWidget(IntsInputWidget.Factory)
 
@@ -54,11 +54,7 @@ public class IntsInputWidget internal constructor(
     public var placeholder: String by stringProp("placeholder", "​")
     public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
-    public var tagStyle: WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by prop(
-        "tag_style",
-        WidgetEnumType(IntsInputWidgetTagStyleEnum, IntsInputWidgetTagStyleEnum.Default),
-        IntsInputWidgetTagStyleEnum.Default,
-    )
+    public var tagStyle: WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by prop("tag_style", WidgetEnumType(IntsInputWidgetTagStyleEnum, IntsInputWidgetTagStyleEnum.Default), IntsInputWidgetTagStyleEnum.Default)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
 }

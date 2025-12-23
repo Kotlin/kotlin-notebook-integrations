@@ -24,15 +24,14 @@ public object GridBoxWidgetBoxStyleEnum : WidgetEnum<GridBoxWidgetBoxStyleEnum>(
     public val Default: WidgetEnumEntry<GridBoxWidgetBoxStyleEnum> by entry("")
 }
 
-private val gridBoxSpec =
-    WidgetSpec(
-        modelName = "GridBoxModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "GridBoxView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val gridBoxSpec = WidgetSpec(
+    modelName = "GridBoxModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "GridBoxView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.gridBox(): GridBoxWidget = createAndRegisterWidget(GridBoxWidget.Factory)
 
@@ -42,11 +41,7 @@ public class GridBoxWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<GridBoxWidget>(gridBoxSpec, ::GridBoxWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<GridBoxWidgetBoxStyleEnum> by prop(
-        "box_style",
-        WidgetEnumType(GridBoxWidgetBoxStyleEnum, GridBoxWidgetBoxStyleEnum.Default),
-        GridBoxWidgetBoxStyleEnum.Default,
-    )
+    public var boxStyle: WidgetEnumEntry<GridBoxWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(GridBoxWidgetBoxStyleEnum, GridBoxWidgetBoxStyleEnum.Default), GridBoxWidgetBoxStyleEnum.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)

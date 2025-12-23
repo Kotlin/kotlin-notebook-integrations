@@ -25,15 +25,14 @@ public object AccordionWidgetBoxStyleEnum : WidgetEnum<AccordionWidgetBoxStyleEn
     public val Default: WidgetEnumEntry<AccordionWidgetBoxStyleEnum> by entry("")
 }
 
-private val accordionSpec =
-    WidgetSpec(
-        modelName = "AccordionModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "AccordionView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val accordionSpec = WidgetSpec(
+    modelName = "AccordionModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "AccordionView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.accordion(): AccordionWidget = createAndRegisterWidget(AccordionWidget.Factory)
 
@@ -43,11 +42,7 @@ public class AccordionWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<AccordionWidget>(accordionSpec, ::AccordionWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<AccordionWidgetBoxStyleEnum> by prop(
-        "box_style",
-        WidgetEnumType(AccordionWidgetBoxStyleEnum, AccordionWidgetBoxStyleEnum.Default),
-        AccordionWidgetBoxStyleEnum.Default,
-    )
+    public var boxStyle: WidgetEnumEntry<AccordionWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(AccordionWidgetBoxStyleEnum, AccordionWidgetBoxStyleEnum.Default), AccordionWidgetBoxStyleEnum.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)

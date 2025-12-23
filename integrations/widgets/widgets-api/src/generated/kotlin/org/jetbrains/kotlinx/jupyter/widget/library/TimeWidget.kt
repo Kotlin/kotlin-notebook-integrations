@@ -13,30 +13,30 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.TimeType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val TimeWidgetStepUnionType =
-    UnionType<Any>(
-        name = "step",
-        default = 60,
-        serializerSelector = { value ->
-            when (value) {
-                is Double -> FloatType
-                is String -> StringType
-                else -> StringType
-            }
-        },
-        deserializers = listOf(FloatType, StringType),
-    )
+private val TimeWidgetStepUnionType = UnionType<Any>(
+    name = "step",
+    default = 60,
+    serializerSelector = { value ->
+        when (value) {
+            is Double -> FloatType
+            is String -> StringType
+            else -> StringType
+        }
+    },
+    deserializers = listOf(FloatType, StringType),
+)
 
-private val timeSpec =
-    WidgetSpec(
-        modelName = "TimeModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "TimeView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+
+private val timeSpec = WidgetSpec(
+    modelName = "TimeModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "TimeView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.time(): TimeWidget = createAndRegisterWidget(TimeWidget.Factory)
 

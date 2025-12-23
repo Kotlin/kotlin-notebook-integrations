@@ -13,30 +13,30 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.DateType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val DatePickerWidgetStepUnionType =
-    UnionType<Any>(
-        name = "step",
-        default = 1,
-        serializerSelector = { value ->
-            when (value) {
-                is Int -> IntType
-                is String -> StringType
-                else -> StringType
-            }
-        },
-        deserializers = listOf(IntType, StringType),
-    )
+private val DatePickerWidgetStepUnionType = UnionType<Any>(
+    name = "step",
+    default = 1,
+    serializerSelector = { value ->
+        when (value) {
+            is Int -> IntType
+            is String -> StringType
+            else -> StringType
+        }
+    },
+    deserializers = listOf(IntType, StringType),
+)
 
-private val datePickerSpec =
-    WidgetSpec(
-        modelName = "DatePickerModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "DatePickerView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+
+private val datePickerSpec = WidgetSpec(
+    modelName = "DatePickerModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "DatePickerView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.datePicker(): DatePickerWidget = createAndRegisterWidget(DatePickerWidget.Factory)
 

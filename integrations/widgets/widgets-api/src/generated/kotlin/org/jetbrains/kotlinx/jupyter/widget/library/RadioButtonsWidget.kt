@@ -14,21 +14,21 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object RadioButtonsWidgetOrientationEnum : WidgetEnum<RadioButtonsWidgetOrientationEnum>() {
     public val Horizontal: WidgetEnumEntry<RadioButtonsWidgetOrientationEnum> by entry("horizontal")
     public val Vertical: WidgetEnumEntry<RadioButtonsWidgetOrientationEnum> by entry("vertical")
 }
 
-private val radioButtonsSpec =
-    WidgetSpec(
-        modelName = "RadioButtonsModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "RadioButtonsView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val radioButtonsSpec = WidgetSpec(
+    modelName = "RadioButtonsModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "RadioButtonsView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.radioButtons(): RadioButtonsWidget = createAndRegisterWidget(RadioButtonsWidget.Factory)
 
@@ -44,11 +44,7 @@ public class RadioButtonsWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     public var index: Int? by prop("index", NullableType(IntType), null)
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
-    public var orientation: WidgetEnumEntry<RadioButtonsWidgetOrientationEnum> by prop(
-        "orientation",
-        WidgetEnumType(RadioButtonsWidgetOrientationEnum, RadioButtonsWidgetOrientationEnum.Vertical),
-        RadioButtonsWidgetOrientationEnum.Vertical,
-    )
+    public var orientation: WidgetEnumEntry<RadioButtonsWidgetOrientationEnum> by prop("orientation", WidgetEnumType(RadioButtonsWidgetOrientationEnum, RadioButtonsWidgetOrientationEnum.Vertical), RadioButtonsWidgetOrientationEnum.Vertical)
     public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)

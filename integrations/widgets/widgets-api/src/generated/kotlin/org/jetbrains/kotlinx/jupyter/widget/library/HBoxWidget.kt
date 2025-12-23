@@ -24,15 +24,14 @@ public object HBoxWidgetBoxStyleEnum : WidgetEnum<HBoxWidgetBoxStyleEnum>() {
     public val Default: WidgetEnumEntry<HBoxWidgetBoxStyleEnum> by entry("")
 }
 
-private val hboxSpec =
-    WidgetSpec(
-        modelName = "HBoxModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "HBoxView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val hboxSpec = WidgetSpec(
+    modelName = "HBoxModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "HBoxView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.hbox(): HBoxWidget = createAndRegisterWidget(HBoxWidget.Factory)
 
@@ -42,11 +41,7 @@ public class HBoxWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<HBoxWidget>(hboxSpec, ::HBoxWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<HBoxWidgetBoxStyleEnum> by prop(
-        "box_style",
-        WidgetEnumType(HBoxWidgetBoxStyleEnum, HBoxWidgetBoxStyleEnum.Default),
-        HBoxWidgetBoxStyleEnum.Default,
-    )
+    public var boxStyle: WidgetEnumEntry<HBoxWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(HBoxWidgetBoxStyleEnum, HBoxWidgetBoxStyleEnum.Default), HBoxWidgetBoxStyleEnum.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)

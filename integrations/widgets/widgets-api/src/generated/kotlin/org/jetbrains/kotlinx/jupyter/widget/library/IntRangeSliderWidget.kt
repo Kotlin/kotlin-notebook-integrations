@@ -13,7 +13,9 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object IntRangeSliderWidgetBehaviorEnum : WidgetEnum<IntRangeSliderWidgetBehaviorEnum>() {
     public val DragTap: WidgetEnumEntry<IntRangeSliderWidgetBehaviorEnum> by entry("drag-tap")
@@ -28,15 +30,14 @@ public object IntRangeSliderWidgetOrientationEnum : WidgetEnum<IntRangeSliderWid
     public val Vertical: WidgetEnumEntry<IntRangeSliderWidgetOrientationEnum> by entry("vertical")
 }
 
-private val intRangeSliderSpec =
-    WidgetSpec(
-        modelName = "IntRangeSliderModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "IntRangeSliderView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val intRangeSliderSpec = WidgetSpec(
+    modelName = "IntRangeSliderModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "IntRangeSliderView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.intRangeSlider(): IntRangeSliderWidget = createAndRegisterWidget(IntRangeSliderWidget.Factory)
 
@@ -46,11 +47,7 @@ public class IntRangeSliderWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<IntRangeSliderWidget>(intRangeSliderSpec, ::IntRangeSliderWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var behavior: WidgetEnumEntry<IntRangeSliderWidgetBehaviorEnum> by prop(
-        "behavior",
-        WidgetEnumType(IntRangeSliderWidgetBehaviorEnum, IntRangeSliderWidgetBehaviorEnum.DragTap),
-        IntRangeSliderWidgetBehaviorEnum.DragTap,
-    )
+    public var behavior: WidgetEnumEntry<IntRangeSliderWidgetBehaviorEnum> by prop("behavior", WidgetEnumType(IntRangeSliderWidgetBehaviorEnum, IntRangeSliderWidgetBehaviorEnum.DragTap), IntRangeSliderWidgetBehaviorEnum.DragTap)
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
     public var description: String by stringProp("description", "")
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
@@ -58,11 +55,7 @@ public class IntRangeSliderWidget internal constructor(
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var max: Int by intProp("max", 100)
     public var min: Int by intProp("min", 0)
-    public var orientation: WidgetEnumEntry<IntRangeSliderWidgetOrientationEnum> by prop(
-        "orientation",
-        WidgetEnumType(IntRangeSliderWidgetOrientationEnum, IntRangeSliderWidgetOrientationEnum.Horizontal),
-        IntRangeSliderWidgetOrientationEnum.Horizontal,
-    )
+    public var orientation: WidgetEnumEntry<IntRangeSliderWidgetOrientationEnum> by prop("orientation", WidgetEnumType(IntRangeSliderWidgetOrientationEnum, IntRangeSliderWidgetOrientationEnum.Horizontal), IntRangeSliderWidgetOrientationEnum.Horizontal)
     public var readout: Boolean by boolProp("readout", true)
     public var readoutFormat: String by stringProp("readout_format", "d")
     public var step: Int by intProp("step", 1)

@@ -10,16 +10,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val htmlSpec =
-    WidgetSpec(
-        modelName = "HTMLModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "HTMLView",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val htmlSpec = WidgetSpec(
+    modelName = "HTMLModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "HTMLView",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.html(): HTMLWidget = createAndRegisterWidget(HTMLWidget.Factory)
 
@@ -33,7 +33,7 @@ public class HTMLWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: HTMLStyleWidget? by widgetProp("style", widgetManager.htmlstyle())
+    public var style: HTMLStyleWidget? by widgetProp("style", widgetManager.htmlStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: String by stringProp("value", "")

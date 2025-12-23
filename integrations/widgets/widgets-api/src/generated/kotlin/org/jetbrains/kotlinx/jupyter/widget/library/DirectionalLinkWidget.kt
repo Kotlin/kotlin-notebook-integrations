@@ -9,15 +9,14 @@ import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
 
-private val directionalLinkSpec =
-    WidgetSpec(
-        modelName = "DirectionalLinkModel",
-        modelModule = "@jupyter-widgets/controls",
-        modelModuleVersion = "2.0.0",
-        viewName = "null",
-        viewModule = "@jupyter-widgets/controls",
-        viewModuleVersion = "2.0.0",
-    )
+private val directionalLinkSpec = WidgetSpec(
+    modelName = "DirectionalLinkModel",
+    modelModule = "@jupyter-widgets/controls",
+    modelModuleVersion = "2.0.0",
+    viewName = "null",
+    viewModule = "@jupyter-widgets/controls",
+    viewModuleVersion = "2.0.0",
+)
 
 public fun WidgetManager.directionalLink(): DirectionalLinkWidget = createAndRegisterWidget(DirectionalLinkWidget.Factory)
 
