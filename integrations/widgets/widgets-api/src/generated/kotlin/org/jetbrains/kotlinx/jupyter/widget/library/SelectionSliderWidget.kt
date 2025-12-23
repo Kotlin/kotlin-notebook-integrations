@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object SelectionSliderWidgetBehaviorEnum : WidgetEnum<SelectionSliderWidgetBehaviorEnum>() {
     public val DragTap: WidgetEnumEntry<SelectionSliderWidgetBehaviorEnum> by entry("drag-tap")
@@ -28,14 +27,15 @@ public object SelectionSliderWidgetOrientationEnum : WidgetEnum<SelectionSliderW
     public val Vertical: WidgetEnumEntry<SelectionSliderWidgetOrientationEnum> by entry("vertical")
 }
 
-private val selectionSliderSpec = WidgetSpec(
-    modelName = "SelectionSliderModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "SelectionSliderView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val selectionSliderSpec =
+    WidgetSpec(
+        modelName = "SelectionSliderModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "SelectionSliderView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.selectionSlider(): SelectionSliderWidget = createAndRegisterWidget(SelectionSliderWidget.Factory)
 
@@ -44,24 +44,26 @@ public class SelectionSliderWidget internal constructor(
 ) : DefaultWidgetModel(selectionSliderSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<SelectionSliderWidget>(selectionSliderSpec, ::SelectionSliderWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "SelectionSliderModel")
-    public var _options_labels: List<String?> by prop("_options_labels", ArrayType(NullableType(StringType)), emptyList())
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "SelectionSliderView")
-    public var behavior: WidgetEnumEntry<SelectionSliderWidgetBehaviorEnum> by prop("behavior", WidgetEnumType(SelectionSliderWidgetBehaviorEnum, SelectionSliderWidgetBehaviorEnum.DragTap), SelectionSliderWidgetBehaviorEnum.DragTap)
-    public var continuous_update: Boolean by boolProp("continuous_update", true)
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var optionsLabels: List<String?> by prop("_options_labels", ArrayType(NullableType(StringType)), emptyList())
+    public var behavior: WidgetEnumEntry<SelectionSliderWidgetBehaviorEnum> by prop(
+        "behavior",
+        WidgetEnumType(SelectionSliderWidgetBehaviorEnum, SelectionSliderWidgetBehaviorEnum.DragTap),
+        SelectionSliderWidgetBehaviorEnum.DragTap,
+    )
+    public var continuousUpdate: Boolean by boolProp("continuous_update", true)
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
     public var index: Int by intProp("index", 0)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
-    public var orientation: WidgetEnumEntry<SelectionSliderWidgetOrientationEnum> by prop("orientation", WidgetEnumType(SelectionSliderWidgetOrientationEnum, SelectionSliderWidgetOrientationEnum.Horizontal), SelectionSliderWidgetOrientationEnum.Horizontal)
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var orientation: WidgetEnumEntry<SelectionSliderWidgetOrientationEnum> by prop(
+        "orientation",
+        WidgetEnumType(SelectionSliderWidgetOrientationEnum, SelectionSliderWidgetOrientationEnum.Horizontal),
+        SelectionSliderWidgetOrientationEnum.Horizontal,
+    )
     public var readout: Boolean by boolProp("readout", true)
-    public var style: SliderStyleWidget? by widgetProp("style", widgetManager.sliderStyleWidget())
+    public var style: SliderStyleWidget? by widgetProp("style", widgetManager.sliderStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
 }

@@ -9,14 +9,15 @@ import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 
-private val sliderStyleSpec = WidgetSpec(
-    modelName = "SliderStyleModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "StyleView",
-    viewModule = "@jupyter-widgets/base",
-    viewModuleVersion = "2.0.0",
-)
+private val sliderStyleSpec =
+    WidgetSpec(
+        modelName = "SliderStyleModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "StyleView",
+        viewModule = "@jupyter-widgets/base",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.sliderStyle(): SliderStyleWidget = createAndRegisterWidget(SliderStyleWidget.Factory)
 
@@ -25,12 +26,6 @@ public class SliderStyleWidget internal constructor(
 ) : DefaultWidgetModel(sliderStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<SliderStyleWidget>(sliderStyleSpec, ::SliderStyleWidget)
 
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "SliderStyleModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/base")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "StyleView")
-    public var description_width: String by stringProp("description_width", "")
-    public var handle_color: String? by prop("handle_color", NullableType(StringType), null)
+    public var descriptionWidth: String by stringProp("description_width", "")
+    public var handleColor: String? by prop("handle_color", NullableType(StringType), null)
 }

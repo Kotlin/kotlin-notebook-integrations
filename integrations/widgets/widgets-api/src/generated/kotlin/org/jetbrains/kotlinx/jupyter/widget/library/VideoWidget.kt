@@ -10,16 +10,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val videoSpec = WidgetSpec(
-    modelName = "VideoModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "VideoView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val videoSpec =
+    WidgetSpec(
+        modelName = "VideoModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "VideoView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.video(): VideoWidget = createAndRegisterWidget(VideoWidget.Factory)
 
@@ -28,18 +28,12 @@ public class VideoWidget internal constructor(
 ) : DefaultWidgetModel(videoSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<VideoWidget>(videoSpec, ::VideoWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "VideoModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "VideoView")
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var autoplay: Boolean by boolProp("autoplay", true)
     public var controls: Boolean by boolProp("controls", true)
     public var format: String by stringProp("format", "mp4")
     public var height: String by stringProp("height", "")
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var loop: Boolean by boolProp("loop", true)
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)

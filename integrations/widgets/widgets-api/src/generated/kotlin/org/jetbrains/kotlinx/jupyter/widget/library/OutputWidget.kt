@@ -11,16 +11,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.RawObjectType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val outputSpec = WidgetSpec(
-    modelName = "OutputModel",
-    modelModule = "@jupyter-widgets/output",
-    modelModuleVersion = "1.0.0",
-    viewName = "OutputView",
-    viewModule = "@jupyter-widgets/output",
-    viewModuleVersion = "1.0.0",
-)
+private val outputSpec =
+    WidgetSpec(
+        modelName = "OutputModel",
+        modelModule = "@jupyter-widgets/output",
+        modelModuleVersion = "1.0.0",
+        viewName = "OutputView",
+        viewModule = "@jupyter-widgets/output",
+        viewModuleVersion = "1.0.0",
+    )
 
 public fun WidgetManager.output(): OutputWidget = createAndRegisterWidget(OutputWidget.Factory)
 
@@ -29,15 +29,9 @@ public class OutputWidget internal constructor(
 ) : DefaultWidgetModel(outputSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<OutputWidget>(outputSpec, ::OutputWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/output")
-    public var _model_module_version: String by stringProp("_model_module_version", "1.0.0")
-    public var _model_name: String by stringProp("_model_name", "OutputModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/output")
-    public var _view_module_version: String by stringProp("_view_module_version", "1.0.0")
-    public var _view_name: String by stringProp("_view_name", "OutputView")
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
-    public var msg_id: String by stringProp("msg_id", "")
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var msgId: String by stringProp("msg_id", "")
     public var outputs: List<Map<String, Any?>?> by prop("outputs", ArrayType(NullableType(RawObjectType)), emptyList())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)

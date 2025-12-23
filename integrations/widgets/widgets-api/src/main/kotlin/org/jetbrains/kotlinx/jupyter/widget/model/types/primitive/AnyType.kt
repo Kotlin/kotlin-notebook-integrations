@@ -6,7 +6,13 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPrope
 public object AnyType : AbstractWidgetModelPropertyType<Any?>("any") {
     override val default: Any? = null
 
-    override fun serialize(propertyValue: Any?, widgetManager: WidgetManager): Any? = propertyValue
+    override fun serialize(
+        propertyValue: Any?,
+        widgetManager: WidgetManager,
+    ): Any? = propertyValue
 
-    override fun deserialize(patchValue: Any?, widgetManager: WidgetManager): Any? = patchValue
+    override fun deserialize(
+        patchValue: Any?,
+        widgetManager: WidgetManager,
+    ): Any? = patchValue
 }

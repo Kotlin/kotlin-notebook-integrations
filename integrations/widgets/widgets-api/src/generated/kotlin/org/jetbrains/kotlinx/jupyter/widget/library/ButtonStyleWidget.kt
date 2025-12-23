@@ -9,14 +9,15 @@ import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 
-private val buttonStyleSpec = WidgetSpec(
-    modelName = "ButtonStyleModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "StyleView",
-    viewModule = "@jupyter-widgets/base",
-    viewModuleVersion = "2.0.0",
-)
+private val buttonStyleSpec =
+    WidgetSpec(
+        modelName = "ButtonStyleModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "StyleView",
+        viewModule = "@jupyter-widgets/base",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.buttonStyle(): ButtonStyleWidget = createAndRegisterWidget(ButtonStyleWidget.Factory)
 
@@ -25,18 +26,12 @@ public class ButtonStyleWidget internal constructor(
 ) : DefaultWidgetModel(buttonStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ButtonStyleWidget>(buttonStyleSpec, ::ButtonStyleWidget)
 
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "ButtonStyleModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/base")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "StyleView")
-    public var button_color: String? by prop("button_color", NullableType(StringType), null)
-    public var font_family: String? by prop("font_family", NullableType(StringType), null)
-    public var font_size: String? by prop("font_size", NullableType(StringType), null)
-    public var font_style: String? by prop("font_style", NullableType(StringType), null)
-    public var font_variant: String? by prop("font_variant", NullableType(StringType), null)
-    public var font_weight: String? by prop("font_weight", NullableType(StringType), null)
-    public var text_color: String? by prop("text_color", NullableType(StringType), null)
-    public var text_decoration: String? by prop("text_decoration", NullableType(StringType), null)
+    public var buttonColor: String? by prop("button_color", NullableType(StringType), null)
+    public var fontFamily: String? by prop("font_family", NullableType(StringType), null)
+    public var fontSize: String? by prop("font_size", NullableType(StringType), null)
+    public var fontStyle: String? by prop("font_style", NullableType(StringType), null)
+    public var fontVariant: String? by prop("font_variant", NullableType(StringType), null)
+    public var fontWeight: String? by prop("font_weight", NullableType(StringType), null)
+    public var textColor: String? by prop("text_color", NullableType(StringType), null)
+    public var textDecoration: String? by prop("text_decoration", NullableType(StringType), null)
 }

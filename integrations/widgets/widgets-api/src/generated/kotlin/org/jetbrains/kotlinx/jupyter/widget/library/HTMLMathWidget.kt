@@ -10,16 +10,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val htmlmathSpec = WidgetSpec(
-    modelName = "HTMLMathModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "HTMLMathView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val htmlmathSpec =
+    WidgetSpec(
+        modelName = "HTMLMathModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "HTMLMathView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.htmlmath(): HTMLMathWidget = createAndRegisterWidget(HTMLMathWidget.Factory)
 
@@ -28,18 +28,12 @@ public class HTMLMathWidget internal constructor(
 ) : DefaultWidgetModel(htmlmathSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<HTMLMathWidget>(htmlmathSpec, ::HTMLMathWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "HTMLMathModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "HTMLMathView")
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: HTMLMathStyleWidget? by widgetProp("style", widgetManager.htmlmathStyleWidget())
+    public var style: HTMLMathStyleWidget? by widgetProp("style", widgetManager.htmlmathStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: String by stringProp("value", "")

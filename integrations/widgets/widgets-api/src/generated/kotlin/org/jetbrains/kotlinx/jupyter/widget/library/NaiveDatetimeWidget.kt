@@ -11,16 +11,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.DatetimeType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val naiveDatetimeSpec = WidgetSpec(
-    modelName = "NaiveDatetimeModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "DatetimeView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val naiveDatetimeSpec =
+    WidgetSpec(
+        modelName = "NaiveDatetimeModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "DatetimeView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.naiveDatetime(): NaiveDatetimeWidget = createAndRegisterWidget(NaiveDatetimeWidget.Factory)
 
@@ -29,20 +29,14 @@ public class NaiveDatetimeWidget internal constructor(
 ) : DefaultWidgetModel(naiveDatetimeSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<NaiveDatetimeWidget>(naiveDatetimeSpec, ::NaiveDatetimeWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "NaiveDatetimeModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "DatetimeView")
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var max: java.time.Instant? by prop("max", NullableType(DatetimeType), null)
     public var min: java.time.Instant? by prop("min", NullableType(DatetimeType), null)
-    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyleWidget())
+    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: java.time.Instant? by prop("value", NullableType(DatetimeType), null)

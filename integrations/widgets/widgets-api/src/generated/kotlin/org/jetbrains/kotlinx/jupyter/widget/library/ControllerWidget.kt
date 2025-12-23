@@ -12,14 +12,15 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val controllerSpec = WidgetSpec(
-    modelName = "ControllerModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "ControllerView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val controllerSpec =
+    WidgetSpec(
+        modelName = "ControllerModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "ControllerView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.controller(): ControllerWidget = createAndRegisterWidget(ControllerWidget.Factory)
 
@@ -28,18 +29,12 @@ public class ControllerWidget internal constructor(
 ) : DefaultWidgetModel(controllerSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ControllerWidget>(controllerSpec, ::ControllerWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "ControllerModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "ControllerView")
-    public var axes: List<AxisWidget?> by prop("axes", ArrayType(WidgetReferenceType<AxisWidget>()), emptyList())
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var axes: List<ControllerAxisWidget?> by prop("axes", ArrayType(WidgetReferenceType<ControllerAxisWidget>()), emptyList())
     public var buttons: List<ButtonWidget?> by prop("buttons", ArrayType(WidgetReferenceType<ButtonWidget>()), emptyList())
     public var connected: Boolean by boolProp("connected", false)
     public var index: Int by intProp("index", 0)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var mapping: String by stringProp("mapping", "")
     public var name: String by stringProp("name", "")
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)

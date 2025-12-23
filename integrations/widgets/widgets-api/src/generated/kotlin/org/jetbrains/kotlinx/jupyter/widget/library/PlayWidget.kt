@@ -10,16 +10,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val playSpec = WidgetSpec(
-    modelName = "PlayModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "PlayView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val playSpec =
+    WidgetSpec(
+        modelName = "PlayModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "PlayView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.play(): PlayWidget = createAndRegisterWidget(PlayWidget.Factory)
 
@@ -28,25 +28,19 @@ public class PlayWidget internal constructor(
 ) : DefaultWidgetModel(playSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<PlayWidget>(playSpec, ::PlayWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "PlayModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "PlayView")
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
     public var interval: Int by intProp("interval", 100)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var max: Int by intProp("max", 100)
     public var min: Int by intProp("min", 0)
     public var playing: Boolean by boolProp("playing", false)
     public var repeat: Boolean by boolProp("repeat", false)
-    public var show_repeat: Boolean by boolProp("show_repeat", true)
+    public var showRepeat: Boolean by boolProp("show_repeat", true)
     public var step: Int by intProp("step", 1)
-    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyleWidget())
+    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: Int by intProp("value", 0)

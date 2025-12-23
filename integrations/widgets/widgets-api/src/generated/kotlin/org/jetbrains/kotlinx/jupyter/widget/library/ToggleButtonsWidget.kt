@@ -14,7 +14,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object ToggleButtonsWidgetButtonStyleEnum : WidgetEnum<ToggleButtonsWidgetButtonStyleEnum>() {
     public val Primary: WidgetEnumEntry<ToggleButtonsWidgetButtonStyleEnum> by entry("primary")
@@ -22,17 +21,18 @@ public object ToggleButtonsWidgetButtonStyleEnum : WidgetEnum<ToggleButtonsWidge
     public val Info: WidgetEnumEntry<ToggleButtonsWidgetButtonStyleEnum> by entry("info")
     public val Warning: WidgetEnumEntry<ToggleButtonsWidgetButtonStyleEnum> by entry("warning")
     public val Danger: WidgetEnumEntry<ToggleButtonsWidgetButtonStyleEnum> by entry("danger")
-    public val : WidgetEnumEntry<ToggleButtonsWidgetButtonStyleEnum> by entry("")
+    public val Default: WidgetEnumEntry<ToggleButtonsWidgetButtonStyleEnum> by entry("")
 }
 
-private val toggleButtonsSpec = WidgetSpec(
-    modelName = "ToggleButtonsModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "ToggleButtonsView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val toggleButtonsSpec =
+    WidgetSpec(
+        modelName = "ToggleButtonsModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "ToggleButtonsView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.toggleButtons(): ToggleButtonsWidget = createAndRegisterWidget(ToggleButtonsWidget.Factory)
 
@@ -41,22 +41,20 @@ public class ToggleButtonsWidget internal constructor(
 ) : DefaultWidgetModel(toggleButtonsSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ToggleButtonsWidget>(toggleButtonsSpec, ::ToggleButtonsWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "ToggleButtonsModel")
-    public var _options_labels: List<String?> by prop("_options_labels", ArrayType(NullableType(StringType)), emptyList())
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "ToggleButtonsView")
-    public var button_style: WidgetEnumEntry<ToggleButtonsWidgetButtonStyleEnum>? by prop("button_style", NullableType(WidgetEnumType(ToggleButtonsWidgetButtonStyleEnum, ToggleButtonsWidgetButtonStyleEnum.)), ToggleButtonsWidgetButtonStyleEnum.)
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var optionsLabels: List<String?> by prop("_options_labels", ArrayType(NullableType(StringType)), emptyList())
+    public var buttonStyle: WidgetEnumEntry<ToggleButtonsWidgetButtonStyleEnum>? by prop(
+        "button_style",
+        NullableType(WidgetEnumType(ToggleButtonsWidgetButtonStyleEnum, ToggleButtonsWidgetButtonStyleEnum.Default)),
+        ToggleButtonsWidgetButtonStyleEnum.Default,
+    )
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
     public var icons: List<String?> by prop("icons", ArrayType(NullableType(StringType)), emptyList())
     public var index: Int? by prop("index", NullableType(IntType), null)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
-    public var style: ToggleButtonsStyleWidget? by widgetProp("style", widgetManager.toggleButtonsStyleWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var style: ToggleButtonsStyleWidget? by widgetProp("style", widgetManager.toggleButtonsStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var tooltips: List<String?> by prop("tooltips", ArrayType(NullableType(StringType)), emptyList())

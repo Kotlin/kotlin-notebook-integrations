@@ -9,14 +9,15 @@ import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 
-private val textStyleSpec = WidgetSpec(
-    modelName = "TextStyleModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "StyleView",
-    viewModule = "@jupyter-widgets/base",
-    viewModuleVersion = "2.0.0",
-)
+private val textStyleSpec =
+    WidgetSpec(
+        modelName = "TextStyleModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "StyleView",
+        viewModule = "@jupyter-widgets/base",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.textStyle(): TextStyleWidget = createAndRegisterWidget(TextStyleWidget.Factory)
 
@@ -25,14 +26,8 @@ public class TextStyleWidget internal constructor(
 ) : DefaultWidgetModel(textStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<TextStyleWidget>(textStyleSpec, ::TextStyleWidget)
 
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "TextStyleModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/base")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "StyleView")
     public var background: String? by prop("background", NullableType(StringType), null)
-    public var description_width: String by stringProp("description_width", "")
-    public var font_size: String? by prop("font_size", NullableType(StringType), null)
-    public var text_color: String? by prop("text_color", NullableType(StringType), null)
+    public var descriptionWidth: String by stringProp("description_width", "")
+    public var fontSize: String? by prop("font_size", NullableType(StringType), null)
+    public var textColor: String? by prop("text_color", NullableType(StringType), null)
 }

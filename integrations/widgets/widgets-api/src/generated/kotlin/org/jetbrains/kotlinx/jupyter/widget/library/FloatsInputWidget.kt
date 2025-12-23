@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object FloatsInputWidgetTagStyleEnum : WidgetEnum<FloatsInputWidgetTagStyleEnum>() {
     public val Primary: WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by entry("primary")
@@ -23,17 +22,18 @@ public object FloatsInputWidgetTagStyleEnum : WidgetEnum<FloatsInputWidgetTagSty
     public val Info: WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by entry("info")
     public val Warning: WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by entry("warning")
     public val Danger: WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by entry("danger")
-    public val : WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by entry("")
+    public val Default: WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by entry("")
 }
 
-private val floatsInputSpec = WidgetSpec(
-    modelName = "FloatsInputModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "FloatsInputView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val floatsInputSpec =
+    WidgetSpec(
+        modelName = "FloatsInputModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "FloatsInputView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.floatsInput(): FloatsInputWidget = createAndRegisterWidget(FloatsInputWidget.Factory)
 
@@ -42,25 +42,23 @@ public class FloatsInputWidget internal constructor(
 ) : DefaultWidgetModel(floatsInputSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<FloatsInputWidget>(floatsInputSpec, ::FloatsInputWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "FloatsInputModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "FloatsInputView")
-    public var allow_duplicates: Boolean by boolProp("allow_duplicates", true)
-    public var allowed_tags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
+    public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var format: String by stringProp("format", ".1f")
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var max: Double? by prop("max", NullableType(FloatType), null)
     public var min: Double? by prop("min", NullableType(FloatType), null)
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyleWidget())
+    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
-    public var tag_style: WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by prop("tag_style", WidgetEnumType(FloatsInputWidgetTagStyleEnum, FloatsInputWidgetTagStyleEnum.), FloatsInputWidgetTagStyleEnum.)
+    public var tagStyle: WidgetEnumEntry<FloatsInputWidgetTagStyleEnum> by prop(
+        "tag_style",
+        WidgetEnumType(FloatsInputWidgetTagStyleEnum, FloatsInputWidgetTagStyleEnum.Default),
+        FloatsInputWidgetTagStyleEnum.Default,
+    )
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
 }

@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object FloatRangeSliderWidgetBehaviorEnum : WidgetEnum<FloatRangeSliderWidgetBehaviorEnum>() {
     public val DragTap: WidgetEnumEntry<FloatRangeSliderWidgetBehaviorEnum> by entry("drag-tap")
@@ -30,14 +29,15 @@ public object FloatRangeSliderWidgetOrientationEnum : WidgetEnum<FloatRangeSlide
     public val Vertical: WidgetEnumEntry<FloatRangeSliderWidgetOrientationEnum> by entry("vertical")
 }
 
-private val floatRangeSliderSpec = WidgetSpec(
-    modelName = "FloatRangeSliderModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "FloatRangeSliderView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val floatRangeSliderSpec =
+    WidgetSpec(
+        modelName = "FloatRangeSliderModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "FloatRangeSliderView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.floatRangeSlider(): FloatRangeSliderWidget = createAndRegisterWidget(FloatRangeSliderWidget.Factory)
 
@@ -46,26 +46,28 @@ public class FloatRangeSliderWidget internal constructor(
 ) : DefaultWidgetModel(floatRangeSliderSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<FloatRangeSliderWidget>(floatRangeSliderSpec, ::FloatRangeSliderWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "FloatRangeSliderModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "FloatRangeSliderView")
-    public var behavior: WidgetEnumEntry<FloatRangeSliderWidgetBehaviorEnum> by prop("behavior", WidgetEnumType(FloatRangeSliderWidgetBehaviorEnum, FloatRangeSliderWidgetBehaviorEnum.DragTap), FloatRangeSliderWidgetBehaviorEnum.DragTap)
-    public var continuous_update: Boolean by boolProp("continuous_update", true)
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var behavior: WidgetEnumEntry<FloatRangeSliderWidgetBehaviorEnum> by prop(
+        "behavior",
+        WidgetEnumType(FloatRangeSliderWidgetBehaviorEnum, FloatRangeSliderWidgetBehaviorEnum.DragTap),
+        FloatRangeSliderWidgetBehaviorEnum.DragTap,
+    )
+    public var continuousUpdate: Boolean by boolProp("continuous_update", true)
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var max: Double by doubleProp("max", 100.0)
     public var min: Double by doubleProp("min", 0.0)
-    public var orientation: WidgetEnumEntry<FloatRangeSliderWidgetOrientationEnum> by prop("orientation", WidgetEnumType(FloatRangeSliderWidgetOrientationEnum, FloatRangeSliderWidgetOrientationEnum.Horizontal), FloatRangeSliderWidgetOrientationEnum.Horizontal)
+    public var orientation: WidgetEnumEntry<FloatRangeSliderWidgetOrientationEnum> by prop(
+        "orientation",
+        WidgetEnumType(FloatRangeSliderWidgetOrientationEnum, FloatRangeSliderWidgetOrientationEnum.Horizontal),
+        FloatRangeSliderWidgetOrientationEnum.Horizontal,
+    )
     public var readout: Boolean by boolProp("readout", true)
-    public var readout_format: String by stringProp("readout_format", ".2f")
+    public var readoutFormat: String by stringProp("readout_format", ".2f")
     public var step: Double? by prop("step", NullableType(FloatType), 0.1)
-    public var style: SliderStyleWidget? by widgetProp("style", widgetManager.sliderStyleWidget())
+    public var style: SliderStyleWidget? by widgetProp("style", widgetManager.sliderStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: List<Any?> by prop("value", ArrayType(AnyType), listOf(0.0, 1.0))

@@ -13,14 +13,13 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object IntProgressWidgetBarStyleEnum : WidgetEnum<IntProgressWidgetBarStyleEnum>() {
     public val Success: WidgetEnumEntry<IntProgressWidgetBarStyleEnum> by entry("success")
     public val Info: WidgetEnumEntry<IntProgressWidgetBarStyleEnum> by entry("info")
     public val Warning: WidgetEnumEntry<IntProgressWidgetBarStyleEnum> by entry("warning")
     public val Danger: WidgetEnumEntry<IntProgressWidgetBarStyleEnum> by entry("danger")
-    public val : WidgetEnumEntry<IntProgressWidgetBarStyleEnum> by entry("")
+    public val Default: WidgetEnumEntry<IntProgressWidgetBarStyleEnum> by entry("")
 }
 
 public object IntProgressWidgetOrientationEnum : WidgetEnum<IntProgressWidgetOrientationEnum>() {
@@ -28,14 +27,15 @@ public object IntProgressWidgetOrientationEnum : WidgetEnum<IntProgressWidgetOri
     public val Vertical: WidgetEnumEntry<IntProgressWidgetOrientationEnum> by entry("vertical")
 }
 
-private val intProgressSpec = WidgetSpec(
-    modelName = "IntProgressModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "ProgressView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val intProgressSpec =
+    WidgetSpec(
+        modelName = "IntProgressModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "ProgressView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.intProgress(): IntProgressWidget = createAndRegisterWidget(IntProgressWidget.Factory)
 
@@ -44,21 +44,23 @@ public class IntProgressWidget internal constructor(
 ) : DefaultWidgetModel(intProgressSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<IntProgressWidget>(intProgressSpec, ::IntProgressWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "IntProgressModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "ProgressView")
-    public var bar_style: WidgetEnumEntry<IntProgressWidgetBarStyleEnum> by prop("bar_style", WidgetEnumType(IntProgressWidgetBarStyleEnum, IntProgressWidgetBarStyleEnum.), IntProgressWidgetBarStyleEnum.)
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var barStyle: WidgetEnumEntry<IntProgressWidgetBarStyleEnum> by prop(
+        "bar_style",
+        WidgetEnumType(IntProgressWidgetBarStyleEnum, IntProgressWidgetBarStyleEnum.Default),
+        IntProgressWidgetBarStyleEnum.Default,
+    )
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var max: Int by intProp("max", 100)
     public var min: Int by intProp("min", 0)
-    public var orientation: WidgetEnumEntry<IntProgressWidgetOrientationEnum> by prop("orientation", WidgetEnumType(IntProgressWidgetOrientationEnum, IntProgressWidgetOrientationEnum.Horizontal), IntProgressWidgetOrientationEnum.Horizontal)
-    public var style: ProgressStyleWidget? by widgetProp("style", widgetManager.progressStyleWidget())
+    public var orientation: WidgetEnumEntry<IntProgressWidgetOrientationEnum> by prop(
+        "orientation",
+        WidgetEnumType(IntProgressWidgetOrientationEnum, IntProgressWidgetOrientationEnum.Horizontal),
+        IntProgressWidgetOrientationEnum.Horizontal,
+    )
+    public var style: ProgressStyleWidget? by widgetProp("style", widgetManager.progressStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: Int by intProp("value", 0)

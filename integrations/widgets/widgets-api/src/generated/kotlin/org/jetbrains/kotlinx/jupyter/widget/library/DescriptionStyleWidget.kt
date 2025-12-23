@@ -7,14 +7,15 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 
-private val descriptionStyleSpec = WidgetSpec(
-    modelName = "DescriptionStyleModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "StyleView",
-    viewModule = "@jupyter-widgets/base",
-    viewModuleVersion = "2.0.0",
-)
+private val descriptionStyleSpec =
+    WidgetSpec(
+        modelName = "DescriptionStyleModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "StyleView",
+        viewModule = "@jupyter-widgets/base",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.descriptionStyle(): DescriptionStyleWidget = createAndRegisterWidget(DescriptionStyleWidget.Factory)
 
@@ -23,11 +24,5 @@ public class DescriptionStyleWidget internal constructor(
 ) : DefaultWidgetModel(descriptionStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DescriptionStyleWidget>(descriptionStyleSpec, ::DescriptionStyleWidget)
 
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "DescriptionStyleModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/base")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "StyleView")
-    public var description_width: String by stringProp("description_width", "")
+    public var descriptionWidth: String by stringProp("description_width", "")
 }

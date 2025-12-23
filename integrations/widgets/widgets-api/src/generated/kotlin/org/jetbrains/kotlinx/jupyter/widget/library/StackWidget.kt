@@ -22,17 +22,18 @@ public object StackWidgetBoxStyleEnum : WidgetEnum<StackWidgetBoxStyleEnum>() {
     public val Info: WidgetEnumEntry<StackWidgetBoxStyleEnum> by entry("info")
     public val Warning: WidgetEnumEntry<StackWidgetBoxStyleEnum> by entry("warning")
     public val Danger: WidgetEnumEntry<StackWidgetBoxStyleEnum> by entry("danger")
-    public val : WidgetEnumEntry<StackWidgetBoxStyleEnum> by entry("")
+    public val Default: WidgetEnumEntry<StackWidgetBoxStyleEnum> by entry("")
 }
 
-private val stackSpec = WidgetSpec(
-    modelName = "StackModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "StackView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val stackSpec =
+    WidgetSpec(
+        modelName = "StackModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "StackView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.stack(): StackWidget = createAndRegisterWidget(StackWidget.Factory)
 
@@ -41,17 +42,15 @@ public class StackWidget internal constructor(
 ) : DefaultWidgetModel(stackSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<StackWidget>(stackSpec, ::StackWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "StackModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "StackView")
-    public var box_style: WidgetEnumEntry<StackWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(StackWidgetBoxStyleEnum, StackWidgetBoxStyleEnum.), StackWidgetBoxStyleEnum.)
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var boxStyle: WidgetEnumEntry<StackWidgetBoxStyleEnum> by prop(
+        "box_style",
+        WidgetEnumType(StackWidgetBoxStyleEnum, StackWidgetBoxStyleEnum.Default),
+        StackWidgetBoxStyleEnum.Default,
+    )
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
-    public var selected_index: Int? by prop("selected_index", NullableType(IntType), null)
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var titles: List<String?> by prop("titles", ArrayType(NullableType(StringType)), emptyList())
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)

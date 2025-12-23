@@ -10,16 +10,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val htmlSpec = WidgetSpec(
-    modelName = "HTMLModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "HTMLView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val htmlSpec =
+    WidgetSpec(
+        modelName = "HTMLModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "HTMLView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.html(): HTMLWidget = createAndRegisterWidget(HTMLWidget.Factory)
 
@@ -28,18 +28,12 @@ public class HTMLWidget internal constructor(
 ) : DefaultWidgetModel(htmlSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<HTMLWidget>(htmlSpec, ::HTMLWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "HTMLModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "HTMLView")
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: HTMLStyleWidget? by widgetProp("style", widgetManager.htmlstyleWidget())
+    public var style: HTMLStyleWidget? by widgetProp("style", widgetManager.htmlstyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: String by stringProp("value", "")

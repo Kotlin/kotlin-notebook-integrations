@@ -10,13 +10,19 @@ public class UnionType<T>(
     private val serializerSelector: (T) -> WidgetModelPropertyType<out T>,
     private val deserializers: List<WidgetModelPropertyType<out T>>,
 ) : AbstractWidgetModelPropertyType<T>(name) {
-    override fun serialize(propertyValue: T, widgetManager: WidgetManager): Any? {
+    override fun serialize(
+        propertyValue: T,
+        widgetManager: WidgetManager,
+    ): Any? {
         val type = serializerSelector(propertyValue)
         @Suppress("UNCHECKED_CAST")
         return (type as WidgetModelPropertyType<T>).serialize(propertyValue, widgetManager)
     }
 
-    override fun deserialize(patchValue: Any?, widgetManager: WidgetManager): T {
+    override fun deserialize(
+        patchValue: Any?,
+        widgetManager: WidgetManager,
+    ): T {
         for (candidate in deserializers) {
             runCatching {
                 @Suppress("UNCHECKED_CAST")

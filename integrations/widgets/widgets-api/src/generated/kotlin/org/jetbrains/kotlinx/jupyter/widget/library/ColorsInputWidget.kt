@@ -11,16 +11,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val colorsInputSpec = WidgetSpec(
-    modelName = "ColorsInputModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "ColorsInputView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val colorsInputSpec =
+    WidgetSpec(
+        modelName = "ColorsInputModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "ColorsInputView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.colorsInput(): ColorsInputWidget = createAndRegisterWidget(ColorsInputWidget.Factory)
 
@@ -29,20 +29,14 @@ public class ColorsInputWidget internal constructor(
 ) : DefaultWidgetModel(colorsInputSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ColorsInputWidget>(colorsInputSpec, ::ColorsInputWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "ColorsInputModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "ColorsInputView")
-    public var allow_duplicates: Boolean by boolProp("allow_duplicates", true)
-    public var allowed_tags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
+    public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyleWidget())
+    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())

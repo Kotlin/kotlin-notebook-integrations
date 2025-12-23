@@ -9,14 +9,15 @@ import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 
-private val progressStyleSpec = WidgetSpec(
-    modelName = "ProgressStyleModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "StyleView",
-    viewModule = "@jupyter-widgets/base",
-    viewModuleVersion = "2.0.0",
-)
+private val progressStyleSpec =
+    WidgetSpec(
+        modelName = "ProgressStyleModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "StyleView",
+        viewModule = "@jupyter-widgets/base",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.progressStyle(): ProgressStyleWidget = createAndRegisterWidget(ProgressStyleWidget.Factory)
 
@@ -25,12 +26,6 @@ public class ProgressStyleWidget internal constructor(
 ) : DefaultWidgetModel(progressStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ProgressStyleWidget>(progressStyleSpec, ::ProgressStyleWidget)
 
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "ProgressStyleModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/base")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "StyleView")
-    public var bar_color: String? by prop("bar_color", NullableType(StringType), null)
-    public var description_width: String by stringProp("description_width", "")
+    public var barColor: String? by prop("bar_color", NullableType(StringType), null)
+    public var descriptionWidth: String by stringProp("description_width", "")
 }

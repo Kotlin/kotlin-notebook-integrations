@@ -10,38 +10,33 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.UnionType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.DateType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-public object DatePickerWidgetStepEnum : WidgetEnum<DatePickerWidgetStepEnum>() {
-    public val Any: WidgetEnumEntry<DatePickerWidgetStepEnum> by entry("any")
-}
+private val DatePickerWidgetStepUnionType =
+    UnionType<Any>(
+        name = "step",
+        default = 1,
+        serializerSelector = { value ->
+            when (value) {
+                is Int -> IntType
+                is String -> StringType
+                else -> StringType
+            }
+        },
+        deserializers = listOf(IntType, StringType),
+    )
 
-private val DatePickerWidgetStepUnionType = UnionType<Any>(
-    name = "step",
-    default = 1,
-    serializerSelector = { value ->
-        when (value) {
-            is Int -> IntType
-            is WidgetEnumEntry<DatePickerWidgetStepEnum> -> WidgetEnumType(DatePickerWidgetStepEnum, DatePickerWidgetStepEnum.Any)
-            else -> WidgetEnumType(DatePickerWidgetStepEnum, DatePickerWidgetStepEnum.Any)
-        }
-    },
-    deserializers = listOf(IntType, WidgetEnumType(DatePickerWidgetStepEnum, DatePickerWidgetStepEnum.Any)),
-)
-
-private val datePickerSpec = WidgetSpec(
-    modelName = "DatePickerModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "DatePickerView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val datePickerSpec =
+    WidgetSpec(
+        modelName = "DatePickerModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "DatePickerView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.datePicker(): DatePickerWidget = createAndRegisterWidget(DatePickerWidget.Factory)
 
@@ -50,21 +45,15 @@ public class DatePickerWidget internal constructor(
 ) : DefaultWidgetModel(datePickerSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DatePickerWidget>(datePickerSpec, ::DatePickerWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "DatePickerModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "DatePickerView")
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var max: java.time.LocalDate? by prop("max", NullableType(DateType), null)
     public var min: java.time.LocalDate? by prop("min", NullableType(DateType), null)
     public var step: Any by prop("step", DatePickerWidgetStepUnionType, 1)
-    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyleWidget())
+    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: java.time.LocalDate? by prop("value", NullableType(DateType), null)

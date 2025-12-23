@@ -10,38 +10,33 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.UnionType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.TimeType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-public object TimeWidgetStepEnum : WidgetEnum<TimeWidgetStepEnum>() {
-    public val Any: WidgetEnumEntry<TimeWidgetStepEnum> by entry("any")
-}
+private val TimeWidgetStepUnionType =
+    UnionType<Any>(
+        name = "step",
+        default = 60,
+        serializerSelector = { value ->
+            when (value) {
+                is Double -> FloatType
+                is String -> StringType
+                else -> StringType
+            }
+        },
+        deserializers = listOf(FloatType, StringType),
+    )
 
-private val TimeWidgetStepUnionType = UnionType<Any>(
-    name = "step",
-    default = 60,
-    serializerSelector = { value ->
-        when (value) {
-            is Double -> FloatType
-            is WidgetEnumEntry<TimeWidgetStepEnum> -> WidgetEnumType(TimeWidgetStepEnum, TimeWidgetStepEnum.Any)
-            else -> WidgetEnumType(TimeWidgetStepEnum, TimeWidgetStepEnum.Any)
-        }
-    },
-    deserializers = listOf(FloatType, WidgetEnumType(TimeWidgetStepEnum, TimeWidgetStepEnum.Any)),
-)
-
-private val timeSpec = WidgetSpec(
-    modelName = "TimeModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "TimeView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val timeSpec =
+    WidgetSpec(
+        modelName = "TimeModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "TimeView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.time(): TimeWidget = createAndRegisterWidget(TimeWidget.Factory)
 
@@ -50,21 +45,15 @@ public class TimeWidget internal constructor(
 ) : DefaultWidgetModel(timeSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<TimeWidget>(timeSpec, ::TimeWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "TimeModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "TimeView")
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var max: java.time.LocalTime? by prop("max", NullableType(TimeType), null)
     public var min: java.time.LocalTime? by prop("min", NullableType(TimeType), null)
     public var step: Any by prop("step", TimeWidgetStepUnionType, 60)
-    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyleWidget())
+    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: java.time.LocalTime? by prop("value", NullableType(TimeType), null)

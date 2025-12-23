@@ -10,16 +10,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val controllerButtonSpec = WidgetSpec(
-    modelName = "ControllerButtonModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "ControllerButtonView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val controllerButtonSpec =
+    WidgetSpec(
+        modelName = "ControllerButtonModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "ControllerButtonView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.controllerButton(): ControllerButtonWidget = createAndRegisterWidget(ControllerButtonWidget.Factory)
 
@@ -28,14 +28,8 @@ public class ControllerButtonWidget internal constructor(
 ) : DefaultWidgetModel(controllerButtonSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ControllerButtonWidget>(controllerButtonSpec, ::ControllerButtonWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "ControllerButtonModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "ControllerButtonView")
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var pressed: Boolean by boolProp("pressed", false)
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)

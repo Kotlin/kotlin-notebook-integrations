@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 public object IntsInputWidgetTagStyleEnum : WidgetEnum<IntsInputWidgetTagStyleEnum>() {
     public val Primary: WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by entry("primary")
@@ -23,17 +22,18 @@ public object IntsInputWidgetTagStyleEnum : WidgetEnum<IntsInputWidgetTagStyleEn
     public val Info: WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by entry("info")
     public val Warning: WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by entry("warning")
     public val Danger: WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by entry("danger")
-    public val : WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by entry("")
+    public val Default: WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by entry("")
 }
 
-private val intsInputSpec = WidgetSpec(
-    modelName = "IntsInputModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "IntsInputView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val intsInputSpec =
+    WidgetSpec(
+        modelName = "IntsInputModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "IntsInputView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.intsInput(): IntsInputWidget = createAndRegisterWidget(IntsInputWidget.Factory)
 
@@ -42,25 +42,23 @@ public class IntsInputWidget internal constructor(
 ) : DefaultWidgetModel(intsInputSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<IntsInputWidget>(intsInputSpec, ::IntsInputWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "IntsInputModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "IntsInputView")
-    public var allow_duplicates: Boolean by boolProp("allow_duplicates", true)
-    public var allowed_tags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
+    public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var format: String by stringProp("format", "d")
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var max: Int? by prop("max", NullableType(IntType), null)
     public var min: Int? by prop("min", NullableType(IntType), null)
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyleWidget())
+    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
-    public var tag_style: WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by prop("tag_style", WidgetEnumType(IntsInputWidgetTagStyleEnum, IntsInputWidgetTagStyleEnum.), IntsInputWidgetTagStyleEnum.)
+    public var tagStyle: WidgetEnumEntry<IntsInputWidgetTagStyleEnum> by prop(
+        "tag_style",
+        WidgetEnumType(IntsInputWidgetTagStyleEnum, IntsInputWidgetTagStyleEnum.Default),
+        IntsInputWidgetTagStyleEnum.Default,
+    )
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
 }

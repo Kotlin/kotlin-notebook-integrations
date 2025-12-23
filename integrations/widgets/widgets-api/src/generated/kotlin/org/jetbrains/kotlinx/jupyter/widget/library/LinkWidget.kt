@@ -7,18 +7,17 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 
-private val linkSpec = WidgetSpec(
-    modelName = "LinkModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "None",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val linkSpec =
+    WidgetSpec(
+        modelName = "LinkModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "null",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.link(): LinkWidget = createAndRegisterWidget(LinkWidget.Factory)
 
@@ -27,12 +26,6 @@ public class LinkWidget internal constructor(
 ) : DefaultWidgetModel(linkSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LinkWidget>(linkSpec, ::LinkWidget)
 
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "LinkModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String? by prop("_view_name", NullableType(StringType), null)
     public var source: List<Any?> by prop("source", ArrayType(AnyType), emptyList())
     public var target: List<Any?> by prop("target", ArrayType(AnyType), emptyList())
 }

@@ -10,16 +10,16 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val checkboxSpec = WidgetSpec(
-    modelName = "CheckboxModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "CheckboxView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val checkboxSpec =
+    WidgetSpec(
+        modelName = "CheckboxModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "CheckboxView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.checkbox(): CheckboxWidget = createAndRegisterWidget(CheckboxWidget.Factory)
 
@@ -28,19 +28,13 @@ public class CheckboxWidget internal constructor(
 ) : DefaultWidgetModel(checkboxSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<CheckboxWidget>(checkboxSpec, ::CheckboxWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "CheckboxModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "CheckboxView")
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var description: String by stringProp("description", "")
-    public var description_allow_html: Boolean by boolProp("description_allow_html", false)
+    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
     public var indent: Boolean by boolProp("indent", true)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
-    public var style: CheckboxStyleWidget? by widgetProp("style", widgetManager.checkboxStyleWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var style: CheckboxStyleWidget? by widgetProp("style", widgetManager.checkboxStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: Boolean by boolProp("value", false)

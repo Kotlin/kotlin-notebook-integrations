@@ -21,17 +21,18 @@ public object BoxWidgetBoxStyleEnum : WidgetEnum<BoxWidgetBoxStyleEnum>() {
     public val Info: WidgetEnumEntry<BoxWidgetBoxStyleEnum> by entry("info")
     public val Warning: WidgetEnumEntry<BoxWidgetBoxStyleEnum> by entry("warning")
     public val Danger: WidgetEnumEntry<BoxWidgetBoxStyleEnum> by entry("danger")
-    public val : WidgetEnumEntry<BoxWidgetBoxStyleEnum> by entry("")
+    public val Default: WidgetEnumEntry<BoxWidgetBoxStyleEnum> by entry("")
 }
 
-private val boxSpec = WidgetSpec(
-    modelName = "BoxModel",
-    modelModule = "@jupyter-widgets/controls",
-    modelModuleVersion = "2.0.0",
-    viewName = "BoxView",
-    viewModule = "@jupyter-widgets/controls",
-    viewModuleVersion = "2.0.0",
-)
+private val boxSpec =
+    WidgetSpec(
+        modelName = "BoxModel",
+        modelModule = "@jupyter-widgets/controls",
+        modelModuleVersion = "2.0.0",
+        viewName = "BoxView",
+        viewModule = "@jupyter-widgets/controls",
+        viewModuleVersion = "2.0.0",
+    )
 
 public fun WidgetManager.box(): BoxWidget = createAndRegisterWidget(BoxWidget.Factory)
 
@@ -40,16 +41,14 @@ public class BoxWidget internal constructor(
 ) : DefaultWidgetModel(boxSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<BoxWidget>(boxSpec, ::BoxWidget)
 
-    public var _dom_classes: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var _model_module: String by stringProp("_model_module", "@jupyter-widgets/controls")
-    public var _model_module_version: String by stringProp("_model_module_version", "2.0.0")
-    public var _model_name: String by stringProp("_model_name", "BoxModel")
-    public var _view_module: String by stringProp("_view_module", "@jupyter-widgets/controls")
-    public var _view_module_version: String by stringProp("_view_module_version", "2.0.0")
-    public var _view_name: String by stringProp("_view_name", "BoxView")
-    public var box_style: WidgetEnumEntry<BoxWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(BoxWidgetBoxStyleEnum, BoxWidgetBoxStyleEnum.), BoxWidgetBoxStyleEnum.)
+    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var boxStyle: WidgetEnumEntry<BoxWidgetBoxStyleEnum> by prop(
+        "box_style",
+        WidgetEnumType(BoxWidgetBoxStyleEnum, BoxWidgetBoxStyleEnum.Default),
+        BoxWidgetBoxStyleEnum.Default,
+    )
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layoutWidget())
+    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
 }
