@@ -264,7 +264,7 @@ private class WidgetGenerator(
 
         val candidateInfos =
             optionTypes.map { candidate ->
-                candidate.copy(unionAttributes = emptyList()).toSingleTypeInfo(widgetInfo, helperDeclarations, imports)
+                candidate.toSingleTypeInfo(widgetInfo, helperDeclarations, imports)
             }
 
         val serializerSelector = "{ value ->\n        when (value) {\n${candidateInfos.joinToString(separator = "\n") { info ->
