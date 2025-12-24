@@ -7,11 +7,11 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.decodeFromJsonElement
-import kotlinx.serialization.json.double
+import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.encodeToJsonElement
-import kotlinx.serialization.json.int
+import kotlinx.serialization.json.intOrNull
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
@@ -366,7 +366,7 @@ private class WidgetGenerator(
             }
         imports.add("$WIDGET_TYPES_PACKAGE.compound.ArrayType")
         val propertyTypeExpr = "ArrayType(${elementInfo.propertyTypeExpr})"
-        val defaultValue = defaultArrayValue(elementInfo.kotlinTypeWithoutNullability, elementInfo.kotlinType, default)
+        val defaultValue = defaultArrayValue(elementInfo.kotlinType, default)
         val delegate = "prop(\"$name\", $propertyTypeExpr, $defaultValue)"
         return TypeInfo("List<${elementInfo.kotlinType}>", delegate, propertyTypeExpr, defaultValue)
     }
@@ -396,7 +396,7 @@ private class WidgetGenerator(
                 propertyTypeExpr
             }
         val kotlinTypeName = if (nullable) "$kotlinType?" else kotlinType
-        val defaultValue = defaultValueForType(kotlinTypeName, default)
+        val defaultValue = renderLiteral(kotlinTypeName, default)
         val delegate = "prop(\"$name\", $actualTypeExpr, $defaultValue)"
         return TypeInfo(kotlinTypeName, delegate, actualTypeExpr, defaultValue)
     }
@@ -409,7 +409,7 @@ private class WidgetGenerator(
     ): TypeInfo {
         val nullable = attribute.allowNone || attribute.default is JsonNull
         val typeName = if (nullable) "$kotlinType?" else kotlinType
-        val defaultValue = defaultValueForType(typeName, attribute.default)
+        val defaultValue = renderLiteral(typeName, attribute.default)
         imports.add("$WIDGET_TYPES_PACKAGE.primitive.${kotlinType.toPrimitiveTypeName()}")
         return if (nullable) {
             imports.add("$WIDGET_TYPES_PACKAGE.compound.NullableType")
@@ -426,7 +426,7 @@ private class WidgetGenerator(
         helperDeclarations: MutableList<String>,
         imports: MutableSet<String>,
     ): TypeInfo {
-        val enumName = "${widgetInfo.className}${name.toPascalCase()}Enum"
+        val enumName = "${widgetInfo.className}${name.toPascalCase()}"
         imports.add("$WIDGET_TYPES_PACKAGE.enums.WidgetEnum")
         imports.add("$WIDGET_TYPES_PACKAGE.enums.WidgetEnumEntry")
         imports.add("$WIDGET_TYPES_PACKAGE.enums.WidgetEnumType")
@@ -470,49 +470,42 @@ private class WidgetGenerator(
         return if (base.endsWith("Widget")) base else "${base}Widget"
     }
 
-    private fun defaultValueForType(
-        kotlinType: String,
-        value: JsonElement,
-    ): String =
-        when {
-            value is JsonNull -> "null"
-            kotlinType == "ByteArray" || kotlinType == "ByteArray?" -> "byteArrayOf()"
-            value is JsonPrimitive && value.isString -> "\"${value.content.replace("\\", "\\\\").replace("\"", "\\\"")}\""
-            value is JsonPrimitive && value.safeBoolean != null -> value.safeBoolean.toString()
-            value is JsonPrimitive && value.safeInt != null -> value.safeInt.toString()
-            value is JsonPrimitive && value.safeDouble != null -> value.safeDouble.toString()
-            else -> error("Unsupported default value for type $kotlinType: $value")
-        }
-
     private fun defaultArrayValue(
         elementKotlinType: String,
-        nullableElementType: String,
         value: JsonElement,
     ): String =
         if (value is kotlinx.serialization.json.JsonArray && value.isNotEmpty()) {
-            val renderedItems = value.joinToString(", ") { renderLiteral(elementKotlinType, nullableElementType, it) }
+            val renderedItems = value.joinToString(", ") { renderLiteral(elementKotlinType, it) }
             "listOf($renderedItems)"
         } else {
             "emptyList()"
         }
 
     private fun renderLiteral(
-        elementKotlinType: String,
-        nullableElementType: String,
+        kotlinType: String,
         value: JsonElement,
     ): String =
-        when (value) {
-            is JsonNull -> "null"
-            is JsonPrimitive if value.isString -> "\"${value.content.replace("\\", "\\\\").replace("\"", "\\\"")}\""
-            is JsonPrimitive if value.safeBoolean != null -> value.safeBoolean.toString()
-            is JsonPrimitive if value.safeInt != null -> value.safeInt.toString()
-            is JsonPrimitive if value.safeDouble != null -> value.safeDouble.toString()
-            else -> error("Unsupported array literal for $elementKotlinType/$nullableElementType: $value")
+        when {
+            value is JsonNull -> "null"
+            kotlinType == "ByteArray" || kotlinType == "ByteArray?" -> "byteArrayOf()"
+            value is JsonPrimitive -> {
+                if (value.isString) {
+                    val quoted =
+                        value.content
+                            .replace("\\", "\\\\")
+                            .replace("\"", "\\\"")
+                    "\"$quoted\""
+                } else {
+                    val primitiveValue =
+                        value.booleanOrNull
+                            ?: value.intOrNull
+                            ?: value.doubleOrNull
+                            ?: error("Unsupported primitive value for $kotlinType: $value")
+                    primitiveValue.toString()
+                }
+            }
+            else -> error("Unsupported literal for $kotlinType: $value")
         }
-
-    private val JsonPrimitive.safeInt: Int? get() = runCatching { int }.getOrNull()
-    private val JsonPrimitive.safeDouble: Double? get() = runCatching { double }.getOrNull()
-    private val JsonPrimitive.safeBoolean: Boolean? get() = runCatching { boolean }.getOrNull()
 
     private fun String.toPrimitiveTypeName(): String =
         when (this) {

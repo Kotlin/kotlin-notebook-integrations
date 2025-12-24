@@ -17,12 +17,12 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-public object AccordionWidgetBoxStyleEnum : WidgetEnum<AccordionWidgetBoxStyleEnum>() {
-    public val Success: WidgetEnumEntry<AccordionWidgetBoxStyleEnum> by entry("success")
-    public val Info: WidgetEnumEntry<AccordionWidgetBoxStyleEnum> by entry("info")
-    public val Warning: WidgetEnumEntry<AccordionWidgetBoxStyleEnum> by entry("warning")
-    public val Danger: WidgetEnumEntry<AccordionWidgetBoxStyleEnum> by entry("danger")
-    public val Default: WidgetEnumEntry<AccordionWidgetBoxStyleEnum> by entry("")
+public object AccordionWidgetBoxStyle : WidgetEnum<AccordionWidgetBoxStyle>() {
+    public val Success: WidgetEnumEntry<AccordionWidgetBoxStyle> by entry("success")
+    public val Info: WidgetEnumEntry<AccordionWidgetBoxStyle> by entry("info")
+    public val Warning: WidgetEnumEntry<AccordionWidgetBoxStyle> by entry("warning")
+    public val Danger: WidgetEnumEntry<AccordionWidgetBoxStyle> by entry("danger")
+    public val Default: WidgetEnumEntry<AccordionWidgetBoxStyle> by entry("")
 }
 
 private val accordionSpec = WidgetSpec(
@@ -42,7 +42,7 @@ public class AccordionWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<AccordionWidget>(accordionSpec, ::AccordionWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<AccordionWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(AccordionWidgetBoxStyleEnum, AccordionWidgetBoxStyleEnum.Default), AccordionWidgetBoxStyleEnum.Default)
+    public var boxStyle: WidgetEnumEntry<AccordionWidgetBoxStyle> by prop("box_style", WidgetEnumType(AccordionWidgetBoxStyle, AccordionWidgetBoxStyle.Default), AccordionWidgetBoxStyle.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)

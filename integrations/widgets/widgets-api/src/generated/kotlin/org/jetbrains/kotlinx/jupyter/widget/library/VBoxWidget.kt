@@ -16,12 +16,12 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-public object VBoxWidgetBoxStyleEnum : WidgetEnum<VBoxWidgetBoxStyleEnum>() {
-    public val Success: WidgetEnumEntry<VBoxWidgetBoxStyleEnum> by entry("success")
-    public val Info: WidgetEnumEntry<VBoxWidgetBoxStyleEnum> by entry("info")
-    public val Warning: WidgetEnumEntry<VBoxWidgetBoxStyleEnum> by entry("warning")
-    public val Danger: WidgetEnumEntry<VBoxWidgetBoxStyleEnum> by entry("danger")
-    public val Default: WidgetEnumEntry<VBoxWidgetBoxStyleEnum> by entry("")
+public object VBoxWidgetBoxStyle : WidgetEnum<VBoxWidgetBoxStyle>() {
+    public val Success: WidgetEnumEntry<VBoxWidgetBoxStyle> by entry("success")
+    public val Info: WidgetEnumEntry<VBoxWidgetBoxStyle> by entry("info")
+    public val Warning: WidgetEnumEntry<VBoxWidgetBoxStyle> by entry("warning")
+    public val Danger: WidgetEnumEntry<VBoxWidgetBoxStyle> by entry("danger")
+    public val Default: WidgetEnumEntry<VBoxWidgetBoxStyle> by entry("")
 }
 
 private val vboxSpec = WidgetSpec(
@@ -41,7 +41,7 @@ public class VBoxWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<VBoxWidget>(vboxSpec, ::VBoxWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<VBoxWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(VBoxWidgetBoxStyleEnum, VBoxWidgetBoxStyleEnum.Default), VBoxWidgetBoxStyleEnum.Default)
+    public var boxStyle: WidgetEnumEntry<VBoxWidgetBoxStyle> by prop("box_style", WidgetEnumType(VBoxWidgetBoxStyle, VBoxWidgetBoxStyle.Default), VBoxWidgetBoxStyle.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)

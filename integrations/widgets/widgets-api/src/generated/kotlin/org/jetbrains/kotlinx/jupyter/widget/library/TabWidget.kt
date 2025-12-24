@@ -17,12 +17,12 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-public object TabWidgetBoxStyleEnum : WidgetEnum<TabWidgetBoxStyleEnum>() {
-    public val Success: WidgetEnumEntry<TabWidgetBoxStyleEnum> by entry("success")
-    public val Info: WidgetEnumEntry<TabWidgetBoxStyleEnum> by entry("info")
-    public val Warning: WidgetEnumEntry<TabWidgetBoxStyleEnum> by entry("warning")
-    public val Danger: WidgetEnumEntry<TabWidgetBoxStyleEnum> by entry("danger")
-    public val Default: WidgetEnumEntry<TabWidgetBoxStyleEnum> by entry("")
+public object TabWidgetBoxStyle : WidgetEnum<TabWidgetBoxStyle>() {
+    public val Success: WidgetEnumEntry<TabWidgetBoxStyle> by entry("success")
+    public val Info: WidgetEnumEntry<TabWidgetBoxStyle> by entry("info")
+    public val Warning: WidgetEnumEntry<TabWidgetBoxStyle> by entry("warning")
+    public val Danger: WidgetEnumEntry<TabWidgetBoxStyle> by entry("danger")
+    public val Default: WidgetEnumEntry<TabWidgetBoxStyle> by entry("")
 }
 
 private val tabSpec = WidgetSpec(
@@ -42,7 +42,7 @@ public class TabWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<TabWidget>(tabSpec, ::TabWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<TabWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(TabWidgetBoxStyleEnum, TabWidgetBoxStyleEnum.Default), TabWidgetBoxStyleEnum.Default)
+    public var boxStyle: WidgetEnumEntry<TabWidgetBoxStyle> by prop("box_style", WidgetEnumType(TabWidgetBoxStyle, TabWidgetBoxStyle.Default), TabWidgetBoxStyle.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)

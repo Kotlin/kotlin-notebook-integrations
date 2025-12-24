@@ -16,12 +16,12 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-public object GridBoxWidgetBoxStyleEnum : WidgetEnum<GridBoxWidgetBoxStyleEnum>() {
-    public val Success: WidgetEnumEntry<GridBoxWidgetBoxStyleEnum> by entry("success")
-    public val Info: WidgetEnumEntry<GridBoxWidgetBoxStyleEnum> by entry("info")
-    public val Warning: WidgetEnumEntry<GridBoxWidgetBoxStyleEnum> by entry("warning")
-    public val Danger: WidgetEnumEntry<GridBoxWidgetBoxStyleEnum> by entry("danger")
-    public val Default: WidgetEnumEntry<GridBoxWidgetBoxStyleEnum> by entry("")
+public object GridBoxWidgetBoxStyle : WidgetEnum<GridBoxWidgetBoxStyle>() {
+    public val Success: WidgetEnumEntry<GridBoxWidgetBoxStyle> by entry("success")
+    public val Info: WidgetEnumEntry<GridBoxWidgetBoxStyle> by entry("info")
+    public val Warning: WidgetEnumEntry<GridBoxWidgetBoxStyle> by entry("warning")
+    public val Danger: WidgetEnumEntry<GridBoxWidgetBoxStyle> by entry("danger")
+    public val Default: WidgetEnumEntry<GridBoxWidgetBoxStyle> by entry("")
 }
 
 private val gridBoxSpec = WidgetSpec(
@@ -41,7 +41,7 @@ public class GridBoxWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<GridBoxWidget>(gridBoxSpec, ::GridBoxWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<GridBoxWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(GridBoxWidgetBoxStyleEnum, GridBoxWidgetBoxStyleEnum.Default), GridBoxWidgetBoxStyleEnum.Default)
+    public var boxStyle: WidgetEnumEntry<GridBoxWidgetBoxStyle> by prop("box_style", WidgetEnumType(GridBoxWidgetBoxStyle, GridBoxWidgetBoxStyle.Default), GridBoxWidgetBoxStyle.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)

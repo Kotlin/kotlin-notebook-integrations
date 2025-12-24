@@ -12,86 +12,86 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 
-public object LayoutWidgetAlignContentEnum : WidgetEnum<LayoutWidgetAlignContentEnum>() {
-    public val FlexStart: WidgetEnumEntry<LayoutWidgetAlignContentEnum> by entry("flex-start")
-    public val FlexEnd: WidgetEnumEntry<LayoutWidgetAlignContentEnum> by entry("flex-end")
-    public val Center: WidgetEnumEntry<LayoutWidgetAlignContentEnum> by entry("center")
-    public val SpaceBetween: WidgetEnumEntry<LayoutWidgetAlignContentEnum> by entry("space-between")
-    public val SpaceAround: WidgetEnumEntry<LayoutWidgetAlignContentEnum> by entry("space-around")
-    public val SpaceEvenly: WidgetEnumEntry<LayoutWidgetAlignContentEnum> by entry("space-evenly")
-    public val Stretch: WidgetEnumEntry<LayoutWidgetAlignContentEnum> by entry("stretch")
-    public val Inherit: WidgetEnumEntry<LayoutWidgetAlignContentEnum> by entry("inherit")
-    public val Initial: WidgetEnumEntry<LayoutWidgetAlignContentEnum> by entry("initial")
-    public val Unset: WidgetEnumEntry<LayoutWidgetAlignContentEnum> by entry("unset")
+public object LayoutWidgetAlignContent : WidgetEnum<LayoutWidgetAlignContent>() {
+    public val FlexStart: WidgetEnumEntry<LayoutWidgetAlignContent> by entry("flex-start")
+    public val FlexEnd: WidgetEnumEntry<LayoutWidgetAlignContent> by entry("flex-end")
+    public val Center: WidgetEnumEntry<LayoutWidgetAlignContent> by entry("center")
+    public val SpaceBetween: WidgetEnumEntry<LayoutWidgetAlignContent> by entry("space-between")
+    public val SpaceAround: WidgetEnumEntry<LayoutWidgetAlignContent> by entry("space-around")
+    public val SpaceEvenly: WidgetEnumEntry<LayoutWidgetAlignContent> by entry("space-evenly")
+    public val Stretch: WidgetEnumEntry<LayoutWidgetAlignContent> by entry("stretch")
+    public val Inherit: WidgetEnumEntry<LayoutWidgetAlignContent> by entry("inherit")
+    public val Initial: WidgetEnumEntry<LayoutWidgetAlignContent> by entry("initial")
+    public val Unset: WidgetEnumEntry<LayoutWidgetAlignContent> by entry("unset")
 }
 
-public object LayoutWidgetAlignItemsEnum : WidgetEnum<LayoutWidgetAlignItemsEnum>() {
-    public val FlexStart: WidgetEnumEntry<LayoutWidgetAlignItemsEnum> by entry("flex-start")
-    public val FlexEnd: WidgetEnumEntry<LayoutWidgetAlignItemsEnum> by entry("flex-end")
-    public val Center: WidgetEnumEntry<LayoutWidgetAlignItemsEnum> by entry("center")
-    public val Baseline: WidgetEnumEntry<LayoutWidgetAlignItemsEnum> by entry("baseline")
-    public val Stretch: WidgetEnumEntry<LayoutWidgetAlignItemsEnum> by entry("stretch")
-    public val Inherit: WidgetEnumEntry<LayoutWidgetAlignItemsEnum> by entry("inherit")
-    public val Initial: WidgetEnumEntry<LayoutWidgetAlignItemsEnum> by entry("initial")
-    public val Unset: WidgetEnumEntry<LayoutWidgetAlignItemsEnum> by entry("unset")
+public object LayoutWidgetAlignItems : WidgetEnum<LayoutWidgetAlignItems>() {
+    public val FlexStart: WidgetEnumEntry<LayoutWidgetAlignItems> by entry("flex-start")
+    public val FlexEnd: WidgetEnumEntry<LayoutWidgetAlignItems> by entry("flex-end")
+    public val Center: WidgetEnumEntry<LayoutWidgetAlignItems> by entry("center")
+    public val Baseline: WidgetEnumEntry<LayoutWidgetAlignItems> by entry("baseline")
+    public val Stretch: WidgetEnumEntry<LayoutWidgetAlignItems> by entry("stretch")
+    public val Inherit: WidgetEnumEntry<LayoutWidgetAlignItems> by entry("inherit")
+    public val Initial: WidgetEnumEntry<LayoutWidgetAlignItems> by entry("initial")
+    public val Unset: WidgetEnumEntry<LayoutWidgetAlignItems> by entry("unset")
 }
 
-public object LayoutWidgetAlignSelfEnum : WidgetEnum<LayoutWidgetAlignSelfEnum>() {
-    public val Auto: WidgetEnumEntry<LayoutWidgetAlignSelfEnum> by entry("auto")
-    public val FlexStart: WidgetEnumEntry<LayoutWidgetAlignSelfEnum> by entry("flex-start")
-    public val FlexEnd: WidgetEnumEntry<LayoutWidgetAlignSelfEnum> by entry("flex-end")
-    public val Center: WidgetEnumEntry<LayoutWidgetAlignSelfEnum> by entry("center")
-    public val Baseline: WidgetEnumEntry<LayoutWidgetAlignSelfEnum> by entry("baseline")
-    public val Stretch: WidgetEnumEntry<LayoutWidgetAlignSelfEnum> by entry("stretch")
-    public val Inherit: WidgetEnumEntry<LayoutWidgetAlignSelfEnum> by entry("inherit")
-    public val Initial: WidgetEnumEntry<LayoutWidgetAlignSelfEnum> by entry("initial")
-    public val Unset: WidgetEnumEntry<LayoutWidgetAlignSelfEnum> by entry("unset")
+public object LayoutWidgetAlignSelf : WidgetEnum<LayoutWidgetAlignSelf>() {
+    public val Auto: WidgetEnumEntry<LayoutWidgetAlignSelf> by entry("auto")
+    public val FlexStart: WidgetEnumEntry<LayoutWidgetAlignSelf> by entry("flex-start")
+    public val FlexEnd: WidgetEnumEntry<LayoutWidgetAlignSelf> by entry("flex-end")
+    public val Center: WidgetEnumEntry<LayoutWidgetAlignSelf> by entry("center")
+    public val Baseline: WidgetEnumEntry<LayoutWidgetAlignSelf> by entry("baseline")
+    public val Stretch: WidgetEnumEntry<LayoutWidgetAlignSelf> by entry("stretch")
+    public val Inherit: WidgetEnumEntry<LayoutWidgetAlignSelf> by entry("inherit")
+    public val Initial: WidgetEnumEntry<LayoutWidgetAlignSelf> by entry("initial")
+    public val Unset: WidgetEnumEntry<LayoutWidgetAlignSelf> by entry("unset")
 }
 
-public object LayoutWidgetGridAutoFlowEnum : WidgetEnum<LayoutWidgetGridAutoFlowEnum>() {
-    public val Column: WidgetEnumEntry<LayoutWidgetGridAutoFlowEnum> by entry("column")
-    public val Row: WidgetEnumEntry<LayoutWidgetGridAutoFlowEnum> by entry("row")
-    public val RowDense: WidgetEnumEntry<LayoutWidgetGridAutoFlowEnum> by entry("row dense")
-    public val ColumnDense: WidgetEnumEntry<LayoutWidgetGridAutoFlowEnum> by entry("column dense")
-    public val Inherit: WidgetEnumEntry<LayoutWidgetGridAutoFlowEnum> by entry("inherit")
-    public val Initial: WidgetEnumEntry<LayoutWidgetGridAutoFlowEnum> by entry("initial")
-    public val Unset: WidgetEnumEntry<LayoutWidgetGridAutoFlowEnum> by entry("unset")
+public object LayoutWidgetGridAutoFlow : WidgetEnum<LayoutWidgetGridAutoFlow>() {
+    public val Column: WidgetEnumEntry<LayoutWidgetGridAutoFlow> by entry("column")
+    public val Row: WidgetEnumEntry<LayoutWidgetGridAutoFlow> by entry("row")
+    public val RowDense: WidgetEnumEntry<LayoutWidgetGridAutoFlow> by entry("row dense")
+    public val ColumnDense: WidgetEnumEntry<LayoutWidgetGridAutoFlow> by entry("column dense")
+    public val Inherit: WidgetEnumEntry<LayoutWidgetGridAutoFlow> by entry("inherit")
+    public val Initial: WidgetEnumEntry<LayoutWidgetGridAutoFlow> by entry("initial")
+    public val Unset: WidgetEnumEntry<LayoutWidgetGridAutoFlow> by entry("unset")
 }
 
-public object LayoutWidgetJustifyContentEnum : WidgetEnum<LayoutWidgetJustifyContentEnum>() {
-    public val FlexStart: WidgetEnumEntry<LayoutWidgetJustifyContentEnum> by entry("flex-start")
-    public val FlexEnd: WidgetEnumEntry<LayoutWidgetJustifyContentEnum> by entry("flex-end")
-    public val Center: WidgetEnumEntry<LayoutWidgetJustifyContentEnum> by entry("center")
-    public val SpaceBetween: WidgetEnumEntry<LayoutWidgetJustifyContentEnum> by entry("space-between")
-    public val SpaceAround: WidgetEnumEntry<LayoutWidgetJustifyContentEnum> by entry("space-around")
-    public val Inherit: WidgetEnumEntry<LayoutWidgetJustifyContentEnum> by entry("inherit")
-    public val Initial: WidgetEnumEntry<LayoutWidgetJustifyContentEnum> by entry("initial")
-    public val Unset: WidgetEnumEntry<LayoutWidgetJustifyContentEnum> by entry("unset")
+public object LayoutWidgetJustifyContent : WidgetEnum<LayoutWidgetJustifyContent>() {
+    public val FlexStart: WidgetEnumEntry<LayoutWidgetJustifyContent> by entry("flex-start")
+    public val FlexEnd: WidgetEnumEntry<LayoutWidgetJustifyContent> by entry("flex-end")
+    public val Center: WidgetEnumEntry<LayoutWidgetJustifyContent> by entry("center")
+    public val SpaceBetween: WidgetEnumEntry<LayoutWidgetJustifyContent> by entry("space-between")
+    public val SpaceAround: WidgetEnumEntry<LayoutWidgetJustifyContent> by entry("space-around")
+    public val Inherit: WidgetEnumEntry<LayoutWidgetJustifyContent> by entry("inherit")
+    public val Initial: WidgetEnumEntry<LayoutWidgetJustifyContent> by entry("initial")
+    public val Unset: WidgetEnumEntry<LayoutWidgetJustifyContent> by entry("unset")
 }
 
-public object LayoutWidgetJustifyItemsEnum : WidgetEnum<LayoutWidgetJustifyItemsEnum>() {
-    public val FlexStart: WidgetEnumEntry<LayoutWidgetJustifyItemsEnum> by entry("flex-start")
-    public val FlexEnd: WidgetEnumEntry<LayoutWidgetJustifyItemsEnum> by entry("flex-end")
-    public val Center: WidgetEnumEntry<LayoutWidgetJustifyItemsEnum> by entry("center")
-    public val Inherit: WidgetEnumEntry<LayoutWidgetJustifyItemsEnum> by entry("inherit")
-    public val Initial: WidgetEnumEntry<LayoutWidgetJustifyItemsEnum> by entry("initial")
-    public val Unset: WidgetEnumEntry<LayoutWidgetJustifyItemsEnum> by entry("unset")
+public object LayoutWidgetJustifyItems : WidgetEnum<LayoutWidgetJustifyItems>() {
+    public val FlexStart: WidgetEnumEntry<LayoutWidgetJustifyItems> by entry("flex-start")
+    public val FlexEnd: WidgetEnumEntry<LayoutWidgetJustifyItems> by entry("flex-end")
+    public val Center: WidgetEnumEntry<LayoutWidgetJustifyItems> by entry("center")
+    public val Inherit: WidgetEnumEntry<LayoutWidgetJustifyItems> by entry("inherit")
+    public val Initial: WidgetEnumEntry<LayoutWidgetJustifyItems> by entry("initial")
+    public val Unset: WidgetEnumEntry<LayoutWidgetJustifyItems> by entry("unset")
 }
 
-public object LayoutWidgetObjectFitEnum : WidgetEnum<LayoutWidgetObjectFitEnum>() {
-    public val Contain: WidgetEnumEntry<LayoutWidgetObjectFitEnum> by entry("contain")
-    public val Cover: WidgetEnumEntry<LayoutWidgetObjectFitEnum> by entry("cover")
-    public val Fill: WidgetEnumEntry<LayoutWidgetObjectFitEnum> by entry("fill")
-    public val ScaleDown: WidgetEnumEntry<LayoutWidgetObjectFitEnum> by entry("scale-down")
-    public val None: WidgetEnumEntry<LayoutWidgetObjectFitEnum> by entry("none")
+public object LayoutWidgetObjectFit : WidgetEnum<LayoutWidgetObjectFit>() {
+    public val Contain: WidgetEnumEntry<LayoutWidgetObjectFit> by entry("contain")
+    public val Cover: WidgetEnumEntry<LayoutWidgetObjectFit> by entry("cover")
+    public val Fill: WidgetEnumEntry<LayoutWidgetObjectFit> by entry("fill")
+    public val ScaleDown: WidgetEnumEntry<LayoutWidgetObjectFit> by entry("scale-down")
+    public val None: WidgetEnumEntry<LayoutWidgetObjectFit> by entry("none")
 }
 
-public object LayoutWidgetVisibilityEnum : WidgetEnum<LayoutWidgetVisibilityEnum>() {
-    public val Visible: WidgetEnumEntry<LayoutWidgetVisibilityEnum> by entry("visible")
-    public val Hidden: WidgetEnumEntry<LayoutWidgetVisibilityEnum> by entry("hidden")
-    public val Inherit: WidgetEnumEntry<LayoutWidgetVisibilityEnum> by entry("inherit")
-    public val Initial: WidgetEnumEntry<LayoutWidgetVisibilityEnum> by entry("initial")
-    public val Unset: WidgetEnumEntry<LayoutWidgetVisibilityEnum> by entry("unset")
+public object LayoutWidgetVisibility : WidgetEnum<LayoutWidgetVisibility>() {
+    public val Visible: WidgetEnumEntry<LayoutWidgetVisibility> by entry("visible")
+    public val Hidden: WidgetEnumEntry<LayoutWidgetVisibility> by entry("hidden")
+    public val Inherit: WidgetEnumEntry<LayoutWidgetVisibility> by entry("inherit")
+    public val Initial: WidgetEnumEntry<LayoutWidgetVisibility> by entry("initial")
+    public val Unset: WidgetEnumEntry<LayoutWidgetVisibility> by entry("unset")
 }
 
 private val layoutSpec = WidgetSpec(
@@ -110,9 +110,9 @@ public class LayoutWidget internal constructor(
 ) : DefaultWidgetModel(layoutSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LayoutWidget>(layoutSpec, ::LayoutWidget)
 
-    public var alignContent: WidgetEnumEntry<LayoutWidgetAlignContentEnum>? by prop("align_content", NullableType(WidgetEnumType(LayoutWidgetAlignContentEnum, LayoutWidgetAlignContentEnum.FlexStart)), null)
-    public var alignItems: WidgetEnumEntry<LayoutWidgetAlignItemsEnum>? by prop("align_items", NullableType(WidgetEnumType(LayoutWidgetAlignItemsEnum, LayoutWidgetAlignItemsEnum.FlexStart)), null)
-    public var alignSelf: WidgetEnumEntry<LayoutWidgetAlignSelfEnum>? by prop("align_self", NullableType(WidgetEnumType(LayoutWidgetAlignSelfEnum, LayoutWidgetAlignSelfEnum.Auto)), null)
+    public var alignContent: WidgetEnumEntry<LayoutWidgetAlignContent>? by prop("align_content", NullableType(WidgetEnumType(LayoutWidgetAlignContent, LayoutWidgetAlignContent.FlexStart)), null)
+    public var alignItems: WidgetEnumEntry<LayoutWidgetAlignItems>? by prop("align_items", NullableType(WidgetEnumType(LayoutWidgetAlignItems, LayoutWidgetAlignItems.FlexStart)), null)
+    public var alignSelf: WidgetEnumEntry<LayoutWidgetAlignSelf>? by prop("align_self", NullableType(WidgetEnumType(LayoutWidgetAlignSelf, LayoutWidgetAlignSelf.Auto)), null)
     public var borderBottom: String? by prop("border_bottom", NullableType(StringType), null)
     public var borderLeft: String? by prop("border_left", NullableType(StringType), null)
     public var borderRight: String? by prop("border_right", NullableType(StringType), null)
@@ -123,7 +123,7 @@ public class LayoutWidget internal constructor(
     public var flexFlow: String? by prop("flex_flow", NullableType(StringType), null)
     public var gridArea: String? by prop("grid_area", NullableType(StringType), null)
     public var gridAutoColumns: String? by prop("grid_auto_columns", NullableType(StringType), null)
-    public var gridAutoFlow: WidgetEnumEntry<LayoutWidgetGridAutoFlowEnum>? by prop("grid_auto_flow", NullableType(WidgetEnumType(LayoutWidgetGridAutoFlowEnum, LayoutWidgetGridAutoFlowEnum.Column)), null)
+    public var gridAutoFlow: WidgetEnumEntry<LayoutWidgetGridAutoFlow>? by prop("grid_auto_flow", NullableType(WidgetEnumType(LayoutWidgetGridAutoFlow, LayoutWidgetGridAutoFlow.Column)), null)
     public var gridAutoRows: String? by prop("grid_auto_rows", NullableType(StringType), null)
     public var gridColumn: String? by prop("grid_column", NullableType(StringType), null)
     public var gridGap: String? by prop("grid_gap", NullableType(StringType), null)
@@ -132,21 +132,21 @@ public class LayoutWidget internal constructor(
     public var gridTemplateColumns: String? by prop("grid_template_columns", NullableType(StringType), null)
     public var gridTemplateRows: String? by prop("grid_template_rows", NullableType(StringType), null)
     public var height: String? by prop("height", NullableType(StringType), null)
-    public var justifyContent: WidgetEnumEntry<LayoutWidgetJustifyContentEnum>? by prop("justify_content", NullableType(WidgetEnumType(LayoutWidgetJustifyContentEnum, LayoutWidgetJustifyContentEnum.FlexStart)), null)
-    public var justifyItems: WidgetEnumEntry<LayoutWidgetJustifyItemsEnum>? by prop("justify_items", NullableType(WidgetEnumType(LayoutWidgetJustifyItemsEnum, LayoutWidgetJustifyItemsEnum.FlexStart)), null)
+    public var justifyContent: WidgetEnumEntry<LayoutWidgetJustifyContent>? by prop("justify_content", NullableType(WidgetEnumType(LayoutWidgetJustifyContent, LayoutWidgetJustifyContent.FlexStart)), null)
+    public var justifyItems: WidgetEnumEntry<LayoutWidgetJustifyItems>? by prop("justify_items", NullableType(WidgetEnumType(LayoutWidgetJustifyItems, LayoutWidgetJustifyItems.FlexStart)), null)
     public var left: String? by prop("left", NullableType(StringType), null)
     public var margin: String? by prop("margin", NullableType(StringType), null)
     public var maxHeight: String? by prop("max_height", NullableType(StringType), null)
     public var maxWidth: String? by prop("max_width", NullableType(StringType), null)
     public var minHeight: String? by prop("min_height", NullableType(StringType), null)
     public var minWidth: String? by prop("min_width", NullableType(StringType), null)
-    public var objectFit: WidgetEnumEntry<LayoutWidgetObjectFitEnum>? by prop("object_fit", NullableType(WidgetEnumType(LayoutWidgetObjectFitEnum, LayoutWidgetObjectFitEnum.Contain)), null)
+    public var objectFit: WidgetEnumEntry<LayoutWidgetObjectFit>? by prop("object_fit", NullableType(WidgetEnumType(LayoutWidgetObjectFit, LayoutWidgetObjectFit.Contain)), null)
     public var objectPosition: String? by prop("object_position", NullableType(StringType), null)
     public var order: String? by prop("order", NullableType(StringType), null)
     public var overflow: String? by prop("overflow", NullableType(StringType), null)
     public var padding: String? by prop("padding", NullableType(StringType), null)
     public var right: String? by prop("right", NullableType(StringType), null)
     public var top: String? by prop("top", NullableType(StringType), null)
-    public var visibility: WidgetEnumEntry<LayoutWidgetVisibilityEnum>? by prop("visibility", NullableType(WidgetEnumType(LayoutWidgetVisibilityEnum, LayoutWidgetVisibilityEnum.Visible)), null)
+    public var visibility: WidgetEnumEntry<LayoutWidgetVisibility>? by prop("visibility", NullableType(WidgetEnumType(LayoutWidgetVisibility, LayoutWidgetVisibility.Visible)), null)
     public var width: String? by prop("width", NullableType(StringType), null)
 }

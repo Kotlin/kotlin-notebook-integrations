@@ -17,12 +17,12 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-public object StackWidgetBoxStyleEnum : WidgetEnum<StackWidgetBoxStyleEnum>() {
-    public val Success: WidgetEnumEntry<StackWidgetBoxStyleEnum> by entry("success")
-    public val Info: WidgetEnumEntry<StackWidgetBoxStyleEnum> by entry("info")
-    public val Warning: WidgetEnumEntry<StackWidgetBoxStyleEnum> by entry("warning")
-    public val Danger: WidgetEnumEntry<StackWidgetBoxStyleEnum> by entry("danger")
-    public val Default: WidgetEnumEntry<StackWidgetBoxStyleEnum> by entry("")
+public object StackWidgetBoxStyle : WidgetEnum<StackWidgetBoxStyle>() {
+    public val Success: WidgetEnumEntry<StackWidgetBoxStyle> by entry("success")
+    public val Info: WidgetEnumEntry<StackWidgetBoxStyle> by entry("info")
+    public val Warning: WidgetEnumEntry<StackWidgetBoxStyle> by entry("warning")
+    public val Danger: WidgetEnumEntry<StackWidgetBoxStyle> by entry("danger")
+    public val Default: WidgetEnumEntry<StackWidgetBoxStyle> by entry("")
 }
 
 private val stackSpec = WidgetSpec(
@@ -42,7 +42,7 @@ public class StackWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<StackWidget>(stackSpec, ::StackWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<StackWidgetBoxStyleEnum> by prop("box_style", WidgetEnumType(StackWidgetBoxStyleEnum, StackWidgetBoxStyleEnum.Default), StackWidgetBoxStyleEnum.Default)
+    public var boxStyle: WidgetEnumEntry<StackWidgetBoxStyle> by prop("box_style", WidgetEnumType(StackWidgetBoxStyle, StackWidgetBoxStyle.Default), StackWidgetBoxStyle.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
     public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
     public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)
