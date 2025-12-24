@@ -30,7 +30,7 @@ public class ControllerButtonWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<ControllerButtonWidget>(controllerButtonSpec, ::ControllerButtonWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var pressed: Boolean by boolProp("pressed", false)
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)

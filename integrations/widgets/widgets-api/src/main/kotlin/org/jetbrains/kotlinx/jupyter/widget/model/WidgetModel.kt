@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.jupyter.widget.model
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.WidgetModelPropertyType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BytesType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
@@ -77,8 +78,13 @@ public abstract class WidgetModel(
 
     protected fun <M : WidgetModel> widgetProp(
         name: String,
+        initialValue: M,
+    ): ReadWriteProperty<WidgetModel, M> = prop(name, WidgetReferenceType(), initialValue)
+
+    protected fun <M : WidgetModel> nullableWidgetProp(
+        name: String,
         initialValue: M? = null,
-    ): ReadWriteProperty<WidgetModel, M?> = prop(name, WidgetReferenceType(), initialValue)
+    ): ReadWriteProperty<WidgetModel, M?> = prop(name, NullableType(WidgetReferenceType()), initialValue)
 
     protected inner class WidgetKtPropertyDelegate<T>(
         private val property: WidgetModelProperty<T>,

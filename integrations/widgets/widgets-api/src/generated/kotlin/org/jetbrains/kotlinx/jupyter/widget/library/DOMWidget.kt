@@ -30,7 +30,7 @@ public class DOMWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<DOMWidget>(domwidgetSpec, ::DOMWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: ByteArray by bytesProp("value", byteArrayOf())

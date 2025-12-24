@@ -33,7 +33,7 @@ public class AudioWidget internal constructor(
     public var autoplay: Boolean by boolProp("autoplay", true)
     public var controls: Boolean by boolProp("controls", true)
     public var format: String by stringProp("format", "mp3")
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var loop: Boolean by boolProp("loop", true)
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)

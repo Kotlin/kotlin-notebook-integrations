@@ -43,8 +43,8 @@ public class StackWidget internal constructor(
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var boxStyle: WidgetEnumEntry<StackWidgetBoxStyle> by prop("box_style", WidgetEnumType(StackWidgetBoxStyle, StackWidgetBoxStyle.Default), StackWidgetBoxStyle.Default)
-    public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
+    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var titles: List<String?> by prop("titles", ArrayType(NullableType(StringType)), emptyList())

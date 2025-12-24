@@ -30,7 +30,7 @@ public class OutputWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<OutputWidget>(outputSpec, ::OutputWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var msgId: String by stringProp("msg_id", "")
     public var outputs: List<Map<String, Any?>?> by prop("outputs", ArrayType(NullableType(RawObjectType)), emptyList())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)

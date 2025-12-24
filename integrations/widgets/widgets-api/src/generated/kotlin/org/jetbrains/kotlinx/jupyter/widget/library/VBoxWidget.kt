@@ -42,8 +42,8 @@ public class VBoxWidget internal constructor(
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var boxStyle: WidgetEnumEntry<VBoxWidgetBoxStyle> by prop("box_style", WidgetEnumType(VBoxWidgetBoxStyle, VBoxWidgetBoxStyle.Default), VBoxWidgetBoxStyle.Default)
-    public var children: List<WidgetModel?> by prop("children", ArrayType(WidgetReferenceType<WidgetModel>()), emptyList())
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
+    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
 }

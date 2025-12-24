@@ -10,10 +10,17 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.UnionType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.TimeType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
+import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
+import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
+
+public object TimeWidgetStep : WidgetEnum<TimeWidgetStep>() {
+    public val Any: WidgetEnumEntry<TimeWidgetStep> by entry("any")
+}
 
 private val TimeWidgetStepUnionType = UnionType<Any>(
     name = "step",
@@ -21,11 +28,11 @@ private val TimeWidgetStepUnionType = UnionType<Any>(
     serializerSelector = { value ->
         when (value) {
             is Double -> FloatType
-            is String -> StringType
-            else -> StringType
+            is WidgetEnumEntry<*> -> WidgetEnumType(TimeWidgetStep, TimeWidgetStep.Any)
+            else -> WidgetEnumType(TimeWidgetStep, TimeWidgetStep.Any)
         }
     },
-    deserializers = listOf(FloatType, StringType),
+    deserializers = listOf(FloatType, WidgetEnumType(TimeWidgetStep, TimeWidgetStep.Any)),
 )
 
 
@@ -49,11 +56,11 @@ public class TimeWidget internal constructor(
     public var description: String by stringProp("description", "")
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var max: java.time.LocalTime? by prop("max", NullableType(TimeType), null)
     public var min: java.time.LocalTime? by prop("min", NullableType(TimeType), null)
     public var step: Any by prop("step", TimeWidgetStepUnionType, 60)
-    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: java.time.LocalTime? by prop("value", NullableType(TimeType), null)

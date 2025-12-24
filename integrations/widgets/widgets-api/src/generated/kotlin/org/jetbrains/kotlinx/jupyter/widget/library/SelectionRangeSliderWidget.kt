@@ -53,10 +53,10 @@ public class SelectionRangeSliderWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
     public var index: List<Any?> by prop("index", ArrayType(AnyType), listOf(0, 0))
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var orientation: WidgetEnumEntry<SelectionRangeSliderWidgetOrientation> by prop("orientation", WidgetEnumType(SelectionRangeSliderWidgetOrientation, SelectionRangeSliderWidgetOrientation.Horizontal), SelectionRangeSliderWidgetOrientation.Horizontal)
     public var readout: Boolean by boolProp("readout", true)
-    public var style: SliderStyleWidget? by widgetProp("style", widgetManager.sliderStyle())
+    public var style: SliderStyleWidget by widgetProp("style", widgetManager.sliderStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
 }

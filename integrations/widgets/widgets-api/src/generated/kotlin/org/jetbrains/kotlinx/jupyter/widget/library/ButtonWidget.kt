@@ -45,8 +45,8 @@ public class ButtonWidget internal constructor(
     public var description: String by stringProp("description", "")
     public var disabled: Boolean by boolProp("disabled", false)
     public var icon: String by stringProp("icon", "")
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
-    public var style: ButtonStyleWidget? by widgetProp("style", widgetManager.buttonStyle())
+    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var style: ButtonStyleWidget by widgetProp("style", widgetManager.buttonStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
 }

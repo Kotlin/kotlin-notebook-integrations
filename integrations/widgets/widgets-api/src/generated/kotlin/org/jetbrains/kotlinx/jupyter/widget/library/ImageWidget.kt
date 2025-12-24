@@ -32,7 +32,7 @@ public class ImageWidget internal constructor(
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var format: String by stringProp("format", "png")
     public var height: String by stringProp("height", "")
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: ByteArray by bytesProp("value", byteArrayOf())

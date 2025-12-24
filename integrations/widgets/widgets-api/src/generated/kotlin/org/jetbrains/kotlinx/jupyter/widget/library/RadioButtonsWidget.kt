@@ -43,9 +43,9 @@ public class RadioButtonsWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
     public var index: Int? by prop("index", NullableType(IntType), null)
-    public var layout: LayoutWidget? by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var orientation: WidgetEnumEntry<RadioButtonsWidgetOrientation> by prop("orientation", WidgetEnumType(RadioButtonsWidgetOrientation, RadioButtonsWidgetOrientation.Vertical), RadioButtonsWidgetOrientation.Vertical)
-    public var style: DescriptionStyleWidget? by widgetProp("style", widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
 }
