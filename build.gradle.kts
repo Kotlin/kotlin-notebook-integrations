@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.publisher)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.kotlin.serialization) apply false
-    alias(libs.plugins.ktlint) apply false
+    alias(libs.plugins.ktlint)
 }
 
 version =
@@ -16,6 +16,13 @@ allprojects {
     version = rootProject.version
 
     plugins.apply("org.jlleitschuh.gradle.ktlint")
+    ktlint {
+        filter {
+            exclude { entry ->
+                entry.file.toString().contains("generated")
+            }
+        }
+    }
 
     repositories {
         mavenCentral()

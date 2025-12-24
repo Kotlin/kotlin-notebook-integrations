@@ -6,24 +6,22 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPrope
 
 private const val WIDGET_REF_PREFIX = "IPY_MODEL_"
 
-public class WidgetReferenceType<M : WidgetModel> : AbstractWidgetModelPropertyType<M?>("widget-ref") {
-    override val default: M? get() = null
+public class WidgetReferenceType<M : WidgetModel> : AbstractWidgetModelPropertyType<M>("widget-ref") {
+    override val default: M get() = error("No default value for widget-ref")
 
     override fun serialize(
-        propertyValue: M?,
+        propertyValue: M,
         widgetManager: WidgetManager,
-    ): String? =
-        propertyValue?.let {
-            "$WIDGET_REF_PREFIX${widgetManager.getWidgetId(it)}"
-        }
+    ): String = "$WIDGET_REF_PREFIX${widgetManager.getWidgetId(propertyValue)}"
 
     @Suppress("UNCHECKED_CAST")
     override fun deserialize(
         patchValue: Any?,
         widgetManager: WidgetManager,
-    ): M? {
-        if (patchValue == null) return null
-
+    ): M {
+        requireNotNull(patchValue) {
+            "Widget reference cannot be null"
+        }
         require(patchValue is String) {
             "Expected String for widget-ref, got ${patchValue::class.simpleName}"
         }
