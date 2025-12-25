@@ -142,7 +142,9 @@ private class WidgetGenerator(
         recreateDirectory(jupyterOutput)
 
         val widgetInfos = widgets.map { it.toInfo() }
-        widgetInfos.forEach { generateWidgetFile(it) }
+        for (widgetInfo in widgetInfos) {
+            generateWidgetFile(widgetInfo)
+        }
         generateFactoryRegistry(widgetInfos)
         generateJupyterHelpers(widgetInfos)
     }
@@ -183,15 +185,15 @@ private class WidgetGenerator(
                 createProperty(attribute, info, helperDeclarations, imports)
             }
 
-        builder.appendLine(GENERATED_NOTICE)
-        builder.appendLine("package $packageName")
-        builder.appendLine()
+        builder.addHeader(packageName)
         if (imports.isNotEmpty()) {
-            imports.forEach { builder.appendLine("import $it") }
+            for (import in imports) {
+                builder.appendLine("import $import")
+            }
             builder.appendLine()
         }
 
-        helperDeclarations.forEach { declaration ->
+        for (declaration in helperDeclarations) {
             builder.appendLine(declaration)
             builder.appendLine()
         }
@@ -217,7 +219,9 @@ private class WidgetGenerator(
         builder.appendLine("    internal object Factory : DefaultWidgetFactory<${info.className}>($specName, ::${info.className})")
         builder.appendLine()
 
-        properties.forEach { builder.appendLine(it) }
+        for (property in properties) {
+            builder.appendLine(property)
+        }
 
         builder.appendLine("}")
 
@@ -250,14 +254,14 @@ private class WidgetGenerator(
         typeExpr: String,
         imports: MutableSet<String>,
     ): String =
-        if (isNullable) {
+        if (isNullable && typeExpr != "AnyType") {
             imports.add("$WIDGET_TYPES_PACKAGE.compound.NullableType")
             "NullableType($typeExpr)"
         } else {
             typeExpr
         }
 
-    private fun AttributeSchema.toKotlinType(baseType: String): String = if (isNullable) "$baseType?" else baseType
+    private fun AttributeSchema.toNullableKotlinType(baseType: String): String = if (isNullable) "$baseType?" else baseType
 
     private fun AttributeSchema.toTypeInfo(context: GenerationContext): TypeInfo =
         when (type) {
@@ -286,13 +290,38 @@ private class WidgetGenerator(
             }
 
         val serializerSelector =
-            "{ value ->\n        when (value) {\n${candidateInfos.joinToString(separator = "\n") { info ->
-                val checkType =
-                    info.kotlinTypeWithoutNullability.let {
-                        if (it.contains("<")) it.replace(Regex("<.*>"), "<*>") else it
-                    }
-                "            is $checkType -> ${info.propertyTypeExpr}"
-            }}\n            else -> ${candidateInfos.last().propertyTypeExpr}\n        }\n    }"
+            buildString {
+                append(
+                    """
+                    |{ value ->
+                    |        when (value) {
+                    |
+                    """.trimMargin(),
+                )
+                append(
+                    candidateInfos.joinToString(separator = "\n") { info ->
+                        val checkType =
+                            info.kotlinTypeWithoutNullability.let {
+                                if (it.contains("<")) it.replace(Regex("<.*>"), "<*>") else it
+                            }
+                        "   |            is $checkType -> ${info.propertyTypeExpr}".trimMargin()
+                    },
+                )
+                append(
+                    """
+                    |
+                    |            else -> 
+                    """.trimMargin(),
+                )
+                append(candidateInfos.last().propertyTypeExpr)
+                append(
+                    """
+                    |
+                    |        }
+                    |    }
+                    """.trimMargin(),
+                )
+            }
 
         context.imports.add("$WIDGET_TYPES_PACKAGE.compound.UnionType")
         val deserializers =
@@ -312,7 +341,7 @@ private class WidgetGenerator(
         context.helperDeclarations += unionDeclaration
 
         val defaultValue = candidateInfos.first().defaultValue
-        return TypeInfo("Any", "prop(\"$name\", $nameForType, $defaultValue)", nameForType, defaultValue)
+        return getTypeInfo(context, "Any", nameForType, defaultValue)
     }
 
     private fun JsonObject.addMissingFields(base: AttributeSchema): JsonObject {
@@ -331,30 +360,22 @@ private class WidgetGenerator(
         return when (val t = type) {
             is AttributeType.Single ->
                 when (t.name) {
-                    "string" -> basicType("String", "stringProp", context, this)
-                    "bool" -> basicType("Boolean", "boolProp", context, this)
-                    "int" -> basicType("Int", "intProp", context, this)
-                    "float" -> basicType("Double", "doubleProp", context, this)
-                    "bytes" -> basicType("ByteArray", "bytesProp", context, this)
-                    "Datetime" -> timedType("java.time.Instant", "$WIDGET_TYPES_PACKAGE.datetime.DatetimeType", context)
-                    "Date" -> timedType("java.time.LocalDate", "$WIDGET_TYPES_PACKAGE.datetime.DateType", context)
-                    "Time" -> timedType("java.time.LocalTime", "$WIDGET_TYPES_PACKAGE.datetime.TimeType", context)
+                    "string" -> basicType(context, "String", "$WIDGET_TYPES_PACKAGE.primitive.StringType", "stringProp")
+                    "bool" -> basicType(context, "Boolean", "$WIDGET_TYPES_PACKAGE.primitive.BooleanType", "boolProp")
+                    "int" -> basicType(context, "Int", "$WIDGET_TYPES_PACKAGE.primitive.IntType", "intProp")
+                    "float" -> basicType(context, "Double", "$WIDGET_TYPES_PACKAGE.primitive.FloatType", "doubleProp")
+                    "bytes" -> basicType(context, "ByteArray", "$WIDGET_TYPES_PACKAGE.primitive.BytesType", "bytesProp")
+                    "any" -> basicType(context, "Any", "$WIDGET_TYPES_PACKAGE.primitive.AnyType")
+                    "Datetime" -> basicType(context, "java.time.Instant", "$WIDGET_TYPES_PACKAGE.datetime.DatetimeType")
+                    "Date" -> basicType(context, "java.time.LocalDate", "$WIDGET_TYPES_PACKAGE.datetime.DateType")
+                    "Time" -> basicType(context, "java.time.LocalTime", "$WIDGET_TYPES_PACKAGE.datetime.TimeType")
                     "reference" -> referenceType(context)
-                    "object" -> objectType(context)
+                    "object" -> basicType(context, "Map<String, Any?>", "$WIDGET_TYPES_PACKAGE.compound.RawObjectType")
                     "array" -> arrayType(context)
                     else -> error("Unsupported type $type")
                 }
             else -> error("Expected Single type, but got $type")
         }
-    }
-
-    private fun AttributeSchema.objectType(context: GenerationContext): TypeInfo {
-        context.imports.add("$WIDGET_TYPES_PACKAGE.compound.RawObjectType")
-        val kotlinType = toKotlinType("Map<String, Any?>")
-        val propertyTypeExpr = toNullableTypeExpr("RawObjectType", context.imports)
-        val defaultValue = if (isNullable) "null" else "emptyMap()"
-        val delegate = "prop(\"$name\", $propertyTypeExpr, $defaultValue)"
-        return TypeInfo(kotlinType, delegate, propertyTypeExpr, defaultValue)
     }
 
     private fun AttributeSchema.referenceType(context: GenerationContext): TypeInfo {
@@ -369,31 +390,19 @@ private class WidgetGenerator(
         if (targetClass == "WidgetModel") {
             context.imports.add("$WIDGETS_PACKAGE.model.WidgetModel")
         }
-        context.imports.add("$WIDGET_TYPES_PACKAGE.widget.WidgetReferenceType")
 
-        val propertyTypeExpr = "WidgetReferenceType<$targetClass>()"
-        val actualTypeExpr = toNullableTypeExpr(propertyTypeExpr, context.imports)
-        val kotlinType = toKotlinType(targetClass)
-        val delegateName = if (isNullable) "nullableWidgetProp" else "widgetProp"
-        val delegate = "$delegateName(\"$name\", $defaultValue)"
-        return TypeInfo(kotlinType, delegate, actualTypeExpr, defaultValue)
+        val propertyTypeExpr = "$WIDGET_TYPES_PACKAGE.widget.WidgetReferenceType<$targetClass>()"
+        val kotlinType = toNullableKotlinType(targetClass)
+        return getTypeInfo(context, kotlinType, propertyTypeExpr, defaultValue, "widgetProp", "nullableWidgetProp")
     }
 
     private fun AttributeSchema.arrayType(context: GenerationContext): TypeInfo {
-        val elementInfo =
-            if (items == null) {
-                context.imports.add("$WIDGET_TYPES_PACKAGE.primitive.AnyType")
-                TypeInfo("Any?", "prop(\"$name-item\", AnyType, null)", "AnyType", "null")
-            } else {
-                items.toElementType(context)
-            }
-        context.imports.add("$WIDGET_TYPES_PACKAGE.compound.ArrayType")
-        val baseTypeExpr = "ArrayType(${elementInfo.propertyTypeExpr})"
-        val propertyTypeExpr = toNullableTypeExpr(baseTypeExpr, context.imports)
+        val actualItems = items ?: AttributeItems(type = AttributeType.Single("any"))
+        val elementInfo = actualItems.toElementType(context)
+        val kotlinType = toNullableKotlinType("List<${elementInfo.kotlinType}>")
+        val baseTypeExpr = "$WIDGET_TYPES_PACKAGE.compound.ArrayType(${elementInfo.propertyTypeExpr})"
         val defaultValue = if (isNullable) "null" else defaultArrayValue(elementInfo.kotlinType, default)
-        val kotlinType = toKotlinType("List<${elementInfo.kotlinType}>")
-        val delegate = "prop(\"$name\", $propertyTypeExpr, $defaultValue)"
-        return TypeInfo(kotlinType, delegate, propertyTypeExpr, defaultValue)
+        return getTypeInfo(context, kotlinType, baseTypeExpr, defaultValue)
     }
 
     private fun AttributeItems.toElementType(context: GenerationContext): TypeInfo {
@@ -401,45 +410,53 @@ private class WidgetGenerator(
         return schema.toSingleTypeInfo(context)
     }
 
-    private fun AttributeSchema.timedType(
-        kotlinType: String,
-        typeImport: String,
+    private fun AttributeSchema.basicType(
         context: GenerationContext,
+        kotlinType: String,
+        jupyterType: String,
+        delegateName: String? = null,
+        nullableDelegateName: String? = null,
     ): TypeInfo {
-        context.imports.add(typeImport)
-        val propertyTypeExpr = typeImport.substringAfterLast('.')
-        val actualTypeExpr = toNullableTypeExpr(propertyTypeExpr, context.imports)
-        val kotlinTypeName = toKotlinType(kotlinType)
-        val defaultValue = renderLiteral(kotlinTypeName, default)
-        val delegate = "prop(\"$name\", $actualTypeExpr, $defaultValue)"
-        return TypeInfo(kotlinTypeName, delegate, actualTypeExpr, defaultValue)
+        val actualKotlinType = toNullableKotlinType(kotlinType)
+        val defaultValue = renderLiteral(actualKotlinType, default)
+
+        return getTypeInfo(context, actualKotlinType, jupyterType, defaultValue, delegateName, nullableDelegateName)
     }
 
-    private fun basicType(
-        kotlinType: String,
-        delegateName: String,
+    private fun AttributeSchema.getTypeInfo(
         context: GenerationContext,
-        attribute: AttributeSchema,
+        kotlinType: String,
+        jupyterType: String,
+        defaultValue: String,
+        delegateName: String? = null,
+        nullableDelegateName: String? = null,
     ): TypeInfo {
-        val typeName = attribute.toKotlinType(kotlinType)
-        val defaultValue = renderLiteral(typeName, attribute.default)
-        val baseTypeExpr = kotlinType.toPrimitiveTypeName()
-        context.imports.add("$WIDGET_TYPES_PACKAGE.primitive.$baseTypeExpr")
+        val typeExpr =
+            if ('.' in jupyterType) {
+                val fqnEnd = jupyterType.findAnyOf(listOf("(", "<"))?.first ?: jupyterType.length
+                val fqn = jupyterType.take(fqnEnd)
+                context.imports.add(fqn)
+                fqn.substringAfterLast('.') + jupyterType.substring(fqnEnd)
+            } else {
+                jupyterType
+            }
+        val propertyTypeExpr = toNullableTypeExpr(typeExpr, context.imports)
+        val actualDelegateName = if (isNullable) nullableDelegateName else delegateName
 
-        return if (attribute.isNullable) {
-            val propertyTypeExpr = attribute.toNullableTypeExpr(baseTypeExpr, context.imports)
-            val delegate = "prop(\"${attribute.name}\", $propertyTypeExpr, $defaultValue)"
-            TypeInfo(typeName, delegate, propertyTypeExpr, defaultValue)
-        } else {
-            TypeInfo(typeName, "$delegateName(\"${attribute.name}\", $defaultValue)", baseTypeExpr, defaultValue)
-        }
+        val delegateCall =
+            if (actualDelegateName == null) {
+                "prop(\"${name}\", $propertyTypeExpr, $defaultValue)"
+            } else {
+                "$actualDelegateName(\"${name}\", $defaultValue)"
+            }
+
+        return TypeInfo(kotlinType, delegateCall, propertyTypeExpr, defaultValue)
     }
 
     private fun AttributeSchema.toEnumType(context: GenerationContext): TypeInfo {
         val enumName = "${context.widgetInfo.className}${name.toPascalCase()}"
         context.imports.add("$WIDGET_TYPES_PACKAGE.enums.WidgetEnum")
         context.imports.add("$WIDGET_TYPES_PACKAGE.enums.WidgetEnumEntry")
-        context.imports.add("$WIDGET_TYPES_PACKAGE.enums.WidgetEnumType")
 
         val entries =
             enum.joinToString("\n") { value ->
@@ -460,12 +477,9 @@ private class WidgetGenerator(
 
         val typeDefaultEntry = defaultEntry?.takeIf { it in enum } ?: enum.first()
         val typeDefaultEntryName = typeDefaultEntry.ifEmpty { "Default" }
-        val baseTypeExpr = "WidgetEnumType($enumName, $enumName.${typeDefaultEntryName.toPascalCase()})"
-        val typeExpr = toNullableTypeExpr(baseTypeExpr, context.imports)
-
-        val kotlinType = toKotlinType("WidgetEnumEntry<$enumName>")
-        val delegate = "prop(\"$name\", $typeExpr, $defaultExpression)"
-        return TypeInfo(kotlinType, delegate, typeExpr, defaultExpression)
+        val baseTypeExpr = "$WIDGET_TYPES_PACKAGE.enums.WidgetEnumType($enumName, $enumName.${typeDefaultEntryName.toPascalCase()})"
+        val kotlinType = toNullableKotlinType("WidgetEnumEntry<$enumName>")
+        return getTypeInfo(context, kotlinType, baseTypeExpr, defaultExpression)
     }
 
     private fun AttributeSchema.referencedClassName(): String {
@@ -489,10 +503,14 @@ private class WidgetGenerator(
     private fun renderLiteral(
         kotlinType: String,
         value: JsonElement,
-    ): String =
-        when {
+    ): String {
+        val isNullable = kotlinType.endsWith("?")
+        return when {
             value is JsonNull -> "null"
-            kotlinType == "ByteArray" || kotlinType == "ByteArray?" -> "byteArrayOf()"
+            kotlinType.startsWith("ByteArray") -> "byteArrayOf()"
+            kotlinType.startsWith("Map<") -> {
+                if (isNullable) "null" else "emptyMap()"
+            }
             value is JsonPrimitive -> {
                 if (value.isString) {
                     val quoted =
@@ -511,16 +529,7 @@ private class WidgetGenerator(
             }
             else -> error("Unsupported literal for $kotlinType: $value")
         }
-
-    private fun String.toPrimitiveTypeName(): String =
-        when (this) {
-            "Int" -> "IntType"
-            "Double" -> "FloatType"
-            "Boolean" -> "BooleanType"
-            "String" -> "StringType"
-            "ByteArray" -> "BytesType"
-            else -> error("Unsupported primitive type $this")
-        }
+    }
 
     private fun generateFactoryRegistry(widgetInfos: List<WidgetInfo>) {
         val packageName = "$WIDGET_LIBRARY_PACKAGE.registry"
@@ -530,9 +539,7 @@ private class WidgetGenerator(
         val sortedInfos = widgetInfos.sortedInImportsOrder { it.className }
         val content =
             buildString {
-                appendLine(GENERATED_NOTICE)
-                appendLine("package $packageName")
-                appendLine()
+                addHeader(packageName)
                 for (info in sortedInfos) {
                     appendLine("import $WIDGET_LIBRARY_PACKAGE.${info.className}")
                 }
@@ -556,9 +563,7 @@ private class WidgetGenerator(
         val sortedInfos = widgetInfos.sortedInImportsOrder { it.functionName }
         val content =
             buildString {
-                appendLine(GENERATED_NOTICE)
-                appendLine("package $packageName")
-                appendLine()
+                addHeader(packageName)
                 for (info in widgetInfos.sortedInImportsOrder { it.className }) {
                     appendLine("import $WIDGET_LIBRARY_PACKAGE.${info.className}")
                 }
@@ -573,6 +578,12 @@ private class WidgetGenerator(
             }
 
         filePath.writeText(content)
+    }
+
+    private fun StringBuilder.addHeader(packageName: String) {
+        appendLine(GENERATED_NOTICE)
+        appendLine("package $packageName")
+        appendLine()
     }
 
     private fun <T> List<T>.sortedInImportsOrder(representAsString: (T) -> String): List<T> =
