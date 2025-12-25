@@ -133,6 +133,7 @@ private class WidgetGenerator(
     private val schemaPath = projectRoot / "integrations/widgets/widgets-generator/schema.json"
     private val apiOutput = projectRoot / "integrations/widgets/widgets-api/src/generated/kotlin"
     private val jupyterOutput = projectRoot / "integrations/widgets/widgets-jupyter/src/generated/kotlin"
+    private val enums = mutableMapOf<String, EnumInfo>()
 
     fun generate() {
         val schemaText = schemaPath.readText()
@@ -145,6 +146,7 @@ private class WidgetGenerator(
         for (widgetInfo in widgetInfos) {
             generateWidgetFile(widgetInfo)
         }
+        generateEnumFiles()
         generateFactoryRegistry(widgetInfos)
         generateJupyterHelpers(widgetInfos)
     }
@@ -454,18 +456,17 @@ private class WidgetGenerator(
     }
 
     private fun AttributeSchema.toEnumType(context: GenerationContext): TypeInfo {
-        val enumName = "${context.widgetInfo.className}${name.toPascalCase()}"
-        context.imports.add("$WIDGET_TYPES_PACKAGE.enums.WidgetEnum")
+        val enumName = name.toPascalCase()
+        val enumInfo = EnumInfo(enumName, enum)
+        val existingEnum = enums[enumName]
+        if (existingEnum != null && existingEnum.values != enum) {
+            error("Enum conflict for $enumName: existing values ${existingEnum.values}, new values $enum")
+        }
+        enums[enumName] = enumInfo
+
+        val enumPackage = "$WIDGET_LIBRARY_PACKAGE.enums"
+        context.imports.add("$enumPackage.$enumName")
         context.imports.add("$WIDGET_TYPES_PACKAGE.enums.WidgetEnumEntry")
-
-        val entries =
-            enum.joinToString("\n") { value ->
-                val entryName = if (value.isEmpty()) "Default" else value.toPascalCase()
-                "    public val $entryName: WidgetEnumEntry<$enumName> by entry(\"$value\")"
-            }
-
-        val enumDeclaration = "public object $enumName : WidgetEnum<$enumName>() {\n$entries\n}"
-        context.helperDeclarations += enumDeclaration
 
         val defaultEntry = (default as? JsonPrimitive)?.content?.takeUnless { it == "null" }
         val defaultExpression =
@@ -528,6 +529,33 @@ private class WidgetGenerator(
                 }
             }
             else -> error("Unsupported literal for $kotlinType: $value")
+        }
+    }
+
+    private fun generateEnumFiles() {
+        val packageName = "$WIDGET_LIBRARY_PACKAGE.enums"
+        val directory = apiOutput / packageName.replace('.', '/')
+        directory.createDirectories()
+
+        for (enumInfo in enums.values) {
+            val filePath = directory / "${enumInfo.className}.kt"
+            val builder = StringBuilder()
+            builder.addHeader(packageName)
+            builder.appendLine("import $WIDGET_TYPES_PACKAGE.enums.WidgetEnum")
+            builder.appendLine("import $WIDGET_TYPES_PACKAGE.enums.WidgetEnumEntry")
+            builder.appendLine()
+
+            val entries =
+                enumInfo.values.joinToString("\n") { value ->
+                    val entryName = if (value.isEmpty()) "Default" else value.toPascalCase()
+                    "    public val $entryName: WidgetEnumEntry<${enumInfo.className}> by entry(\"$value\")"
+                }
+
+            builder.appendLine("public object ${enumInfo.className} : WidgetEnum<${enumInfo.className}>() {")
+            builder.appendLine(entries)
+            builder.appendLine("}")
+
+            filePath.writeText(builder.toString())
         }
     }
 
@@ -611,6 +639,11 @@ private data class WidgetInfo(
     val className: String,
     val functionName: String,
     val schema: WidgetSchema,
+)
+
+private data class EnumInfo(
+    val className: String,
+    val values: List<String>,
 )
 
 private val commonAbbreviations =

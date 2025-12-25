@@ -2,32 +2,20 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.BarStyle
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.Orientation
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
-
-public object FloatProgressWidgetBarStyle : WidgetEnum<FloatProgressWidgetBarStyle>() {
-    public val Success: WidgetEnumEntry<FloatProgressWidgetBarStyle> by entry("success")
-    public val Info: WidgetEnumEntry<FloatProgressWidgetBarStyle> by entry("info")
-    public val Warning: WidgetEnumEntry<FloatProgressWidgetBarStyle> by entry("warning")
-    public val Danger: WidgetEnumEntry<FloatProgressWidgetBarStyle> by entry("danger")
-    public val Default: WidgetEnumEntry<FloatProgressWidgetBarStyle> by entry("")
-}
-
-public object FloatProgressWidgetOrientation : WidgetEnum<FloatProgressWidgetOrientation>() {
-    public val Horizontal: WidgetEnumEntry<FloatProgressWidgetOrientation> by entry("horizontal")
-    public val Vertical: WidgetEnumEntry<FloatProgressWidgetOrientation> by entry("vertical")
-}
 
 private val floatProgressSpec = WidgetSpec(
     modelName = "FloatProgressModel",
@@ -46,13 +34,13 @@ public class FloatProgressWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<FloatProgressWidget>(floatProgressSpec, ::FloatProgressWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var barStyle: WidgetEnumEntry<FloatProgressWidgetBarStyle>? by prop("bar_style", NullableType(WidgetEnumType(FloatProgressWidgetBarStyle, FloatProgressWidgetBarStyle.Default)), FloatProgressWidgetBarStyle.Default)
+    public var barStyle: WidgetEnumEntry<BarStyle>? by prop("bar_style", NullableType(WidgetEnumType(BarStyle, BarStyle.Default)), BarStyle.Default)
     public var description: String by stringProp("description", "")
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var max: Double by doubleProp("max", 100.0)
     public var min: Double by doubleProp("min", 0.0)
-    public var orientation: WidgetEnumEntry<FloatProgressWidgetOrientation> by prop("orientation", WidgetEnumType(FloatProgressWidgetOrientation, FloatProgressWidgetOrientation.Horizontal), FloatProgressWidgetOrientation.Horizontal)
+    public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
     public var style: ProgressStyleWidget by widgetProp("style", widgetManager.progressStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)

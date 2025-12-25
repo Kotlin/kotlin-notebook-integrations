@@ -6,6 +6,8 @@ public abstract class WidgetEnum<T : WidgetEnum<T>> {
     private val _entries = mutableListOf<WidgetEnumEntry<T>>()
     public val entries: List<WidgetEnumEntry<T>> get() = _entries
 
+    public fun getEntry(name: String): WidgetEnumEntry<T>? = entries.find { it.name == name }
+
     protected fun entry(name: String): ReadOnlyProperty<WidgetEnum<T>, WidgetEnumEntry<T>> {
         val e = WidgetEnumEntry<T>(name)
         _entries.add(e)

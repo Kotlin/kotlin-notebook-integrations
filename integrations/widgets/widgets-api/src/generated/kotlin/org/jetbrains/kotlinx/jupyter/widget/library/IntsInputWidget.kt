@@ -2,13 +2,13 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.TagStyle
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
@@ -16,15 +16,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
-
-public object IntsInputWidgetTagStyle : WidgetEnum<IntsInputWidgetTagStyle>() {
-    public val Primary: WidgetEnumEntry<IntsInputWidgetTagStyle> by entry("primary")
-    public val Success: WidgetEnumEntry<IntsInputWidgetTagStyle> by entry("success")
-    public val Info: WidgetEnumEntry<IntsInputWidgetTagStyle> by entry("info")
-    public val Warning: WidgetEnumEntry<IntsInputWidgetTagStyle> by entry("warning")
-    public val Danger: WidgetEnumEntry<IntsInputWidgetTagStyle> by entry("danger")
-    public val Default: WidgetEnumEntry<IntsInputWidgetTagStyle> by entry("")
-}
 
 private val intsInputSpec = WidgetSpec(
     modelName = "IntsInputModel",
@@ -54,7 +45,7 @@ public class IntsInputWidget internal constructor(
     public var placeholder: String by stringProp("placeholder", "​")
     public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
-    public var tagStyle: WidgetEnumEntry<IntsInputWidgetTagStyle> by prop("tag_style", WidgetEnumType(IntsInputWidgetTagStyle, IntsInputWidgetTagStyle.Default), IntsInputWidgetTagStyle.Default)
+    public var tagStyle: WidgetEnumEntry<TagStyle> by prop("tag_style", WidgetEnumType(TagStyle, TagStyle.Default), TagStyle.Default)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
 }

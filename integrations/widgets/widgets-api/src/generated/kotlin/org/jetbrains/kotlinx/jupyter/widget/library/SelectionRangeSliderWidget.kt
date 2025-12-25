@@ -2,32 +2,20 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.Behavior
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.Orientation
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
-
-public object SelectionRangeSliderWidgetBehavior : WidgetEnum<SelectionRangeSliderWidgetBehavior>() {
-    public val DragTap: WidgetEnumEntry<SelectionRangeSliderWidgetBehavior> by entry("drag-tap")
-    public val DragSnap: WidgetEnumEntry<SelectionRangeSliderWidgetBehavior> by entry("drag-snap")
-    public val Tap: WidgetEnumEntry<SelectionRangeSliderWidgetBehavior> by entry("tap")
-    public val Drag: WidgetEnumEntry<SelectionRangeSliderWidgetBehavior> by entry("drag")
-    public val Snap: WidgetEnumEntry<SelectionRangeSliderWidgetBehavior> by entry("snap")
-}
-
-public object SelectionRangeSliderWidgetOrientation : WidgetEnum<SelectionRangeSliderWidgetOrientation>() {
-    public val Horizontal: WidgetEnumEntry<SelectionRangeSliderWidgetOrientation> by entry("horizontal")
-    public val Vertical: WidgetEnumEntry<SelectionRangeSliderWidgetOrientation> by entry("vertical")
-}
 
 private val selectionRangeSliderSpec = WidgetSpec(
     modelName = "SelectionRangeSliderModel",
@@ -47,14 +35,14 @@ public class SelectionRangeSliderWidget internal constructor(
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var optionsLabels: List<String?> by prop("_options_labels", ArrayType(NullableType(StringType)), emptyList())
-    public var behavior: WidgetEnumEntry<SelectionRangeSliderWidgetBehavior> by prop("behavior", WidgetEnumType(SelectionRangeSliderWidgetBehavior, SelectionRangeSliderWidgetBehavior.DragTap), SelectionRangeSliderWidgetBehavior.DragTap)
+    public var behavior: WidgetEnumEntry<Behavior> by prop("behavior", WidgetEnumType(Behavior, Behavior.DragTap), Behavior.DragTap)
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
     public var description: String by stringProp("description", "")
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)
     public var index: List<Any?> by prop("index", ArrayType(AnyType), listOf(0, 0))
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
-    public var orientation: WidgetEnumEntry<SelectionRangeSliderWidgetOrientation> by prop("orientation", WidgetEnumType(SelectionRangeSliderWidgetOrientation, SelectionRangeSliderWidgetOrientation.Horizontal), SelectionRangeSliderWidgetOrientation.Horizontal)
+    public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
     public var readout: Boolean by boolProp("readout", true)
     public var style: SliderStyleWidget by widgetProp("style", widgetManager.sliderStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)

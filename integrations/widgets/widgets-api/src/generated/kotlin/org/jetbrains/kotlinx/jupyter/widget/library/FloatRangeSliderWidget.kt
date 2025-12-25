@@ -2,13 +2,14 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.Behavior
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.Orientation
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
@@ -16,19 +17,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
-
-public object FloatRangeSliderWidgetBehavior : WidgetEnum<FloatRangeSliderWidgetBehavior>() {
-    public val DragTap: WidgetEnumEntry<FloatRangeSliderWidgetBehavior> by entry("drag-tap")
-    public val DragSnap: WidgetEnumEntry<FloatRangeSliderWidgetBehavior> by entry("drag-snap")
-    public val Tap: WidgetEnumEntry<FloatRangeSliderWidgetBehavior> by entry("tap")
-    public val Drag: WidgetEnumEntry<FloatRangeSliderWidgetBehavior> by entry("drag")
-    public val Snap: WidgetEnumEntry<FloatRangeSliderWidgetBehavior> by entry("snap")
-}
-
-public object FloatRangeSliderWidgetOrientation : WidgetEnum<FloatRangeSliderWidgetOrientation>() {
-    public val Horizontal: WidgetEnumEntry<FloatRangeSliderWidgetOrientation> by entry("horizontal")
-    public val Vertical: WidgetEnumEntry<FloatRangeSliderWidgetOrientation> by entry("vertical")
-}
 
 private val floatRangeSliderSpec = WidgetSpec(
     modelName = "FloatRangeSliderModel",
@@ -47,7 +35,7 @@ public class FloatRangeSliderWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<FloatRangeSliderWidget>(floatRangeSliderSpec, ::FloatRangeSliderWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var behavior: WidgetEnumEntry<FloatRangeSliderWidgetBehavior> by prop("behavior", WidgetEnumType(FloatRangeSliderWidgetBehavior, FloatRangeSliderWidgetBehavior.DragTap), FloatRangeSliderWidgetBehavior.DragTap)
+    public var behavior: WidgetEnumEntry<Behavior> by prop("behavior", WidgetEnumType(Behavior, Behavior.DragTap), Behavior.DragTap)
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
     public var description: String by stringProp("description", "")
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
@@ -55,7 +43,7 @@ public class FloatRangeSliderWidget internal constructor(
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var max: Double by doubleProp("max", 100.0)
     public var min: Double by doubleProp("min", 0.0)
-    public var orientation: WidgetEnumEntry<FloatRangeSliderWidgetOrientation> by prop("orientation", WidgetEnumType(FloatRangeSliderWidgetOrientation, FloatRangeSliderWidgetOrientation.Horizontal), FloatRangeSliderWidgetOrientation.Horizontal)
+    public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
     public var readout: Boolean by boolProp("readout", true)
     public var readoutFormat: String by stringProp("readout_format", ".2f")
     public var step: Double? by prop("step", NullableType(FloatType), 0.1)

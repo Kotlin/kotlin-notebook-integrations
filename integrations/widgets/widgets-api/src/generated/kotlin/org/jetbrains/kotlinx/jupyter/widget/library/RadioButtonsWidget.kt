@@ -2,24 +2,19 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.Orientation
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
-
-public object RadioButtonsWidgetOrientation : WidgetEnum<RadioButtonsWidgetOrientation>() {
-    public val Horizontal: WidgetEnumEntry<RadioButtonsWidgetOrientation> by entry("horizontal")
-    public val Vertical: WidgetEnumEntry<RadioButtonsWidgetOrientation> by entry("vertical")
-}
 
 private val radioButtonsSpec = WidgetSpec(
     modelName = "RadioButtonsModel",
@@ -44,7 +39,7 @@ public class RadioButtonsWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     public var index: Int? by prop("index", NullableType(IntType), null)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
-    public var orientation: WidgetEnumEntry<RadioButtonsWidgetOrientation> by prop("orientation", WidgetEnumType(RadioButtonsWidgetOrientation, RadioButtonsWidgetOrientation.Vertical), RadioButtonsWidgetOrientation.Vertical)
+    public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Vertical), Orientation.Vertical)
     public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)

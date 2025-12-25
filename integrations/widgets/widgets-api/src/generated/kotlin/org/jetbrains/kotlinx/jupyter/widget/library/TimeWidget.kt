@@ -2,6 +2,7 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.Step
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
@@ -10,7 +11,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.UnionType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.TimeType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
@@ -18,21 +18,17 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-public object TimeWidgetStep : WidgetEnum<TimeWidgetStep>() {
-    public val Any: WidgetEnumEntry<TimeWidgetStep> by entry("any")
-}
-
 private val TimeWidgetStepUnionType = UnionType<Any>(
     name = "step",
     default = 60,
     serializerSelector = { value ->
         when (value) {
             is Double -> FloatType
-            is WidgetEnumEntry<*> -> WidgetEnumType(TimeWidgetStep, TimeWidgetStep.Any)
-            else -> WidgetEnumType(TimeWidgetStep, TimeWidgetStep.Any)
+            is WidgetEnumEntry<*> -> WidgetEnumType(Step, Step.Any)
+            else -> WidgetEnumType(Step, Step.Any)
         }
     },
-    deserializers = listOf(FloatType, WidgetEnumType(TimeWidgetStep, TimeWidgetStep.Any)),
+    deserializers = listOf(FloatType, WidgetEnumType(Step, Step.Any)),
 )
 
 

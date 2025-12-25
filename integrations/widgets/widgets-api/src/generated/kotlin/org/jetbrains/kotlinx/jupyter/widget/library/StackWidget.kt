@@ -2,6 +2,7 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.BoxStyle
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
@@ -9,21 +10,12 @@ import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
-
-public object StackWidgetBoxStyle : WidgetEnum<StackWidgetBoxStyle>() {
-    public val Success: WidgetEnumEntry<StackWidgetBoxStyle> by entry("success")
-    public val Info: WidgetEnumEntry<StackWidgetBoxStyle> by entry("info")
-    public val Warning: WidgetEnumEntry<StackWidgetBoxStyle> by entry("warning")
-    public val Danger: WidgetEnumEntry<StackWidgetBoxStyle> by entry("danger")
-    public val Default: WidgetEnumEntry<StackWidgetBoxStyle> by entry("")
-}
 
 private val stackSpec = WidgetSpec(
     modelName = "StackModel",
@@ -42,7 +34,7 @@ public class StackWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<StackWidget>(stackSpec, ::StackWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<StackWidgetBoxStyle> by prop("box_style", WidgetEnumType(StackWidgetBoxStyle, StackWidgetBoxStyle.Default), StackWidgetBoxStyle.Default)
+    public var boxStyle: WidgetEnumEntry<BoxStyle> by prop("box_style", WidgetEnumType(BoxStyle, BoxStyle.Default), BoxStyle.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)

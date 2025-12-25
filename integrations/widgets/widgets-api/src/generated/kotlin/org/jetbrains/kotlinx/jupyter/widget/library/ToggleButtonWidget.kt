@@ -2,27 +2,18 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.ButtonStyle
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
-
-public object ToggleButtonWidgetButtonStyle : WidgetEnum<ToggleButtonWidgetButtonStyle>() {
-    public val Primary: WidgetEnumEntry<ToggleButtonWidgetButtonStyle> by entry("primary")
-    public val Success: WidgetEnumEntry<ToggleButtonWidgetButtonStyle> by entry("success")
-    public val Info: WidgetEnumEntry<ToggleButtonWidgetButtonStyle> by entry("info")
-    public val Warning: WidgetEnumEntry<ToggleButtonWidgetButtonStyle> by entry("warning")
-    public val Danger: WidgetEnumEntry<ToggleButtonWidgetButtonStyle> by entry("danger")
-    public val Default: WidgetEnumEntry<ToggleButtonWidgetButtonStyle> by entry("")
-}
 
 private val toggleButtonSpec = WidgetSpec(
     modelName = "ToggleButtonModel",
@@ -41,7 +32,7 @@ public class ToggleButtonWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<ToggleButtonWidget>(toggleButtonSpec, ::ToggleButtonWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var buttonStyle: WidgetEnumEntry<ToggleButtonWidgetButtonStyle> by prop("button_style", WidgetEnumType(ToggleButtonWidgetButtonStyle, ToggleButtonWidgetButtonStyle.Default), ToggleButtonWidgetButtonStyle.Default)
+    public var buttonStyle: WidgetEnumEntry<ButtonStyle> by prop("button_style", WidgetEnumType(ButtonStyle, ButtonStyle.Default), ButtonStyle.Default)
     public var description: String by stringProp("description", "")
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var disabled: Boolean by boolProp("disabled", false)

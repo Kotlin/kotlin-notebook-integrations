@@ -2,6 +2,7 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.BoxStyle
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
@@ -9,20 +10,11 @@ import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
-
-public object GridBoxWidgetBoxStyle : WidgetEnum<GridBoxWidgetBoxStyle>() {
-    public val Success: WidgetEnumEntry<GridBoxWidgetBoxStyle> by entry("success")
-    public val Info: WidgetEnumEntry<GridBoxWidgetBoxStyle> by entry("info")
-    public val Warning: WidgetEnumEntry<GridBoxWidgetBoxStyle> by entry("warning")
-    public val Danger: WidgetEnumEntry<GridBoxWidgetBoxStyle> by entry("danger")
-    public val Default: WidgetEnumEntry<GridBoxWidgetBoxStyle> by entry("")
-}
 
 private val gridBoxSpec = WidgetSpec(
     modelName = "GridBoxModel",
@@ -41,7 +33,7 @@ public class GridBoxWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<GridBoxWidget>(gridBoxSpec, ::GridBoxWidget)
 
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var boxStyle: WidgetEnumEntry<GridBoxWidgetBoxStyle> by prop("box_style", WidgetEnumType(GridBoxWidgetBoxStyle, GridBoxWidgetBoxStyle.Default), GridBoxWidgetBoxStyle.Default)
+    public var boxStyle: WidgetEnumEntry<BoxStyle> by prop("box_style", WidgetEnumType(BoxStyle, BoxStyle.Default), BoxStyle.Default)
     public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)

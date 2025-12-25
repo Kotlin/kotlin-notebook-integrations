@@ -2,6 +2,7 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.enums.Step
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
@@ -10,7 +11,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.UnionType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.DateType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnum
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
@@ -18,21 +18,17 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-public object DatePickerWidgetStep : WidgetEnum<DatePickerWidgetStep>() {
-    public val Any: WidgetEnumEntry<DatePickerWidgetStep> by entry("any")
-}
-
 private val DatePickerWidgetStepUnionType = UnionType<Any>(
     name = "step",
     default = 1,
     serializerSelector = { value ->
         when (value) {
             is Int -> IntType
-            is WidgetEnumEntry<*> -> WidgetEnumType(DatePickerWidgetStep, DatePickerWidgetStep.Any)
-            else -> WidgetEnumType(DatePickerWidgetStep, DatePickerWidgetStep.Any)
+            is WidgetEnumEntry<*> -> WidgetEnumType(Step, Step.Any)
+            else -> WidgetEnumType(Step, Step.Any)
         }
     },
-    deserializers = listOf(IntType, WidgetEnumType(DatePickerWidgetStep, DatePickerWidgetStep.Any)),
+    deserializers = listOf(IntType, WidgetEnumType(Step, Step.Any)),
 )
 
 
