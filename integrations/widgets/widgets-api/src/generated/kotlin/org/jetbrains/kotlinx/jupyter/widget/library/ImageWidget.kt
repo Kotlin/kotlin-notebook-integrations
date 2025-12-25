@@ -29,12 +29,19 @@ public class ImageWidget internal constructor(
 ) : DefaultWidgetModel(imageSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ImageWidget>(imageSpec, ::ImageWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** The format of the image. */
     public var format: String by stringProp("format", "png")
+    /** Height of the image in pixels. Use layout.height for styling the widget. */
     public var height: String by stringProp("height", "")
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** The media data as a memory view of bytes. */
     public var value: ByteArray by bytesProp("value", byteArrayOf())
+    /** Width of the image in pixels. Use layout.width for styling the widget. */
     public var width: String by stringProp("width", "")
 }

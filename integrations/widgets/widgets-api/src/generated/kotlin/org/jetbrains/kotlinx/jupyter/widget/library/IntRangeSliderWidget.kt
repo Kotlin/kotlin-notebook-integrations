@@ -34,21 +34,37 @@ public class IntRangeSliderWidget internal constructor(
 ) : DefaultWidgetModel(intRangeSliderSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<IntRangeSliderWidget>(intRangeSliderSpec, ::IntRangeSliderWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** Slider dragging behavior. */
     public var behavior: WidgetEnumEntry<Behavior> by prop("behavior", WidgetEnumType(Behavior, Behavior.DragTap), Behavior.DragTap)
+    /** Update the value of the widget as the user is sliding the slider. */
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Max value */
     public var max: Int by intProp("max", 100)
+    /** Min value */
     public var min: Int by intProp("min", 0)
+    /** Vertical or horizontal. */
     public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
+    /** Display the current value of the slider next to it. */
     public var readout: Boolean by boolProp("readout", true)
+    /** Format for the readout */
     public var readoutFormat: String by stringProp("readout_format", "d")
+    /** Minimum step that the value can take */
     public var step: Int by intProp("step", 1)
+    /** Slider style customizations. */
     public var style: SliderStyleWidget by widgetProp("style", widgetManager.sliderStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** Tuple of (lower, upper) bounds */
     public var value: List<Any?> by prop("value", ArrayType(AnyType), listOf(0, 1))
 }

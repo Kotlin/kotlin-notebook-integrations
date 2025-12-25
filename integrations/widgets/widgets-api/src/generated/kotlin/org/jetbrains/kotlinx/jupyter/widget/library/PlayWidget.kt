@@ -29,20 +29,35 @@ public class PlayWidget internal constructor(
 ) : DefaultWidgetModel(playSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<PlayWidget>(playSpec, ::PlayWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
+    /** The time between two animation steps (ms). */
     public var interval: Int by intProp("interval", 100)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Max value */
     public var max: Int by intProp("max", 100)
+    /** Min value */
     public var min: Int by intProp("min", 0)
+    /** Whether the control is currently playing. */
     public var playing: Boolean by boolProp("playing", false)
+    /** Whether the control will repeat in a continuous loop. */
     public var repeat: Boolean by boolProp("repeat", false)
+    /** Show the repeat toggle button in the widget. */
     public var showRepeat: Boolean by boolProp("show_repeat", true)
+    /** Increment step */
     public var step: Int by intProp("step", 1)
+    /** Styling customizations */
     public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** Int value */
     public var value: Int by intProp("value", 0)
 }

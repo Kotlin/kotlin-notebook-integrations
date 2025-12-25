@@ -25,6 +25,8 @@ public class DirectionalLinkWidget internal constructor(
 ) : DefaultWidgetModel(directionalLinkSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DirectionalLinkWidget>(directionalLinkSpec, ::DirectionalLinkWidget)
 
+    /** The source (widget, 'trait_name') pair */
     public var source: List<Any?> by prop("source", ArrayType(AnyType), emptyList())
+    /** The target (widget, 'trait_name') pair */
     public var target: List<Any?> by prop("target", ArrayType(AnyType), emptyList())
 }

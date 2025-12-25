@@ -25,8 +25,12 @@ public class HTMLMathStyleWidget internal constructor(
 ) : DefaultWidgetModel(htmlMathStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<HTMLMathStyleWidget>(htmlMathStyleSpec, ::HTMLMathStyleWidget)
 
+    /** Background specifications. */
     public var background: String? by prop("background", NullableType(StringType), null)
+    /** Width of the description to the side of the control. */
     public var descriptionWidth: String by stringProp("description_width", "")
+    /** Text font size. */
     public var fontSize: String? by prop("font_size", NullableType(StringType), null)
+    /** Text color */
     public var textColor: String? by prop("text_color", NullableType(StringType), null)
 }

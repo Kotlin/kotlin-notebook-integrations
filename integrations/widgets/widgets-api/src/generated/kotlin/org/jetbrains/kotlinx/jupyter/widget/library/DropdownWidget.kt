@@ -29,14 +29,23 @@ public class DropdownWidget internal constructor(
 ) : DefaultWidgetModel(dropdownSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DropdownWidget>(dropdownSpec, ::DropdownWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** The labels for the options. */
     public var optionsLabels: List<String?> by prop("_options_labels", ArrayType(NullableType(StringType)), emptyList())
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
+    /** Selected index */
     public var index: Int? by prop("index", NullableType(IntType), null)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Styling customizations */
     public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
 }

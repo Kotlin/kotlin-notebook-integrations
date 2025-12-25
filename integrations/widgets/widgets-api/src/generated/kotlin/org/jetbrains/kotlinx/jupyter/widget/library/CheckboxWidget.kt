@@ -28,14 +28,23 @@ public class CheckboxWidget internal constructor(
 ) : DefaultWidgetModel(checkboxSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<CheckboxWidget>(checkboxSpec, ::CheckboxWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    /** Enable or disable user changes. */
     public var disabled: Boolean by boolProp("disabled", false)
+    /** Indent the control to align with other controls with a description. */
     public var indent: Boolean by boolProp("indent", true)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Styling customizations */
     public var style: CheckboxStyleWidget by widgetProp("style", widgetManager.checkboxStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** Bool value */
     public var value: Boolean by boolProp("value", false)
 }

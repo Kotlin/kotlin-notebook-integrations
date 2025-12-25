@@ -24,5 +24,6 @@ public class DescriptionStyleWidget internal constructor(
 ) : DefaultWidgetModel(descriptionStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DescriptionStyleWidget>(descriptionStyleSpec, ::DescriptionStyleWidget)
 
+    /** Width of the description to the side of the control. */
     public var descriptionWidth: String by stringProp("description_width", "")
 }

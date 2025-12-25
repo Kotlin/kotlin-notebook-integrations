@@ -29,15 +29,25 @@ public class SelectMultipleWidget internal constructor(
 ) : DefaultWidgetModel(selectMultipleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<SelectMultipleWidget>(selectMultipleSpec, ::SelectMultipleWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** The labels for the options. */
     public var optionsLabels: List<String?> by prop("_options_labels", ArrayType(NullableType(StringType)), emptyList())
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
+    /** Selected indices */
     public var index: List<Int?> by prop("index", ArrayType(NullableType(IntType)), emptyList())
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** The number of rows to display. */
     public var rows: Int by intProp("rows", 5)
+    /** Styling customizations */
     public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
 }

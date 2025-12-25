@@ -29,15 +29,25 @@ public class FloatTextWidget internal constructor(
 ) : DefaultWidgetModel(floatTextSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<FloatTextWidget>(floatTextSpec, ::FloatTextWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** Update the value as the user types. If False, update on submission, e.g., pressing Enter or navigating away. */
     public var continuousUpdate: Boolean by boolProp("continuous_update", false)
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Minimum step to increment the value */
     public var step: Double? by prop("step", NullableType(FloatType), null)
+    /** Styling customizations */
     public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** Float value */
     public var value: Double by doubleProp("value", 0.0)
 }

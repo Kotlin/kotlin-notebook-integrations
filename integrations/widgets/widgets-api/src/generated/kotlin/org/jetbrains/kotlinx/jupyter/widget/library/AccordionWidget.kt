@@ -33,12 +33,19 @@ public class AccordionWidget internal constructor(
 ) : DefaultWidgetModel(accordionSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<AccordionWidget>(accordionSpec, ::AccordionWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** Use a predefined styling for the box. */
     public var boxStyle: WidgetEnumEntry<BoxStyle> by prop("box_style", WidgetEnumType(BoxStyle, BoxStyle.Default), BoxStyle.Default)
+    /** List of widget children */
     public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** The index of the selected page. This is either an integer selecting a particular sub-widget, or None to have no widgets selected. */
     public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** Titles of the pages */
     public var titles: List<String?> by prop("titles", ArrayType(NullableType(StringType)), emptyList())
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
 }

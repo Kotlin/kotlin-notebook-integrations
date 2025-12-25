@@ -29,15 +29,22 @@ public class ColorsInputWidget internal constructor(
 ) : DefaultWidgetModel(colorsInputSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ColorsInputWidget>(colorsInputSpec, ::ColorsInputWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
     public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var placeholder: String by stringProp("placeholder", "​")
+    /** Styling customizations */
     public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** List of string tags */
     public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
 }

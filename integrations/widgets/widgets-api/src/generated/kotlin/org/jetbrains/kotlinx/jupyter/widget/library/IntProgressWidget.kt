@@ -33,16 +33,26 @@ public class IntProgressWidget internal constructor(
 ) : DefaultWidgetModel(intProgressSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<IntProgressWidget>(intProgressSpec, ::IntProgressWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** Use a predefined styling for the progress bar. */
     public var barStyle: WidgetEnumEntry<BarStyle> by prop("bar_style", WidgetEnumType(BarStyle, BarStyle.Default), BarStyle.Default)
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Max value */
     public var max: Int by intProp("max", 100)
+    /** Min value */
     public var min: Int by intProp("min", 0)
+    /** Vertical or horizontal. */
     public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
     public var style: ProgressStyleWidget by widgetProp("style", widgetManager.progressStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** Int value */
     public var value: Int by intProp("value", 0)
 }

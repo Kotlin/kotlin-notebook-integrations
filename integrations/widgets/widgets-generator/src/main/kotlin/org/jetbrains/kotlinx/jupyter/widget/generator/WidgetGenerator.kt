@@ -239,6 +239,10 @@ private class WidgetGenerator(
         val context = GenerationContext(widgetInfo, helperDeclarations, imports)
         val typeInfo = attribute.toTypeInfo(context)
         return buildString {
+            val help = attribute.help
+            if (help.isNotEmpty()) {
+                appendLine("    /** $help */")
+            }
             append("    public var ${attribute.name.toPascalCase().toCamelCase()}: ${typeInfo.kotlinType} by ")
             append(typeInfo.delegate)
         }

@@ -28,17 +28,28 @@ public class ComboboxWidget internal constructor(
 ) : DefaultWidgetModel(comboboxSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ComboboxWidget>(comboboxSpec, ::ComboboxWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** Update the value as the user types. If False, update on submission, e.g., pressing Enter or navigating away. */
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
+    /** If set, ensure value is in options. Implies continuous_update=False. */
     public var ensureOption: Boolean by boolProp("ensure_option", false)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Dropdown options for the combobox */
     public var options: List<String?> by prop("options", ArrayType(NullableType(StringType)), emptyList())
+    /** Placeholder text to display when nothing has been typed */
     public var placeholder: String by stringProp("placeholder", "​")
     public var style: TextStyleWidget by widgetProp("style", widgetManager.textStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** String value */
     public var value: String by stringProp("value", "")
 }

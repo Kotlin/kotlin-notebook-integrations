@@ -28,14 +28,23 @@ public class ValidWidget internal constructor(
 ) : DefaultWidgetModel(validSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ValidWidget>(validSpec, ::ValidWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    /** Enable or disable user changes. */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Message displayed when the value is False */
     public var readout: String by stringProp("readout", "Invalid")
+    /** Styling customizations */
     public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** Bool value */
     public var value: Boolean by boolProp("value", false)
 }

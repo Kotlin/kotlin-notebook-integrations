@@ -48,16 +48,24 @@ public class TimeWidget internal constructor(
 ) : DefaultWidgetModel(timeSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<TimeWidget>(timeSpec, ::TimeWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    /** Enable or disable user changes. */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var max: java.time.LocalTime? by prop("max", NullableType(TimeType), null)
     public var min: java.time.LocalTime? by prop("min", NullableType(TimeType), null)
+    /** The time step to use for the picker, in seconds, or "any". */
     public var step: Any by prop("step", TimeWidgetStepUnionType, 60)
+    /** Styling customizations */
     public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
     public var value: java.time.LocalTime? by prop("value", NullableType(TimeType), null)
 }

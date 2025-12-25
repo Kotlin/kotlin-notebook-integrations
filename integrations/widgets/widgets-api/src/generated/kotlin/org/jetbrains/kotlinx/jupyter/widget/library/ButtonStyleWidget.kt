@@ -25,12 +25,20 @@ public class ButtonStyleWidget internal constructor(
 ) : DefaultWidgetModel(buttonStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ButtonStyleWidget>(buttonStyleSpec, ::ButtonStyleWidget)
 
+    /** Color of the button */
     public var buttonColor: String? by prop("button_color", NullableType(StringType), null)
+    /** Button text font family. */
     public var fontFamily: String? by prop("font_family", NullableType(StringType), null)
+    /** Button text font size. */
     public var fontSize: String? by prop("font_size", NullableType(StringType), null)
+    /** Button text font style. */
     public var fontStyle: String? by prop("font_style", NullableType(StringType), null)
+    /** Button text font variant. */
     public var fontVariant: String? by prop("font_variant", NullableType(StringType), null)
+    /** Button text font weight. */
     public var fontWeight: String? by prop("font_weight", NullableType(StringType), null)
+    /** Button text color. */
     public var textColor: String? by prop("text_color", NullableType(StringType), null)
+    /** Button text decoration. */
     public var textDecoration: String? by prop("text_decoration", NullableType(StringType), null)
 }

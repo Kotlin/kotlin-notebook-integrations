@@ -25,6 +25,8 @@ public class LinkWidget internal constructor(
 ) : DefaultWidgetModel(linkSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LinkWidget>(linkSpec, ::LinkWidget)
 
+    /** The source (widget, 'trait_name') pair */
     public var source: List<Any?> by prop("source", ArrayType(AnyType), emptyList())
+    /** The target (widget, 'trait_name') pair */
     public var target: List<Any?> by prop("target", ArrayType(AnyType), emptyList())
 }

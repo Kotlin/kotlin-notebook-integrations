@@ -29,9 +29,13 @@ public class ControllerAxisWidget internal constructor(
 ) : DefaultWidgetModel(controllerAxisSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ControllerAxisWidget>(controllerAxisSpec, ::ControllerAxisWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** The value of the axis. */
     public var value: Double by doubleProp("value", 0.0)
 }

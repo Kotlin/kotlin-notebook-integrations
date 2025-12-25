@@ -29,13 +29,21 @@ public class AudioWidget internal constructor(
 ) : DefaultWidgetModel(audioSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<AudioWidget>(audioSpec, ::AudioWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** When true, the audio starts when it's displayed */
     public var autoplay: Boolean by boolProp("autoplay", true)
+    /** Specifies that audio controls should be displayed (such as a play/pause button etc) */
     public var controls: Boolean by boolProp("controls", true)
+    /** The format of the audio. */
     public var format: String by stringProp("format", "mp3")
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** When true, the audio will start from the beginning after finishing */
     public var loop: Boolean by boolProp("loop", true)
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** The media data as a memory view of bytes. */
     public var value: ByteArray by bytesProp("value", byteArrayOf())
 }

@@ -29,10 +29,15 @@ public class OutputWidget internal constructor(
 ) : DefaultWidgetModel(outputSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<OutputWidget>(outputSpec, ::OutputWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Parent message id of messages to capture */
     public var msgId: String by stringProp("msg_id", "")
+    /** The output messages synced from the frontend. */
     public var outputs: List<Map<String, Any?>?> by prop("outputs", ArrayType(NullableType(RawObjectType)), emptyList())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
 }

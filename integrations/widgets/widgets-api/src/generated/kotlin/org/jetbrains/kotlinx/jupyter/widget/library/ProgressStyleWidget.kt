@@ -25,6 +25,8 @@ public class ProgressStyleWidget internal constructor(
 ) : DefaultWidgetModel(progressStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ProgressStyleWidget>(progressStyleSpec, ::ProgressStyleWidget)
 
+    /** Color of the progress bar. */
     public var barColor: String? by prop("bar_color", NullableType(StringType), null)
+    /** Width of the description to the side of the control. */
     public var descriptionWidth: String by stringProp("description_width", "")
 }

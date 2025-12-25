@@ -28,13 +28,20 @@ public class HTMLMathWidget internal constructor(
 ) : DefaultWidgetModel(htmlMathSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<HTMLMathWidget>(htmlMathSpec, ::HTMLMathWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** Description of the control. */
     public var description: String by stringProp("description", "")
+    /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    /** Placeholder text to display when nothing has been typed */
     public var placeholder: String by stringProp("placeholder", "​")
     public var style: HTMLMathStyleWidget by widgetProp("style", widgetManager.htmlMathStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    /** String value */
     public var value: String by stringProp("value", "")
 }

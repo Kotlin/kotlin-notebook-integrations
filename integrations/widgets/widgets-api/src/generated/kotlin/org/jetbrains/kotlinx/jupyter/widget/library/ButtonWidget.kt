@@ -31,13 +31,20 @@ public class ButtonWidget internal constructor(
 ) : DefaultWidgetModel(buttonSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ButtonWidget>(buttonSpec, ::ButtonWidget)
 
+    /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    /** Use a predefined styling for the button. */
     public var buttonStyle: WidgetEnumEntry<ButtonStyle> by prop("button_style", WidgetEnumType(ButtonStyle, ButtonStyle.Default), ButtonStyle.Default)
+    /** Button label. */
     public var description: String by stringProp("description", "")
+    /** Enable or disable user changes. */
     public var disabled: Boolean by boolProp("disabled", false)
+    /** Font-awesome icon names, without the 'fa-' prefix. */
     public var icon: String by stringProp("icon", "")
     public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
     public var style: ButtonStyleWidget by widgetProp("style", widgetManager.buttonStyle())
+    /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    /** A tooltip caption. */
     public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
 }
