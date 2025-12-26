@@ -3,8 +3,13 @@ package org.jetbrains.kotlinx.jupyter.widget.test
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.put
 import org.jetbrains.kotlinx.jupyter.protocol.comms.CommManagerImpl
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.jupiter.api.BeforeEach
@@ -88,6 +93,15 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
         // Actually WidgetManagerImpl.initializeWidget uses getWireMessage which handles buffers.
         msgEvent.buffers.shouldHaveSize(1)
         msgEvent.buffers[0] shouldBe byteArrayOf(1, 2, 3)
+        msgEvent.data["buffer_paths"]
+            ?.shouldBeInstanceOf<JsonArray>()
+            ?.shouldHaveSize(1)
+            ?.get(0)
+            ?.shouldBeInstanceOf<JsonArray>()
+            ?.shouldHaveSize(1)
+            ?.get(0)
+            ?.jsonPrimitive
+            ?.content shouldBe "value"
     }
 
     @Test
@@ -106,8 +120,87 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
             ?.content shouldBe "2023-01-01"
     }
 
+    @Test
+    fun `frontend message updates widget property`() {
+        execRaw("val s = intSliderWidget()")
+        val sliderId = (facility.sentEvents[2] as CommEvent.Open).commId
+
+        val updateData =
+            buildJsonObject {
+                put("method", "update")
+                put(
+                    "state",
+                    buildJsonObject {
+                        put("value", 42)
+                    },
+                )
+                put("buffer_paths", JsonArray(emptyList()))
+            }
+
+        commManager.processCommMessage(sliderId, updateData, null, emptyList())
+
+        execRaw("s.value") shouldBe 42
+    }
+
+    @Test
+    fun `frontend comm open creates widget`() {
+        val openData =
+            buildJsonObject {
+                put(
+                    "state",
+                    buildJsonObject {
+                        put("_model_name", "IntSliderModel")
+                        put("_model_module", "@jupyter-widgets/controls")
+                        put("_model_module_version", "2.0.0")
+                        put("value", 55)
+                    },
+                )
+                put("buffer_paths", JsonArray(emptyList()))
+            }
+
+        commManager.processCommOpen("new_slider_id", "jupyter.widget", openData, null, emptyList())
+
+        execRaw("import org.jetbrains.kotlinx.jupyter.widget.library.IntSliderWidget")
+        execRaw("val createdSlider = widgetManager.getWidget(\"new_slider_id\") as IntSliderWidget")
+        execRaw("createdSlider.value") shouldBe 55
+    }
+
+    @Test
+    fun `frontend message updates image bytes`() {
+        execRaw("val img = imageWidget()")
+        // Image depends on Layout, so 2 widgets registered. Image is the second one.
+        val imageId = (facility.sentEvents[1] as CommEvent.Open).commId
+
+        val bytes = byteArrayOf(10, 20, 30)
+        val updateData =
+            buildJsonObject {
+                put("method", "update")
+                put(
+                    "state",
+                    buildJsonObject {
+                        put("value", null as String?)
+                    },
+                )
+                put(
+                    "buffer_paths",
+                    buildJsonArray {
+                        add(
+                            buildJsonArray {
+                                add("value")
+                            },
+                        )
+                    },
+                )
+            }
+
+        commManager.processCommMessage(imageId, updateData, null, listOf(bytes))
+
+        execRaw("img.value") shouldBe bytes
+    }
+
     companion object {
         private val facility = TestServerCommCommunicationFacility()
-        private val provider = WidgetReplProvider(CommManagerImpl(facility))
+        private val commManager = CommManagerImpl(facility)
+        private val provider = WidgetReplProvider(commManager)
     }
 }

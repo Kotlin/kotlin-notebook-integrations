@@ -7,7 +7,7 @@ plugins {
 dependencies {
     testImplementation(libs.kotlinx.serialization.json)
     testImplementation(projects.integrations.widgets.widgetsJupyter)
-    testImplementation(kotlin("test"))
+    testImplementation(libs.kotlin.test)
     testImplementation(libs.test.kotlintest.assertions)
 }
 
