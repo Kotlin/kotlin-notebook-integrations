@@ -24,6 +24,7 @@ projectStructure {
             project("widgets-api")
             project("widgets-jupyter")
             project("widgets-generator")
+            project("widgets-tests")
         }
     }
 }
