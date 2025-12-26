@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val DatePickerWidgetStepUnionType = UnionType<Any>(
+private val StepUnionType = UnionType<Any>(
     name = "step",
     default = 1,
     serializerSelector = { value ->
@@ -30,7 +30,6 @@ private val DatePickerWidgetStepUnionType = UnionType<Any>(
     },
     deserializers = listOf(IntType, WidgetEnumType(Step, Step.Any)),
 )
-
 
 private val datePickerSpec = WidgetSpec(
     modelName = "DatePickerModel",
@@ -60,7 +59,7 @@ public class DatePickerWidget internal constructor(
     public var max: java.time.LocalDate? by prop("max", NullableType(DateType), null)
     public var min: java.time.LocalDate? by prop("min", NullableType(DateType), null)
     /** The date step to use for the picker, in days, or "any". */
-    public var step: Any by prop("step", DatePickerWidgetStepUnionType, 1)
+    public var step: Any by prop("step", StepUnionType, 1)
     /** Styling customizations */
     public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
     /** Is widget tabbable? */

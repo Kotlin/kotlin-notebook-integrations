@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val TimeWidgetStepUnionType = UnionType<Any>(
+private val StepUnionType = UnionType<Any>(
     name = "step",
     default = 60,
     serializerSelector = { value ->
@@ -30,7 +30,6 @@ private val TimeWidgetStepUnionType = UnionType<Any>(
     },
     deserializers = listOf(FloatType, WidgetEnumType(Step, Step.Any)),
 )
-
 
 private val timeSpec = WidgetSpec(
     modelName = "TimeModel",
@@ -60,7 +59,7 @@ public class TimeWidget internal constructor(
     public var max: java.time.LocalTime? by prop("max", NullableType(TimeType), null)
     public var min: java.time.LocalTime? by prop("min", NullableType(TimeType), null)
     /** The time step to use for the picker, in seconds, or "any". */
-    public var step: Any by prop("step", TimeWidgetStepUnionType, 60)
+    public var step: Any by prop("step", StepUnionType, 60)
     /** Styling customizations */
     public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
     /** Is widget tabbable? */
