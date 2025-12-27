@@ -97,6 +97,14 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
     }
 
     @Test
+    fun `time widget with integer step`() {
+        execRaw("val tw = timeWidget()")
+        execRaw("tw.step = 30")
+        assertOpenEvents("LayoutModel", "DescriptionStyleModel", "TimeModel")
+        assertNextUpdateEvent("step" to 30)
+    }
+
+    @Test
     fun `frontend message updates widget property`() {
         execRaw("val s = intSliderWidget()")
         val sliderId = assertOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId

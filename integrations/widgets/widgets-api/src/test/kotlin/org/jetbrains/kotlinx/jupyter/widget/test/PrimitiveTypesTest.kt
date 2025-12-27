@@ -14,6 +14,10 @@ class PrimitiveTypesTest {
         object : WidgetManager {
             override val factoryRegistry: WidgetFactoryRegistry get() = notImplemented()
 
+            override var echoUpdateEnabled: Boolean
+                get() = false
+                set(_) {}
+
             override fun getWidget(modelId: String): WidgetModel = notImplemented()
 
             override fun getWidgetId(widget: WidgetModel): String = notImplemented()

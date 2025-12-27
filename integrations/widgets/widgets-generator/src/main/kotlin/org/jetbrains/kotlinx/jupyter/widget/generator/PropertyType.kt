@@ -14,6 +14,8 @@ internal const val WIDGETS_PACKAGE: String = "org.jetbrains.kotlinx.jupyter.widg
 internal const val WIDGET_TYPES_PACKAGE: String = "$WIDGETS_PACKAGE.model.types"
 internal const val WIDGET_LIBRARY_PACKAGE: String = "$WIDGETS_PACKAGE.library"
 
+private val typeArgumentsRegex = Regex("<.*>")
+
 internal data class EnumInfo(
     val className: String,
     val values: List<String>,
@@ -30,7 +32,11 @@ internal interface PropertyType {
 
     val delegateName: String? get() = null
 
-    val kotlinTypeWithoutNullability: String get() = kotlinType.removeSuffix("?")
+    val checkTypeExpression: String
+        get() {
+            val typeWithoutNullability = kotlinType.removeSuffix("?")
+            return typeWithoutNullability.replace(typeArgumentsRegex, "<*>")
+        }
 }
 
 private open class BasicPropertyType(
@@ -49,27 +55,58 @@ private open class BasicPropertyType(
 private open class PrimitiveType(
     kotlinType: String,
     typeName: String,
-    delegateName: String? = null,
+    nonNullableDelegateName: String? = null,
     nullableDelegateName: String? = null,
 ) : BasicPropertyType(
         kotlinType = kotlinType,
         typeExpression = typeName,
         imports = setOf("$WIDGET_TYPES_PACKAGE.primitive.$typeName"),
-        nonNullableDelegateName = delegateName,
+        nonNullableDelegateName = nonNullableDelegateName,
         nullableDelegateName = nullableDelegateName,
     )
 
-private object StringPropertyType : PrimitiveType("String", "StringType", "stringProp", "nullableStringProp")
+private object StringPropertyType : PrimitiveType(
+    kotlinType = "String",
+    typeName = "StringType",
+    nonNullableDelegateName = "stringProp",
+    nullableDelegateName = "nullableStringProp",
+)
 
-private object BooleanPropertyType : PrimitiveType("Boolean", "BooleanType", "boolProp", "nullableBoolProp")
+private object BooleanPropertyType : PrimitiveType(
+    kotlinType = "Boolean",
+    typeName = "BooleanType",
+    nonNullableDelegateName = "boolProp",
+    nullableDelegateName = "nullableBoolProp",
+)
 
-private object IntPropertyType : PrimitiveType("Int", "IntType", "intProp", "nullableIntProp")
+private object IntPropertyType : PrimitiveType(
+    kotlinType = "Int",
+    typeName = "IntType",
+    nonNullableDelegateName = "intProp",
+    nullableDelegateName = "nullableIntProp",
+) {
+    override val checkTypeExpression: String get() = "Number"
+}
 
-private object DoublePropertyType : PrimitiveType("Double", "FloatType", "doubleProp", "nullableDoubleProp")
+private object DoublePropertyType : PrimitiveType(
+    kotlinType = "Double",
+    typeName = "FloatType",
+    nonNullableDelegateName = "doubleProp",
+    nullableDelegateName = "nullableDoubleProp",
+) {
+    override val checkTypeExpression: String get() = "Number"
+}
 
-private object BytesPropertyType : PrimitiveType("ByteArray", "BytesType", "bytesProp")
+private object BytesPropertyType : PrimitiveType(
+    kotlinType = "ByteArray",
+    typeName = "BytesType",
+    nonNullableDelegateName = "bytesProp",
+)
 
-private object AnyPropertyType : PrimitiveType("Any", "AnyType")
+private object AnyPropertyType : PrimitiveType(
+    kotlinType = "Any",
+    typeName = "AnyType",
+)
 
 private open class DatetimeBasePropertyType(
     kotlinType: String,
@@ -239,11 +276,7 @@ private class UnionPropertyType(
                 |        when (value) {
                 ${
                     options.joinToString("\n") { opt ->
-                        val checkType =
-                            opt.kotlinTypeWithoutNullability.let {
-                                if (it.contains("<")) it.replace(Regex("<.*>"), "<*>") else it
-                            }
-                        "|            is $checkType -> ${opt.typeExpression}"
+                        "|            is ${opt.checkTypeExpression} -> ${opt.typeExpression}"
                     }
                 }
                 |            else -> ${options.last().typeExpression}

@@ -23,7 +23,7 @@ private val StepUnionType = UnionType<Any>(
     default = 1,
     serializerSelector = { value ->
         when (value) {
-            is Int -> IntType
+            is Number -> IntType
             is WidgetEnumEntry<*> -> WidgetEnumType(Step, Step.Any)
             else -> WidgetEnumType(Step, Step.Any)
         }
