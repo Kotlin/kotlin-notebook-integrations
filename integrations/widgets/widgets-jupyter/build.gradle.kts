@@ -6,7 +6,7 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.integrations.widgets.widgetsApi)
+    api(projects.integrations.widgets.widgetsApi)
 }
 
 kotlin {

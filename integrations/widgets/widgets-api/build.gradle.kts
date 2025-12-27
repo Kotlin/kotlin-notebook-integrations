@@ -6,7 +6,7 @@ plugins {
 }
 
 dependencies {
-    compileOnly(libs.kotlinx.serialization.json)
+    api(libs.kotlinx.serialization.json)
     implementation(libs.kotlin.reflect)
 
     testImplementation(libs.kotlin.test)
