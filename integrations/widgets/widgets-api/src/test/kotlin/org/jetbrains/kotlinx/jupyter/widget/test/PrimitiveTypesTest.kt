@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.jupyter.widget.test
 
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import org.jetbrains.kotlinx.jupyter.api.DisplayResult
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetFactoryRegistry
@@ -25,6 +27,13 @@ class PrimitiveTypesTest {
             override fun registerWidget(widget: WidgetModel) = notImplemented()
 
             override fun renderWidget(widget: WidgetModel): DisplayResult = notImplemented()
+
+            override fun sendCustomMessage(
+                widget: WidgetModel,
+                content: JsonObject,
+                metadata: JsonElement?,
+                buffers: List<ByteArray>,
+            ) = notImplemented()
         }
 
     @Test

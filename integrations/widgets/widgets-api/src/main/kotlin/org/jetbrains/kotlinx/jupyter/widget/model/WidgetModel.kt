@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.jupyter.widget.model
 
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.WidgetModelPropertyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
@@ -23,12 +25,34 @@ public abstract class WidgetModel(
     protected val widgetManager: WidgetManager,
 ) {
     private val properties = mutableMapOf<String, WidgetModelProperty<*>>()
+    private val changeListeners = mutableListOf<(Patch, Boolean) -> Unit>()
+    private val customMessageListeners = mutableListOf<CustomMessageListener>()
 
     public fun getProperty(name: String): WidgetModelProperty<*>? = properties[name]
 
-    private val changeListeners = mutableListOf<(Patch, Boolean) -> Unit>()
-
     public fun getFullState(): Patch = properties.mapValues { (_, property) -> property.serializedValue }
+
+    public fun sendCustomMessage(
+        content: JsonObject,
+        metadata: JsonElement? = null,
+        buffers: List<ByteArray> = emptyList(),
+    ) {
+        widgetManager.sendCustomMessage(this, content, metadata, buffers)
+    }
+
+    public fun addCustomMessageListener(listener: CustomMessageListener) {
+        customMessageListeners.add(listener)
+    }
+
+    internal fun handleCustomMessage(
+        content: JsonObject,
+        metadata: JsonElement?,
+        buffers: List<ByteArray>,
+    ) {
+        for (listener in customMessageListeners) {
+            listener(content, metadata, buffers)
+        }
+    }
 
     public fun applyFrontendPatch(patch: Patch) {
         applyPatchImpl(patch, fromFrontend = true)

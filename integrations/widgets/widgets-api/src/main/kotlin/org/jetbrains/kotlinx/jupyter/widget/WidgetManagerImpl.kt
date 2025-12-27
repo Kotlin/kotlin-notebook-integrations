@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.jupyter.widget
 
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.encodeToJsonElement
@@ -44,6 +46,7 @@ public class WidgetManagerImpl(
     private val widgetControlTarget = "jupyter.widget.control"
     private val widgets = mutableMapOf<String, WidgetModel>()
     private val widgetIdByWidget = mutableMapOf<WidgetModel, String>()
+    private val commByWidget = mutableMapOf<WidgetModel, Comm>()
 
     override val factoryRegistry: WidgetFactoryRegistry = WidgetFactoryRegistry()
 
@@ -143,6 +146,18 @@ public class WidgetManagerImpl(
             null,
         )
 
+    override fun sendCustomMessage(
+        widget: WidgetModel,
+        content: JsonObject,
+        metadata: JsonElement?,
+        buffers: List<ByteArray>,
+    ) {
+        val comm = commByWidget[widget] ?: error("Widget is not registered")
+        val message = CustomMessage(content)
+        val data = Json.encodeToJsonElement<WidgetMessage>(message).jsonObject
+        comm.send(data, metadata, buffers)
+    }
+
     private fun initializeWidget(
         comm: Comm,
         widget: WidgetModel,
@@ -150,6 +165,7 @@ public class WidgetManagerImpl(
         val modelId = comm.id
         widgetIdByWidget[widget] = modelId
         widgets[modelId] = widget
+        commByWidget[widget] = comm
 
         // Reflect kernel-side changes on the frontend
         widget.addChangeListener { patch, fromFrontend ->
@@ -157,7 +173,7 @@ public class WidgetManagerImpl(
         }
 
         // Reflect frontend-side changes on kernel
-        comm.onMessage { msg, _, buffers ->
+        comm.onMessage { msg, metadata, buffers ->
             when (val message = Json.decodeFromJsonElement<WidgetMessage>(msg)) {
                 is WidgetStateMessage -> {
                     widget.applyFrontendPatch(message.toPatch(buffers))
@@ -177,7 +193,13 @@ public class WidgetManagerImpl(
                     comm.send(data, null, wireMessage.buffers)
                 }
 
-                is CustomMessage -> {}
+                is CustomMessage -> {
+                    widget.handleCustomMessage(
+                        message.content,
+                        metadata,
+                        buffers,
+                    )
+                }
 
                 else -> {}
             }
@@ -186,6 +208,7 @@ public class WidgetManagerImpl(
         comm.onClose { _, _ ->
             widgets.remove(modelId)
             widgetIdByWidget.remove(widget)
+            commByWidget.remove(widget)
         }
     }
 
