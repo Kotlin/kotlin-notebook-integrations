@@ -33,3 +33,14 @@ This project consists of the following modules:
 
 - `widgets-api`: Contains the core widget implementations, protocols, and model definitions.
 - `widgets-jupyter`: Provides the integration logic and useful helpers for Kotlin Jupyter notebooks.
+- `widgets-generator`: Generates widget models from `schema.json`.
+- `widgets-tests`: Contains integration tests for widgets.
+
+## Development
+
+Most widgets are automatically generated from a schema.
+To regenerate widgets after changing `schema.json` or the generator itself, run:
+
+```bash
+./gradlew :integrations:widgets:widgets-generator:generateWidgets
+```
