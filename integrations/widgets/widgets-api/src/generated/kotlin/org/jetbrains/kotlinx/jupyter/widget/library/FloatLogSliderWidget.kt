@@ -60,12 +60,12 @@ public class FloatLogSliderWidget internal constructor(
     /** Format for the readout */
     public var readoutFormat: String by stringProp("readout_format", ".3g")
     /** Minimum step in the exponent to increment the value */
-    public var step: Double? by prop("step", NullableType(FloatType), 0.1)
+    public var step: Double? by nullableDoubleProp("step", 0.1)
     public var style: SliderStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.sliderStyle())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** Float value */
     public var value: Double by doubleProp("value", 1.0)
 }

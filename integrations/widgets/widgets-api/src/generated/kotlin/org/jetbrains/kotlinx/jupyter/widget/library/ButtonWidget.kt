@@ -45,7 +45,7 @@ public class ButtonWidget internal constructor(
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var style: ButtonStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.buttonStyle())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
 }

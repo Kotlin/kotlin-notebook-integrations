@@ -44,17 +44,17 @@ public class IntsInputWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var format: String by stringProp("format", "d")
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    public var max: Int? by prop("max", NullableType(IntType), null)
-    public var min: Int? by prop("min", NullableType(IntType), null)
+    public var max: Int? by nullableIntProp("max", null)
+    public var min: Int? by nullableIntProp("min", null)
     public var placeholder: String by stringProp("placeholder", "​")
     /** Styling customizations */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** Use a predefined styling for the tags. */
     public var tagStyle: WidgetEnumEntry<TagStyle> by prop("tag_style", WidgetEnumType(TagStyle, TagStyle.Default), TagStyle.Default)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** List of int tags */
     public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
 }

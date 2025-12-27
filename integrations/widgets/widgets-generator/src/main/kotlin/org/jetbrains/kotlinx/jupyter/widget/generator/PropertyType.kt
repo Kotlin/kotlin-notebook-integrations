@@ -59,13 +59,13 @@ private open class PrimitiveType(
         nullableDelegateName = nullableDelegateName,
     )
 
-private object StringPropertyType : PrimitiveType("String", "StringType", "stringProp")
+private object StringPropertyType : PrimitiveType("String", "StringType", "stringProp", "nullableStringProp")
 
-private object BooleanPropertyType : PrimitiveType("Boolean", "BooleanType", "boolProp")
+private object BooleanPropertyType : PrimitiveType("Boolean", "BooleanType", "boolProp", "nullableBoolProp")
 
-private object IntPropertyType : PrimitiveType("Int", "IntType", "intProp")
+private object IntPropertyType : PrimitiveType("Int", "IntType", "intProp", "nullableIntProp")
 
-private object DoublePropertyType : PrimitiveType("Double", "FloatType", "doubleProp")
+private object DoublePropertyType : PrimitiveType("Double", "FloatType", "doubleProp", "nullableDoubleProp")
 
 private object BytesPropertyType : PrimitiveType("ByteArray", "BytesType", "bytesProp")
 

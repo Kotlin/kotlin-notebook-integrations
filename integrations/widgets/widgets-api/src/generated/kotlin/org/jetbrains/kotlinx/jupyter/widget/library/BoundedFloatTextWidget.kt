@@ -46,13 +46,13 @@ public class BoundedFloatTextWidget internal constructor(
     /** Min value */
     public var min: Double by doubleProp("min", 0.0)
     /** Minimum step to increment the value */
-    public var step: Double? by prop("step", NullableType(FloatType), null)
+    public var step: Double? by nullableDoubleProp("step", null)
     /** Styling customizations */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** Float value */
     public var value: Double by doubleProp("value", 0.0)
 }

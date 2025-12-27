@@ -51,9 +51,9 @@ public class IntProgressWidget internal constructor(
     public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
     public var style: ProgressStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.progressStyle())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** Int value */
     public var value: Int by intProp("value", 0)
 }

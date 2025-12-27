@@ -27,19 +27,19 @@ public class ButtonStyleWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<ButtonStyleWidget>(buttonStyleSpec, ::ButtonStyleWidget)
 
     /** Color of the button */
-    public var buttonColor: String? by prop("button_color", NullableType(StringType), null)
+    public var buttonColor: String? by nullableStringProp("button_color", null)
     /** Button text font family. */
-    public var fontFamily: String? by prop("font_family", NullableType(StringType), null)
+    public var fontFamily: String? by nullableStringProp("font_family", null)
     /** Button text font size. */
-    public var fontSize: String? by prop("font_size", NullableType(StringType), null)
+    public var fontSize: String? by nullableStringProp("font_size", null)
     /** Button text font style. */
-    public var fontStyle: String? by prop("font_style", NullableType(StringType), null)
+    public var fontStyle: String? by nullableStringProp("font_style", null)
     /** Button text font variant. */
-    public var fontVariant: String? by prop("font_variant", NullableType(StringType), null)
+    public var fontVariant: String? by nullableStringProp("font_variant", null)
     /** Button text font weight. */
-    public var fontWeight: String? by prop("font_weight", NullableType(StringType), null)
+    public var fontWeight: String? by nullableStringProp("font_weight", null)
     /** Button text color. */
-    public var textColor: String? by prop("text_color", NullableType(StringType), null)
+    public var textColor: String? by nullableStringProp("text_color", null)
     /** Button text decoration. */
-    public var textDecoration: String? by prop("text_decoration", NullableType(StringType), null)
+    public var textDecoration: String? by nullableStringProp("text_decoration", null)
 }

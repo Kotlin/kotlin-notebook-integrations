@@ -44,12 +44,12 @@ public class TextareaWidget internal constructor(
     /** Placeholder text to display when nothing has been typed */
     public var placeholder: String by stringProp("placeholder", "​")
     /** The number of rows to display. */
-    public var rows: Int? by prop("rows", NullableType(IntType), null)
+    public var rows: Int? by nullableIntProp("rows", null)
     public var style: TextStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.textStyle())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** String value */
     public var value: String by stringProp("value", "")
 }

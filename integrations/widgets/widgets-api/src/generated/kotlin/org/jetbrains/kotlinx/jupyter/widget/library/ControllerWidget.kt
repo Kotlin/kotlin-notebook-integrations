@@ -47,9 +47,9 @@ public class ControllerWidget internal constructor(
     /** The name of the controller. */
     public var name: String by stringProp("name", "")
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** The last time the data from this gamepad was updated. */
     public var timestamp: Double by doubleProp("timestamp", 0.0)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
 }

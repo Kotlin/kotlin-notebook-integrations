@@ -36,9 +36,9 @@ public class ControllerButtonWidget internal constructor(
     /** Whether the button is pressed. */
     public var pressed: Boolean by boolProp("pressed", false)
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** The value of the button. */
     public var value: Double by doubleProp("value", 0.0)
 }

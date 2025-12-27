@@ -89,7 +89,7 @@ import org.jetbrains.kotlinx.jupyter.widget.library.datePicker
 import org.jetbrains.kotlinx.jupyter.widget.library.datetime
 import org.jetbrains.kotlinx.jupyter.widget.library.descriptionStyle
 import org.jetbrains.kotlinx.jupyter.widget.library.directionalLink
-import org.jetbrains.kotlinx.jupyter.widget.library.domwidget
+import org.jetbrains.kotlinx.jupyter.widget.library.domWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.dropdown
 import org.jetbrains.kotlinx.jupyter.widget.library.fileUpload
 import org.jetbrains.kotlinx.jupyter.widget.library.floatLogSlider
@@ -178,7 +178,7 @@ public fun descriptionStyleWidget(): DescriptionStyleWidget = globalWidgetManage
 
 public fun directionalLinkWidget(): DirectionalLinkWidget = globalWidgetManager.directionalLink()
 
-public fun domwidgetWidget(): DOMWidget = globalWidgetManager.domwidget()
+public fun domWidget(): DOMWidget = globalWidgetManager.domWidget()
 
 public fun dropdownWidget(): DropdownWidget = globalWidgetManager.dropdown()
 

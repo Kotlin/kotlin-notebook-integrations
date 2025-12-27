@@ -41,7 +41,7 @@ public class HBoxWidget internal constructor(
     public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
 }

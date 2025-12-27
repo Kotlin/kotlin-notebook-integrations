@@ -63,9 +63,9 @@ public class IntRangeSliderWidget internal constructor(
     /** Slider style customizations. */
     public var style: SliderStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.sliderStyle())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** Tuple of (lower, upper) bounds */
     public var value: List<Any?> by prop("value", ArrayType(AnyType), listOf(0, 1))
 }

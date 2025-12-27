@@ -128,12 +128,20 @@ private class WidgetGenerator(
 
         val specName = "${info.functionName}Spec"
         builder.appendLine("private val $specName = WidgetSpec(")
-        builder.appendLine("    modelName = \"${info.schema.model.name}\",")
-        builder.appendLine("    modelModule = \"${info.schema.model.module}\",")
-        builder.appendLine("    modelModuleVersion = \"${info.schema.model.version}\",")
-        builder.appendLine("    viewName = \"${info.schema.view.name}\",")
-        builder.appendLine("    viewModule = \"${info.schema.view.module}\",")
-        builder.appendLine("    viewModuleVersion = \"${info.schema.view.version}\",")
+
+        fun addArgument(
+            name: String,
+            value: String?,
+        ) {
+            builder.appendLine("    $name = ${value?.let { "\"$it\"" } ?: "null"},")
+        }
+
+        addArgument("modelName", info.schema.model.name)
+        addArgument("modelModule", info.schema.model.module)
+        addArgument("modelModuleVersion", info.schema.model.version)
+        addArgument("viewName", info.schema.view.name)
+        addArgument("viewModule", info.schema.view.module)
+        addArgument("viewModuleVersion", info.schema.view.version)
         builder.appendLine(")")
         builder.appendLine()
 
@@ -252,7 +260,8 @@ private class WidgetGenerator(
                 }
                 appendLine()
                 for (info in sortedInfos) {
-                    appendLine("public fun ${info.functionName}Widget(): ${info.className} = globalWidgetManager.${info.functionName}()")
+                    val functionName = info.functionName.removeSuffix("Widget") + "Widget"
+                    appendLine("public fun $functionName(): ${info.className} = globalWidgetManager.${info.functionName}()")
                     appendLine()
                 }
             }

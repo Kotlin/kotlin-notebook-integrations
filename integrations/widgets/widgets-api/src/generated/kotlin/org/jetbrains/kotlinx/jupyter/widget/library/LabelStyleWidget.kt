@@ -27,21 +27,21 @@ public class LabelStyleWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<LabelStyleWidget>(labelStyleSpec, ::LabelStyleWidget)
 
     /** Background specifications. */
-    public var background: String? by prop("background", NullableType(StringType), null)
+    public var background: String? by nullableStringProp("background", null)
     /** Width of the description to the side of the control. */
     public var descriptionWidth: String by stringProp("description_width", "")
     /** Label text font family. */
-    public var fontFamily: String? by prop("font_family", NullableType(StringType), null)
+    public var fontFamily: String? by nullableStringProp("font_family", null)
     /** Text font size. */
-    public var fontSize: String? by prop("font_size", NullableType(StringType), null)
+    public var fontSize: String? by nullableStringProp("font_size", null)
     /** Label text font style. */
-    public var fontStyle: String? by prop("font_style", NullableType(StringType), null)
+    public var fontStyle: String? by nullableStringProp("font_style", null)
     /** Label text font variant. */
-    public var fontVariant: String? by prop("font_variant", NullableType(StringType), null)
+    public var fontVariant: String? by nullableStringProp("font_variant", null)
     /** Label text font weight. */
-    public var fontWeight: String? by prop("font_weight", NullableType(StringType), null)
+    public var fontWeight: String? by nullableStringProp("font_weight", null)
     /** Text color */
-    public var textColor: String? by prop("text_color", NullableType(StringType), null)
+    public var textColor: String? by nullableStringProp("text_color", null)
     /** Label text decoration. */
-    public var textDecoration: String? by prop("text_decoration", NullableType(StringType), null)
+    public var textDecoration: String? by nullableStringProp("text_decoration", null)
 }

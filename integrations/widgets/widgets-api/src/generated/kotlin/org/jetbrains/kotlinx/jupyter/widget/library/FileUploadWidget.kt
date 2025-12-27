@@ -54,9 +54,9 @@ public class FileUploadWidget internal constructor(
     public var multiple: Boolean by boolProp("multiple", false)
     public var style: ButtonStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.buttonStyle())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** The file upload value */
     public var value: List<Map<String, Any?>?> by prop("value", ArrayType(NullableType(RawObjectType)), emptyList())
 }

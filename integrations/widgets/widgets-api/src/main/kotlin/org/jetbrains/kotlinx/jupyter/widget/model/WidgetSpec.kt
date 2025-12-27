@@ -16,7 +16,7 @@ public data class WidgetSpec(
     val modelName: String,
     val modelModule: String,
     val modelModuleVersion: String,
-    val viewName: String,
+    val viewName: String?,
     val viewModule: String,
     val viewModuleVersion: String,
 )

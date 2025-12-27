@@ -42,9 +42,9 @@ public class AudioWidget internal constructor(
     /** When true, the audio will start from the beginning after finishing */
     public var loop: Boolean by boolProp("loop", true)
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** The media data as a memory view of bytes. */
     public var value: ByteArray by bytesProp("value", byteArrayOf())
 }

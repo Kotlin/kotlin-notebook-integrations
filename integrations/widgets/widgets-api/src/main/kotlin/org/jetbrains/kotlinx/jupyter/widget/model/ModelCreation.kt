@@ -33,7 +33,7 @@ public open class DefaultWidgetModel(
     public val modelName: String by stringProp("_model_name", spec.modelName)
     public val modelModule: String by stringProp("_model_module", spec.modelModule)
     public val modelModuleVersion: String by stringProp("_model_module_version", spec.modelModuleVersion)
-    public val viewName: String by stringProp("_view_name", spec.viewName)
+    public val viewName: String? by nullableStringProp("_view_name", spec.viewName)
     public val viewModule: String by stringProp("_view_module", spec.viewModule)
     public val viewModuleVersion: String by stringProp("_view_module_version", spec.viewModuleVersion)
 }

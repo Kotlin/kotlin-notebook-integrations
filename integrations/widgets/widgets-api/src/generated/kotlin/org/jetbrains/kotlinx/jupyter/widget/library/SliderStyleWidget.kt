@@ -29,5 +29,5 @@ public class SliderStyleWidget internal constructor(
     /** Width of the description to the side of the control. */
     public var descriptionWidth: String by stringProp("description_width", "")
     /** Color of the slider handle. */
-    public var handleColor: String? by prop("handle_color", NullableType(StringType), null)
+    public var handleColor: String? by nullableStringProp("handle_color", null)
 }

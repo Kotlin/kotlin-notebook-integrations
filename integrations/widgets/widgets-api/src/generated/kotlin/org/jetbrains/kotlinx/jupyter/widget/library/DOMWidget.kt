@@ -13,30 +13,30 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BytesType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val domwidgetSpec = WidgetSpec(
+private val domWidgetSpec = WidgetSpec(
     modelName = "DOMWidgetModel",
     modelModule = "@jupyter-widgets/controls",
     modelModuleVersion = "2.0.0",
-    viewName = "null",
+    viewName = null,
     viewModule = "@jupyter-widgets/controls",
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.domwidget(): DOMWidget = createAndRegisterWidget(DOMWidget.Factory)
+public fun WidgetManager.domWidget(): DOMWidget = createAndRegisterWidget(DOMWidget.Factory)
 
 public class DOMWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(domwidgetSpec, widgetManager) {
-    internal object Factory : DefaultWidgetFactory<DOMWidget>(domwidgetSpec, ::DOMWidget)
+) : DefaultWidgetModel(domWidgetSpec, widgetManager) {
+    internal object Factory : DefaultWidgetFactory<DOMWidget>(domWidgetSpec, ::DOMWidget)
 
     /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** The media data as a memory view of bytes. */
     public var value: ByteArray by bytesProp("value", byteArrayOf())
 }

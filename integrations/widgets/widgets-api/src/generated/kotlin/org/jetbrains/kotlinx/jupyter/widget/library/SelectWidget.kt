@@ -41,14 +41,14 @@ public class SelectWidget internal constructor(
     /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
     /** Selected index */
-    public var index: Int? by prop("index", NullableType(IntType), null)
+    public var index: Int? by nullableIntProp("index", null)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** The number of rows to display. */
     public var rows: Int by intProp("rows", 5)
     /** Styling customizations */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
 }

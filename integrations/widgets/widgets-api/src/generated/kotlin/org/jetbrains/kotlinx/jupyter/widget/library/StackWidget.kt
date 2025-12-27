@@ -42,11 +42,11 @@ public class StackWidget internal constructor(
     public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** The index of the selected page. This is either an integer selecting a particular sub-widget, or None to have no widgets selected. */
-    public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)
+    public var selectedIndex: Int? by nullableIntProp("selected_index", null)
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** Titles of the pages */
     public var titles: List<String?> by prop("titles", ArrayType(NullableType(StringType)), emptyList())
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
 }

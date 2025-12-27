@@ -38,7 +38,7 @@ public class OutputWidget internal constructor(
     /** The output messages synced from the frontend. */
     public var outputs: List<Map<String, Any?>?> by prop("outputs", ArrayType(NullableType(RawObjectType)), emptyList())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
 }

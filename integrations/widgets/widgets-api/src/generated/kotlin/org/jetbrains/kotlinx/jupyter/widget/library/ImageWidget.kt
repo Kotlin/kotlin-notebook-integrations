@@ -38,9 +38,9 @@ public class ImageWidget internal constructor(
     public var height: String by stringProp("height", "")
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** The media data as a memory view of bytes. */
     public var value: ByteArray by bytesProp("value", byteArrayOf())
     /** Width of the image in pixels. Use layout.width for styling the widget. */

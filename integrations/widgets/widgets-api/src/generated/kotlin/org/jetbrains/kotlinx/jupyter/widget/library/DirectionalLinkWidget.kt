@@ -13,7 +13,7 @@ private val directionalLinkSpec = WidgetSpec(
     modelName = "DirectionalLinkModel",
     modelModule = "@jupyter-widgets/controls",
     modelModuleVersion = "2.0.0",
-    viewName = "null",
+    viewName = null,
     viewModule = "@jupyter-widgets/controls",
     viewModuleVersion = "2.0.0",
 )

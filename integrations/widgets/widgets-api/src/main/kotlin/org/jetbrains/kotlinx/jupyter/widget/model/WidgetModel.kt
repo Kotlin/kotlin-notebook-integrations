@@ -70,20 +70,40 @@ public abstract class WidgetModel(
         initialValue: String = "",
     ): ReadWriteProperty<WidgetModel, String> = prop(name, StringType, initialValue)
 
+    protected fun nullableStringProp(
+        name: String,
+        initialValue: String? = null,
+    ): ReadWriteProperty<WidgetModel, String?> = prop(name, NullableType(StringType), initialValue)
+
     protected fun intProp(
         name: String,
         initialValue: Int = 0,
     ): ReadWriteProperty<WidgetModel, Int> = prop(name, IntType, initialValue)
+
+    protected fun nullableIntProp(
+        name: String,
+        initialValue: Int? = null,
+    ): ReadWriteProperty<WidgetModel, Int?> = prop(name, NullableType(IntType), initialValue)
 
     protected fun doubleProp(
         name: String,
         initialValue: Double = 0.0,
     ): ReadWriteProperty<WidgetModel, Double> = prop(name, FloatType, initialValue)
 
+    protected fun nullableDoubleProp(
+        name: String,
+        initialValue: Double? = null,
+    ): ReadWriteProperty<WidgetModel, Double?> = prop(name, NullableType(FloatType), initialValue)
+
     protected fun boolProp(
         name: String,
         initialValue: Boolean = false,
     ): ReadWriteProperty<WidgetModel, Boolean> = prop(name, BooleanType, initialValue)
+
+    protected fun nullableBoolProp(
+        name: String,
+        initialValue: Boolean? = null,
+    ): ReadWriteProperty<WidgetModel, Boolean?> = prop(name, NullableType(BooleanType), initialValue)
 
     protected fun bytesProp(
         name: String,

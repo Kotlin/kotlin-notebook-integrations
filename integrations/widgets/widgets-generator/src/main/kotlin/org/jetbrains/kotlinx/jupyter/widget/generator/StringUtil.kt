@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.jupyter.widget.generator
 private val commonAbbreviations: Set<String> =
     setOf(
         "html",
+        "dom",
     )
 
 internal fun String.toCamelCase(): String {

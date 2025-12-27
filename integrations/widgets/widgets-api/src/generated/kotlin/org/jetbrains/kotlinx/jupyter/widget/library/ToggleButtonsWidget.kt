@@ -48,13 +48,13 @@ public class ToggleButtonsWidget internal constructor(
     /** Icons names for each button (FontAwesome names without the fa- prefix). */
     public var icons: List<String?> by prop("icons", ArrayType(NullableType(StringType)), emptyList())
     /** Selected index */
-    public var index: Int? by prop("index", NullableType(IntType), null)
+    public var index: Int? by nullableIntProp("index", null)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var style: ToggleButtonsStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.toggleButtonsStyle())
     /** Is widget tabbable? */
-    public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
+    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
-    public var tooltip: String? by prop("tooltip", NullableType(StringType), null)
+    public var tooltip: String? by nullableStringProp("tooltip", null)
     /** Tooltips for each button. */
     public var tooltips: List<String?> by prop("tooltips", ArrayType(NullableType(StringType)), emptyList())
 }
