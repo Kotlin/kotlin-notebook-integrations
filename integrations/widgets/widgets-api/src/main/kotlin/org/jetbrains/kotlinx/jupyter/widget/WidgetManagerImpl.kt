@@ -74,7 +74,7 @@ public class WidgetManagerImpl(
 
             val widget = widgetFactory.create(this)
             val patch = openMessage.toPatch(buffers)
-            widget.applyPatch(patch)
+            widget.applyFrontendPatch(patch)
 
             initializeWidget(comm, widget)
         }
@@ -147,7 +147,8 @@ public class WidgetManagerImpl(
         widgets[modelId] = widget
 
         // Reflect kernel-side changes on the frontend
-        widget.addChangeListener { patch ->
+        widget.addChangeListener { patch, fromFrontend ->
+            if (fromFrontend) return@addChangeListener
             val wireMessage = getWireMessage(patch)
             val data =
                 Json
@@ -164,7 +165,7 @@ public class WidgetManagerImpl(
         comm.onMessage { msg, _, buffers ->
             when (val message = Json.decodeFromJsonElement<WidgetMessage>(msg)) {
                 is WidgetStateMessage -> {
-                    widget.applyPatch(message.toPatch(buffers))
+                    widget.applyFrontendPatch(message.toPatch(buffers))
                 }
 
                 is RequestStateMessage -> {

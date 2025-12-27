@@ -17,31 +17,45 @@ public abstract class WidgetModel(
     protected val widgetManager: WidgetManager,
 ) {
     private val properties = mutableMapOf<String, WidgetModelProperty<*>>()
-    private val changeListeners = mutableListOf<(Patch) -> Unit>()
+    private val changeListeners = mutableListOf<(Patch, Boolean) -> Unit>()
 
     public fun getFullState(): Patch = properties.mapValues { (_, property) -> property.serializedValue }
 
+    public fun applyFrontendPatch(patch: Patch) {
+        applyPatchImpl(patch, fromFrontend = true)
+    }
+
     public fun applyPatch(patch: Patch) {
+        applyPatchImpl(patch, fromFrontend = false)
+    }
+
+    private fun applyPatchImpl(
+        patch: Patch,
+        fromFrontend: Boolean,
+    ) {
         for ((key, value) in patch) {
             val property = properties[key] ?: continue
-            property.applyPatch(value)
+            property.applyPatch(value, fromFrontend)
         }
     }
 
-    public fun addChangeListener(listener: (Patch) -> Unit) {
+    public fun addChangeListener(listener: (Patch, fromFrontend: Boolean) -> Unit) {
         changeListeners.add(listener)
     }
 
     private fun addProperty(property: WidgetModelProperty<*>) {
         properties[property.name] = property
-        property.addChangeListener { patch ->
-            notifyChange(mapOf(property.name to patch))
+        property.addChangeListener { patch, fromFrontend ->
+            notifyChange(mapOf(property.name to patch), fromFrontend)
         }
     }
 
-    private fun notifyChange(patch: Patch) {
+    private fun notifyChange(
+        patch: Patch,
+        fromFrontend: Boolean,
+    ) {
         for (listener in changeListeners) {
-            listener(patch)
+            listener(patch, fromFrontend)
         }
     }
 
@@ -118,9 +132,12 @@ public interface WidgetModelProperty<T> {
 
     public val serializedValue: Any?
 
-    public fun applyPatch(patch: Any?)
+    public fun applyPatch(
+        patch: Any?,
+        fromFrontend: Boolean = false,
+    )
 
-    public fun addChangeListener(listener: (Any?) -> Unit)
+    public fun addChangeListener(listener: (Any?, fromFrontend: Boolean) -> Unit)
 }
 
 internal class WidgetModelPropertyImpl<T>(
@@ -130,30 +147,41 @@ internal class WidgetModelPropertyImpl<T>(
     private val widgetManager: WidgetManager,
 ) : WidgetModelProperty<T> {
     private var _value: T = initialValue
-    private val listeners = mutableListOf<(Any?) -> Unit>()
+    private val listeners = mutableListOf<(newValue: Any?, fromFrontend: Boolean) -> Unit>()
 
     override var value: T
         get() = _value
-        set(newValue) {
-            if (newValue == _value) return
-            _value = newValue
-            notifyListeners(newValue)
-        }
+        set(newValue) = setNewValue(newValue)
 
     override val serializedValue: Any? get() = type.serialize(value, widgetManager)
 
-    override fun applyPatch(patch: Any?) {
-        value = type.deserialize(patch, widgetManager)
+    override fun applyPatch(
+        patch: Any?,
+        fromFrontend: Boolean,
+    ) {
+        setNewValue(type.deserialize(patch, widgetManager), fromFrontend)
     }
 
-    override fun addChangeListener(listener: (Any?) -> Unit) {
+    override fun addChangeListener(listener: (Any?, Boolean) -> Unit) {
         listeners.add(listener)
     }
 
-    private fun notifyListeners(newValue: T) {
+    private fun setNewValue(
+        newValue: T,
+        fromFrontend: Boolean = false,
+    ) {
+        if (newValue == _value) return
+        _value = newValue
+        notifyListeners(newValue, fromFrontend)
+    }
+
+    private fun notifyListeners(
+        newValue: T,
+        fromFrontend: Boolean,
+    ) {
         val serializedValue = type.serialize(newValue, widgetManager)
         for (listener in listeners) {
-            listener(serializedValue)
+            listener(serializedValue, fromFrontend)
         }
     }
 }
