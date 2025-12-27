@@ -12,7 +12,12 @@ public class WidgetReferenceType<M : WidgetModel> : AbstractWidgetModelPropertyT
     override fun serialize(
         propertyValue: M,
         widgetManager: WidgetManager,
-    ): String = "$WIDGET_REF_PREFIX${widgetManager.getWidgetId(propertyValue)}"
+    ): String {
+        val widgetId =
+            widgetManager.getWidgetId(propertyValue)
+                ?: error("Widget id for widget $propertyValue was not found")
+        return "$WIDGET_REF_PREFIX$widgetId"
+    }
 
     @Suppress("UNCHECKED_CAST")
     override fun deserialize(
