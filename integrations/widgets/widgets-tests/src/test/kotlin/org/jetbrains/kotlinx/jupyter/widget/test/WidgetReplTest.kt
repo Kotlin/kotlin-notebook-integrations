@@ -220,6 +220,104 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
         execRaw("img.value") shouldBe bytes
     }
 
+    @Test
+    fun `echo_update is disabled by default`() {
+        execRaw("val s = intSliderWidget()")
+        val sliderId = (facility.sentEvents[2] as CommEvent.Open).commId
+        facility.sentEvents.clear()
+
+        val updateData =
+            buildJsonObject {
+                put("method", "update")
+                put(
+                    "state",
+                    buildJsonObject {
+                        put("value", 42)
+                    },
+                )
+                put("buffer_paths", JsonArray(emptyList()))
+            }
+
+        commManager.processCommMessage(sliderId, updateData, null, emptyList())
+
+        facility.sentEvents.shouldBeEmpty()
+    }
+
+    @Test
+    fun `echo_update can be enabled and filters properties`() {
+        execRaw("widgetManager.echoUpdateEnabled = true")
+        execRaw("val s = intSliderWidget()")
+        val sliderId = (facility.sentEvents[2] as CommEvent.Open).commId
+        facility.sentEvents.clear()
+
+        // 1. Both properties are echoed
+        val updateData1 =
+            buildJsonObject {
+                put("method", "update")
+                put(
+                    "state",
+                    buildJsonObject {
+                        put("value", 42)
+                    },
+                )
+                put("buffer_paths", JsonArray(emptyList()))
+            }
+        commManager.processCommMessage(sliderId, updateData1, null, emptyList())
+        facility.sentEvents.shouldHaveSize(1)
+        facility.sentEvents[0]
+            .shouldBeInstanceOf<CommEvent.Message>()
+            .data["method"]
+            ?.jsonPrimitive
+            ?.content shouldBe "echo_update"
+        facility.sentEvents.clear()
+
+        // 2. Disable echo for 'value' property
+        execRaw("import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel")
+        execRaw("(s as WidgetModel).getProperty(\"value\")?.echoUpdate = false")
+
+        val updateData2 =
+            buildJsonObject {
+                put("method", "update")
+                put(
+                    "state",
+                    buildJsonObject {
+                        put("value", 43)
+                    },
+                )
+                put("buffer_paths", JsonArray(emptyList()))
+            }
+        commManager.processCommMessage(sliderId, updateData2, null, emptyList())
+
+        facility.sentEvents.shouldBeEmpty()
+
+        // 3. Mixed properties: one with echo, one without
+        // IntSlider has 'step' property too.
+        val updateData3 =
+            buildJsonObject {
+                put("method", "update")
+                put(
+                    "state",
+                    buildJsonObject {
+                        put("value", 44)
+                        put("step", 2)
+                    },
+                )
+                put("buffer_paths", JsonArray(emptyList()))
+            }
+        commManager.processCommMessage(sliderId, updateData3, null, emptyList())
+
+        facility.sentEvents.shouldHaveSize(1)
+
+        val echoEvent = facility.sentEvents[0].shouldBeInstanceOf<CommEvent.Message>()
+        echoEvent.data["method"]?.jsonPrimitive?.content shouldBe "echo_update"
+        val echoState = echoEvent.data["state"]?.shouldBeInstanceOf<JsonObject>()!!
+        echoState.containsKey("step") shouldBe true
+        echoState.containsKey("value") shouldBe false
+
+        // Reset for other tests
+        execRaw("widgetManager.echoUpdateEnabled = false")
+    }
+
     companion object {
         private val facility = TestServerCommCommunicationFacility()
         private val commManager = CommManagerImpl(facility)

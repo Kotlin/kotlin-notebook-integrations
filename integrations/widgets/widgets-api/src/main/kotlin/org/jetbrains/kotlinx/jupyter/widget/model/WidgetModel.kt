@@ -17,6 +17,9 @@ public abstract class WidgetModel(
     protected val widgetManager: WidgetManager,
 ) {
     private val properties = mutableMapOf<String, WidgetModelProperty<*>>()
+
+    public fun getProperty(name: String): WidgetModelProperty<*>? = properties[name]
+
     private val changeListeners = mutableListOf<(Patch, Boolean) -> Unit>()
 
     public fun getFullState(): Patch = properties.mapValues { (_, property) -> property.serializedValue }
@@ -63,68 +66,80 @@ public abstract class WidgetModel(
         name: String,
         type: WidgetModelPropertyType<T>,
         initialValue: T,
-    ): ReadWriteProperty<WidgetModel, T> = WidgetKtPropertyDelegate(name, type, initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, T> = WidgetKtPropertyDelegate(name, type, initialValue, echoUpdate)
 
     protected fun stringProp(
         name: String,
         initialValue: String = "",
-    ): ReadWriteProperty<WidgetModel, String> = prop(name, StringType, initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, String> = prop(name, StringType, initialValue, echoUpdate)
 
     protected fun nullableStringProp(
         name: String,
         initialValue: String? = null,
-    ): ReadWriteProperty<WidgetModel, String?> = prop(name, NullableType(StringType), initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, String?> = prop(name, NullableType(StringType), initialValue, echoUpdate)
 
     protected fun intProp(
         name: String,
         initialValue: Int = 0,
-    ): ReadWriteProperty<WidgetModel, Int> = prop(name, IntType, initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, Int> = prop(name, IntType, initialValue, echoUpdate)
 
     protected fun nullableIntProp(
         name: String,
         initialValue: Int? = null,
-    ): ReadWriteProperty<WidgetModel, Int?> = prop(name, NullableType(IntType), initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, Int?> = prop(name, NullableType(IntType), initialValue, echoUpdate)
 
     protected fun doubleProp(
         name: String,
         initialValue: Double = 0.0,
-    ): ReadWriteProperty<WidgetModel, Double> = prop(name, FloatType, initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, Double> = prop(name, FloatType, initialValue, echoUpdate)
 
     protected fun nullableDoubleProp(
         name: String,
         initialValue: Double? = null,
-    ): ReadWriteProperty<WidgetModel, Double?> = prop(name, NullableType(FloatType), initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, Double?> = prop(name, NullableType(FloatType), initialValue, echoUpdate)
 
     protected fun boolProp(
         name: String,
         initialValue: Boolean = false,
-    ): ReadWriteProperty<WidgetModel, Boolean> = prop(name, BooleanType, initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, Boolean> = prop(name, BooleanType, initialValue, echoUpdate)
 
     protected fun nullableBoolProp(
         name: String,
         initialValue: Boolean? = null,
-    ): ReadWriteProperty<WidgetModel, Boolean?> = prop(name, NullableType(BooleanType), initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, Boolean?> = prop(name, NullableType(BooleanType), initialValue, echoUpdate)
 
     protected fun bytesProp(
         name: String,
         initialValue: ByteArray = byteArrayOf(),
-    ): ReadWriteProperty<WidgetModel, ByteArray> = prop(name, BytesType, initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, ByteArray> = prop(name, BytesType, initialValue, echoUpdate)
 
     protected fun <M : WidgetModel> widgetProp(
         name: String,
         initialValue: M,
-    ): ReadWriteProperty<WidgetModel, M> = prop(name, WidgetReferenceType(), initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, M> = prop(name, WidgetReferenceType(), initialValue, echoUpdate)
 
     protected fun <M : WidgetModel> nullableWidgetProp(
         name: String,
         initialValue: M? = null,
-    ): ReadWriteProperty<WidgetModel, M?> = prop(name, NullableType(WidgetReferenceType()), initialValue)
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, M?> = prop(name, NullableType(WidgetReferenceType()), initialValue, echoUpdate)
 
     protected inner class WidgetKtPropertyDelegate<T>(
         private val property: WidgetModelProperty<T>,
     ) : ReadWriteProperty<WidgetModel, T> {
-        internal constructor(name: String, type: WidgetModelPropertyType<T>, initialValue: T) :
-            this(WidgetModelPropertyImpl(name, type, initialValue, widgetManager))
+        internal constructor(name: String, type: WidgetModelPropertyType<T>, initialValue: T, echoUpdate: Boolean = true) :
+            this(WidgetModelPropertyImpl(name, type, initialValue, widgetManager, echoUpdate))
 
         init {
             addProperty(property)
@@ -149,6 +164,7 @@ public interface WidgetModelProperty<T> {
     public val name: String
     public val type: WidgetModelPropertyType<T>
     public var value: T
+    public var echoUpdate: Boolean
 
     public val serializedValue: Any?
 
@@ -165,6 +181,7 @@ internal class WidgetModelPropertyImpl<T>(
     override val type: WidgetModelPropertyType<T>,
     initialValue: T,
     private val widgetManager: WidgetManager,
+    override var echoUpdate: Boolean,
 ) : WidgetModelProperty<T> {
     private var _value: T = initialValue
     private val listeners = mutableListOf<(newValue: Any?, fromFrontend: Boolean) -> Unit>()

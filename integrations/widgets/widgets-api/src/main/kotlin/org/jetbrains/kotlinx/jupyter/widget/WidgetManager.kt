@@ -7,6 +7,8 @@ import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
 public interface WidgetManager {
     public val factoryRegistry: WidgetFactoryRegistry
 
+    public var echoUpdateEnabled: Boolean
+
     public fun getWidget(modelId: String): WidgetModel?
 
     public fun getWidgetId(widget: WidgetModel): String?

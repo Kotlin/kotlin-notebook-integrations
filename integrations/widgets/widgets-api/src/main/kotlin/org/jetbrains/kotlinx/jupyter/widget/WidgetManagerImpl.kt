@@ -19,9 +19,11 @@ import org.jetbrains.kotlinx.jupyter.widget.model.WidgetFactoryRegistry
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.versionConstraintRegex
 import org.jetbrains.kotlinx.jupyter.widget.protocol.CustomMessage
+import org.jetbrains.kotlinx.jupyter.widget.protocol.Patch
 import org.jetbrains.kotlinx.jupyter.widget.protocol.RequestStateMessage
 import org.jetbrains.kotlinx.jupyter.widget.protocol.RequestStatesMessage
 import org.jetbrains.kotlinx.jupyter.widget.protocol.UpdateStatesMessage
+import org.jetbrains.kotlinx.jupyter.widget.protocol.WidgetEchoUpdateMessage
 import org.jetbrains.kotlinx.jupyter.widget.protocol.WidgetMessage
 import org.jetbrains.kotlinx.jupyter.widget.protocol.WidgetOpenMessage
 import org.jetbrains.kotlinx.jupyter.widget.protocol.WidgetStateMessage
@@ -44,6 +46,9 @@ public class WidgetManagerImpl(
     private val widgetIdByWidget = mutableMapOf<WidgetModel, String>()
 
     override val factoryRegistry: WidgetFactoryRegistry = WidgetFactoryRegistry()
+
+    override var echoUpdateEnabled: Boolean =
+        System.getenv("JUPYTER_WIDGETS_ECHO")?.let { it.lowercase() == "true" } ?: false
 
     init {
         commManager.registerCommTarget(widgetControlTarget) { comm, _, _, _ ->
@@ -148,17 +153,7 @@ public class WidgetManagerImpl(
 
         // Reflect kernel-side changes on the frontend
         widget.addChangeListener { patch, fromFrontend ->
-            if (fromFrontend) return@addChangeListener
-            val wireMessage = getWireMessage(patch)
-            val data =
-                Json
-                    .encodeToJsonElement<WidgetMessage>(
-                        WidgetUpdateMessage(
-                            wireMessage.state,
-                            wireMessage.bufferPaths,
-                        ),
-                    ).jsonObject
-            comm.send(data, null, wireMessage.buffers)
+            handleWidgetUpdate(comm, widget, patch, fromFrontend)
         }
 
         // Reflect frontend-side changes on kernel
@@ -187,5 +182,46 @@ public class WidgetManagerImpl(
                 else -> {}
             }
         }
+    }
+
+    private fun handleWidgetUpdate(
+        comm: Comm,
+        widget: WidgetModel,
+        patch: Patch,
+        fromFrontend: Boolean,
+    ) {
+        val updatePatch =
+            if (fromFrontend) {
+                if (!echoUpdateEnabled) return
+                val echoPatch =
+                    patch.filterKeys {
+                        widget.getProperty(it)?.echoUpdate != false
+                    }
+                if (echoPatch.isEmpty()) return
+                echoPatch
+            } else {
+                patch
+            }
+
+        val wireMessage = getWireMessage(updatePatch)
+        val updateMessage =
+            if (fromFrontend) {
+                WidgetEchoUpdateMessage(
+                    wireMessage.state,
+                    wireMessage.bufferPaths,
+                )
+            } else {
+                WidgetUpdateMessage(
+                    wireMessage.state,
+                    wireMessage.bufferPaths,
+                )
+            }
+
+        val updateData =
+            Json
+                .encodeToJsonElement<WidgetMessage>(updateMessage)
+                .jsonObject
+
+        comm.send(updateData, null, wireMessage.buffers)
     }
 }
