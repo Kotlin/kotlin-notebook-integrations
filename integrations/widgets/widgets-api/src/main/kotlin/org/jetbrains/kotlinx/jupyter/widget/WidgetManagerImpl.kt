@@ -182,6 +182,11 @@ public class WidgetManagerImpl(
                 else -> {}
             }
         }
+
+        comm.onClose { _, _ ->
+            widgets.remove(modelId)
+            widgetIdByWidget.remove(widget)
+        }
     }
 
     private fun handleWidgetUpdate(
