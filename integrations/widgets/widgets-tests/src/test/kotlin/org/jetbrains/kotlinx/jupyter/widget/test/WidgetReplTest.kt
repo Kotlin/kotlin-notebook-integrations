@@ -7,7 +7,9 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonArray
@@ -21,9 +23,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class WidgetReplTest : JupyterReplTestCase(provider) {
+    private var nextEventIndex = 0
+
     @BeforeEach
-    fun clearEvents() {
+    fun resetEvents() {
         facility.sentEvents.clear()
+        nextEventIndex = 0
     }
 
     @Test
@@ -31,28 +36,8 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
         execRaw("val s = intSliderWidget()")
 
         // IntSlider depends on Layout and SliderStyle, so 3 widgets are registered
+        assertOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel")
         facility.sentEvents.shouldHaveSize(3)
-
-        val layoutOpen = facility.sentEvents[0].shouldBeInstanceOf<CommEvent.Open>()
-        layoutOpen.data["state"]
-            ?.shouldBeInstanceOf<JsonObject>()
-            ?.get("_model_name")
-            ?.jsonPrimitive
-            ?.content shouldBe "LayoutModel"
-
-        val styleOpen = facility.sentEvents[1].shouldBeInstanceOf<CommEvent.Open>()
-        styleOpen.data["state"]
-            ?.shouldBeInstanceOf<JsonObject>()
-            ?.get("_model_name")
-            ?.jsonPrimitive
-            ?.content shouldBe "SliderStyleModel"
-
-        val sliderOpen = facility.sentEvents[2].shouldBeInstanceOf<CommEvent.Open>()
-        sliderOpen.data["state"]
-            ?.shouldBeInstanceOf<JsonObject>()
-            ?.get("_model_name")
-            ?.jsonPrimitive
-            ?.content shouldBe "IntSliderModel"
     }
 
     @Test
@@ -60,28 +45,15 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
         execRaw("val s = intSliderWidget()")
         execRaw("s.value = 42")
 
+        assertNextOpenEvent("LayoutModel")
+        assertNextOpenEvent("SliderStyleModel")
+        val sliderId = assertNextOpenEvent("IntSliderModel").commId
+        assertNextUpdateEvent("value" to 42)
         facility.sentEvents.shouldHaveSize(4)
-        val msgEvent = facility.sentEvents[3].shouldBeInstanceOf<CommEvent.Message>()
-        msgEvent.data["method"]?.jsonPrimitive?.content shouldBe "update"
-        msgEvent.data["state"]
-            ?.shouldBeInstanceOf<JsonObject>()
-            ?.get("value")
-            ?.jsonPrimitive
-            ?.content shouldBe "42"
 
         val displayedWidget = execSuccess("s").displayValue
         val json = displayedWidget?.toJson(Json.EMPTY, null)
-        json.shouldNotBeNull()
-
-        val sliderId = (facility.sentEvents[2] as CommEvent.Open).commId
-        val data = json["data"].shouldBeInstanceOf<JsonObject>()
-        val viewData = data["application/vnd.jupyter.widget-view+json"].shouldBeInstanceOf<JsonObject>()
-        viewData["model_id"]?.jsonPrimitive?.content shouldBe sliderId
-        viewData["version_major"]?.jsonPrimitive?.content shouldBe "2"
-        viewData["version_minor"]?.jsonPrimitive?.content shouldBe "0"
-
-        val htmlData = data["text/html"].shouldBeInstanceOf<JsonPrimitive>().content
-        htmlData shouldBe "IntSliderModel(id=$sliderId)"
+        assertWidgetDisplayJson(json, sliderId, "IntSliderModel")
     }
 
     @Test
@@ -89,15 +61,12 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
         execRaw("val s2 = intSliderWidget()")
         execRaw("s2.layout?.width = \"100px\"")
 
-        facility.sentEvents.shouldHaveSize(4)
-        val layoutId = (facility.sentEvents[0] as CommEvent.Open).commId
-        val msgEvent = facility.sentEvents[3].shouldBeInstanceOf<CommEvent.Message>()
+        val layoutId = assertNextOpenEvent("LayoutModel").commId
+        assertNextOpenEvent("SliderStyleModel")
+        assertNextOpenEvent("IntSliderModel")
+        val msgEvent = assertNextUpdateEvent("width" to "100px")
         msgEvent.commId shouldBe layoutId
-        msgEvent.data["state"]
-            ?.shouldBeInstanceOf<JsonObject>()
-            ?.get("width")
-            ?.jsonPrimitive
-            ?.content shouldBe "100px"
+        facility.sentEvents.shouldHaveSize(4)
     }
 
     @Test
@@ -106,21 +75,13 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
         execRaw("img.value = byteArrayOf(1, 2, 3)")
 
         // Image depends on Layout, so 2 widgets registered
-        facility.sentEvents.shouldHaveSize(3)
-        val msgEvent = facility.sentEvents[2].shouldBeInstanceOf<CommEvent.Message>()
-        // Bytes are currently sent as buffers in the protocol, but let's see how they are rendered in data
-        // Actually WidgetManagerImpl.initializeWidget uses getWireMessage which handles buffers.
+        assertNextOpenEvent("LayoutModel")
+        assertNextOpenEvent("ImageModel")
+        val msgEvent = assertNextUpdateEvent()
         msgEvent.buffers.shouldHaveSize(1)
         msgEvent.buffers[0] shouldBe byteArrayOf(1, 2, 3)
-        msgEvent.data["buffer_paths"]
-            ?.shouldBeInstanceOf<JsonArray>()
-            ?.shouldHaveSize(1)
-            ?.get(0)
-            ?.shouldBeInstanceOf<JsonArray>()
-            ?.shouldHaveSize(1)
-            ?.get(0)
-            ?.jsonPrimitive
-            ?.content shouldBe "value"
+        assertBufferPath(msgEvent, 0, "value")
+        facility.sentEvents.shouldHaveSize(3)
     }
 
     @Test
@@ -130,33 +91,17 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
         execRaw("dp.value = LocalDate.of(2023, 1, 1)")
 
         // DatePicker depends on Layout and DescriptionStyle, so 3 widgets registered
+        assertOpenEvents("LayoutModel", "DescriptionStyleModel", "DatePickerModel")
+        assertNextUpdateEvent("value" to "2023-01-01")
         facility.sentEvents.shouldHaveSize(4)
-        val msgEvent = facility.sentEvents[3].shouldBeInstanceOf<CommEvent.Message>()
-        msgEvent.data["state"]
-            ?.shouldBeInstanceOf<JsonObject>()
-            ?.get("value")
-            ?.jsonPrimitive
-            ?.content shouldBe "2023-01-01"
     }
 
     @Test
     fun `frontend message updates widget property`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = (facility.sentEvents[2] as CommEvent.Open).commId
+        val sliderId = assertOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
 
-        val updateData =
-            buildJsonObject {
-                put("method", "update")
-                put(
-                    "state",
-                    buildJsonObject {
-                        put("value", 42)
-                    },
-                )
-                put("buffer_paths", JsonArray(emptyList()))
-            }
-
-        commManager.processCommMessage(sliderId, updateData, null, emptyList())
+        sendUpdate(sliderId, "value" to 42)
 
         execRaw("s.value") shouldBe 42
     }
@@ -167,12 +112,12 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
             buildJsonObject {
                 put(
                     "state",
-                    buildJsonObject {
-                        put("_model_name", "IntSliderModel")
-                        put("_model_module", "@jupyter-widgets/controls")
-                        put("_model_module_version", "2.0.0")
-                        put("value", 55)
-                    },
+                    buildState(
+                        "_model_name" to "IntSliderModel",
+                        "_model_module" to "@jupyter-widgets/controls",
+                        "_model_module_version" to "2.0.0",
+                        "value" to 55,
+                    ),
                 )
                 put("buffer_paths", JsonArray(emptyList()))
             }
@@ -191,31 +136,15 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
     fun `frontend message updates image bytes`() {
         execRaw("val img = imageWidget()")
         // Image depends on Layout, so 2 widgets registered. Image is the second one.
-        val imageId = (facility.sentEvents[1] as CommEvent.Open).commId
+        val imageId = assertOpenEvents("LayoutModel", "ImageModel").last().commId
 
         val bytes = byteArrayOf(10, 20, 30)
-        val updateData =
-            buildJsonObject {
-                put("method", "update")
-                put(
-                    "state",
-                    buildJsonObject {
-                        put("value", null as String?)
-                    },
-                )
-                put(
-                    "buffer_paths",
-                    buildJsonArray {
-                        add(
-                            buildJsonArray {
-                                add("value")
-                            },
-                        )
-                    },
-                )
-            }
-
-        commManager.processCommMessage(imageId, updateData, null, listOf(bytes))
+        sendUpdate(
+            imageId,
+            buildState("value" to null),
+            listOf(bytes),
+            listOf(listOf("value")),
+        )
 
         execRaw("img.value") shouldBe bytes
     }
@@ -223,22 +152,10 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
     @Test
     fun `echo_update is disabled by default`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = (facility.sentEvents[2] as CommEvent.Open).commId
-        facility.sentEvents.clear()
+        val sliderId = assertOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
+        resetEvents()
 
-        val updateData =
-            buildJsonObject {
-                put("method", "update")
-                put(
-                    "state",
-                    buildJsonObject {
-                        put("value", 42)
-                    },
-                )
-                put("buffer_paths", JsonArray(emptyList()))
-            }
-
-        commManager.processCommMessage(sliderId, updateData, null, emptyList())
+        sendUpdate(sliderId, "value" to 42)
 
         facility.sentEvents.shouldBeEmpty()
     }
@@ -247,75 +164,144 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
     fun `echo_update can be enabled and filters properties`() {
         execRaw("widgetManager.echoUpdateEnabled = true")
         execRaw("val s = intSliderWidget()")
-        val sliderId = (facility.sentEvents[2] as CommEvent.Open).commId
-        facility.sentEvents.clear()
+        val sliderId = assertOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
+        resetEvents()
 
         // 1. Both properties are echoed
-        val updateData1 =
-            buildJsonObject {
-                put("method", "update")
-                put(
-                    "state",
-                    buildJsonObject {
-                        put("value", 42)
-                    },
-                )
-                put("buffer_paths", JsonArray(emptyList()))
-            }
-        commManager.processCommMessage(sliderId, updateData1, null, emptyList())
-        facility.sentEvents.shouldHaveSize(1)
-        facility.sentEvents[0]
-            .shouldBeInstanceOf<CommEvent.Message>()
-            .data["method"]
-            ?.jsonPrimitive
-            ?.content shouldBe "echo_update"
-        facility.sentEvents.clear()
+        sendUpdate(sliderId, "value" to 42)
+        assertNextEchoUpdateEvent()
+        resetEvents()
 
         // 2. Disable echo for 'value' property
         execRaw("import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel")
         execRaw("(s as WidgetModel).getProperty(\"value\")?.echoUpdate = false")
 
-        val updateData2 =
-            buildJsonObject {
-                put("method", "update")
-                put(
-                    "state",
-                    buildJsonObject {
-                        put("value", 43)
-                    },
-                )
-                put("buffer_paths", JsonArray(emptyList()))
-            }
-        commManager.processCommMessage(sliderId, updateData2, null, emptyList())
+        sendUpdate(sliderId, "value" to 43)
 
         facility.sentEvents.shouldBeEmpty()
 
         // 3. Mixed properties: one with echo, one without
         // IntSlider has 'step' property too.
-        val updateData3 =
-            buildJsonObject {
-                put("method", "update")
-                put(
-                    "state",
-                    buildJsonObject {
-                        put("value", 44)
-                        put("step", 2)
-                    },
-                )
-                put("buffer_paths", JsonArray(emptyList()))
-            }
-        commManager.processCommMessage(sliderId, updateData3, null, emptyList())
+        sendUpdate(sliderId, "value" to 44, "step" to 2)
 
         facility.sentEvents.shouldHaveSize(1)
 
-        val echoEvent = facility.sentEvents[0].shouldBeInstanceOf<CommEvent.Message>()
-        echoEvent.data["method"]?.jsonPrimitive?.content shouldBe "echo_update"
+        val echoEvent = assertNextEchoUpdateEvent()
         val echoState = echoEvent.data["state"]?.shouldBeInstanceOf<JsonObject>()!!
         echoState.containsKey("step") shouldBe true
         echoState.containsKey("value") shouldBe false
 
         // Reset for other tests
         execRaw("widgetManager.echoUpdateEnabled = false")
+    }
+
+    private fun assertOpenEvents(vararg expectedModelNames: String): List<CommEvent.Open> =
+        expectedModelNames.map { assertNextOpenEvent(it) }
+
+    private fun assertNextOpenEvent(expectedModelName: String) = assertOpenEvent(nextEventIndex++, expectedModelName)
+
+    private fun assertOpenEvent(
+        index: Int,
+        expectedModelName: String,
+    ): CommEvent.Open {
+        val openEvent = facility.sentEvents[index].shouldBeInstanceOf<CommEvent.Open>()
+        openEvent.data["state"]
+            ?.shouldBeInstanceOf<JsonObject>()
+            ?.get("_model_name")
+            ?.jsonPrimitive
+            ?.content shouldBe expectedModelName
+        return openEvent
+    }
+
+    private fun assertNextUpdateEvent(vararg expectedState: Pair<String, Any?>) =
+        assertMessageEvent(nextEventIndex++, "update", *expectedState)
+
+    private fun assertNextEchoUpdateEvent(vararg expectedState: Pair<String, Any?>) =
+        assertMessageEvent(nextEventIndex++, "echo_update", *expectedState)
+
+    private fun assertMessageEvent(
+        index: Int,
+        method: String,
+        vararg expectedState: Pair<String, Any?>,
+    ): CommEvent.Message {
+        val msgEvent = facility.sentEvents[index].shouldBeInstanceOf<CommEvent.Message>()
+        msgEvent.data["method"]?.jsonPrimitive?.content shouldBe method
+        val state = msgEvent.data["state"].shouldBeInstanceOf<JsonObject>()
+        for ((key, value) in expectedState) {
+            state[key]?.jsonPrimitive?.content shouldBe value?.toString()
+        }
+        return msgEvent
+    }
+
+    private fun assertBufferPath(
+        msgEvent: CommEvent.Message,
+        index: Int,
+        vararg expectedPath: String,
+    ) {
+        val paths = msgEvent.data["buffer_paths"]?.shouldBeInstanceOf<JsonArray>()!!
+        val path = paths[index].shouldBeInstanceOf<JsonArray>()
+        path.size shouldBe expectedPath.size
+        expectedPath.forEachIndexed { i, segment ->
+            path[i].jsonPrimitive.content shouldBe segment
+        }
+    }
+
+    private fun assertWidgetDisplayJson(
+        json: JsonObject?,
+        expectedModelId: String,
+        expectedModelName: String,
+    ) {
+        json.shouldNotBeNull()
+        val data = json["data"].shouldBeInstanceOf<JsonObject>()
+        val viewData = data["application/vnd.jupyter.widget-view+json"].shouldBeInstanceOf<JsonObject>()
+        viewData["model_id"]?.jsonPrimitive?.content shouldBe expectedModelId
+        viewData["version_major"]?.jsonPrimitive?.content shouldBe "2"
+        viewData["version_minor"]?.jsonPrimitive?.content shouldBe "0"
+
+        val htmlData = data["text/html"].shouldBeInstanceOf<JsonPrimitive>().content
+        htmlData shouldBe "$expectedModelName(id=$expectedModelId)"
+    }
+
+    private fun sendUpdate(
+        commId: String,
+        vararg state: Pair<String, Any?>,
+    ) = sendUpdate(commId, buildState(*state))
+
+    private fun sendUpdate(
+        commId: String,
+        state: JsonObject,
+        buffers: List<ByteArray> = emptyList(),
+        bufferPaths: List<List<String>> = emptyList(),
+    ) {
+        val updateData =
+            buildJsonObject {
+                put("method", "update")
+                put("state", state)
+                put(
+                    "buffer_paths",
+                    buildJsonArray {
+                        bufferPaths.forEach { path ->
+                            add(buildJsonArray { path.forEach { add(it) } })
+                        }
+                    },
+                )
+            }
+        commManager.processCommMessage(commId, updateData, null, buffers)
+    }
+
+    private fun buildState(vararg state: Pair<String, Any?>) = buildJsonObject { putState(*state) }
+
+    private fun JsonObjectBuilder.putState(vararg state: Pair<String, Any?>) {
+        for ((key, value) in state) {
+            when (value) {
+                is String -> put(key, value)
+                is Number -> put(key, value)
+                is Boolean -> put(key, value)
+                is JsonElement -> put(key, value)
+                null -> put(key, null as String?)
+                else -> throw IllegalArgumentException("Unsupported type: ${value::class}")
+            }
+        }
     }
 
     companion object {
