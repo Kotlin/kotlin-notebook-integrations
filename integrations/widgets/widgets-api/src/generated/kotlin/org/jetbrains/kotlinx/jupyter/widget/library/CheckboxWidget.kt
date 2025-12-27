@@ -39,9 +39,9 @@ public class CheckboxWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     /** Indent the control to align with other controls with a description. */
     public var indent: Boolean by boolProp("indent", true)
-    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Styling customizations */
-    public var style: CheckboxStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.checkboxStyle())
+    public var style: CheckboxStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.checkboxStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

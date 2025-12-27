@@ -39,7 +39,7 @@ public class BoxWidget internal constructor(
     public var boxStyle: WidgetEnumEntry<BoxStyle> by prop("box_style", WidgetEnumType(BoxStyle, BoxStyle.Default), BoxStyle.Default)
     /** List of widget children */
     public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
-    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

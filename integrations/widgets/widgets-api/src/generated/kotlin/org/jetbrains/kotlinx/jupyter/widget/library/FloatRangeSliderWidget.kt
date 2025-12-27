@@ -47,7 +47,7 @@ public class FloatRangeSliderWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Max value */
     public var max: Double by doubleProp("max", 100.0)
     /** Min value */
@@ -60,7 +60,7 @@ public class FloatRangeSliderWidget internal constructor(
     public var readoutFormat: String by stringProp("readout_format", ".2f")
     /** Minimum step to increment the value */
     public var step: Double? by prop("step", NullableType(FloatType), 0.1)
-    public var style: SliderStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.sliderStyle())
+    public var style: SliderStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.sliderStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

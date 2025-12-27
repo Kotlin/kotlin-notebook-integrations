@@ -40,7 +40,7 @@ public class VideoWidget internal constructor(
     public var format: String by stringProp("format", "mp4")
     /** Height of the video in pixels. */
     public var height: String by stringProp("height", "")
-    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** When true, the video will start from the beginning after finishing */
     public var loop: Boolean by boolProp("loop", true)
     /** Is widget tabbable? */

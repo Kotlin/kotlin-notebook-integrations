@@ -36,7 +36,7 @@ public class ImageWidget internal constructor(
     public var format: String by stringProp("format", "png")
     /** Height of the image in pixels. Use layout.height for styling the widget. */
     public var height: String by stringProp("height", "")
-    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

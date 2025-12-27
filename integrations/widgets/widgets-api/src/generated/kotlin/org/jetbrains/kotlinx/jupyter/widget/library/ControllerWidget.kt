@@ -41,7 +41,7 @@ public class ControllerWidget internal constructor(
     public var connected: Boolean by boolProp("connected", false)
     /** The id number of the controller. */
     public var index: Int by intProp("index", 0)
-    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** The name of the control mapping. */
     public var mapping: String by stringProp("mapping", "")
     /** The name of the controller. */

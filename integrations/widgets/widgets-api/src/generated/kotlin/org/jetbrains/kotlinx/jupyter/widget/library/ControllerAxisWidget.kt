@@ -32,7 +32,7 @@ public class ControllerAxisWidget internal constructor(
 
     /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

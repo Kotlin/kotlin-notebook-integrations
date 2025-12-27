@@ -62,7 +62,7 @@ public abstract class WidgetModel(
     protected fun <T> prop(
         name: String,
         type: WidgetModelPropertyType<T>,
-        initialValue: T?,
+        initialValue: T,
     ): ReadWriteProperty<WidgetModel, T> = WidgetKtPropertyDelegate(name, type, initialValue)
 
     protected fun stringProp(
@@ -92,7 +92,7 @@ public abstract class WidgetModel(
 
     protected fun <M : WidgetModel> widgetProp(
         name: String,
-        initialValue: M? = null,
+        initialValue: M,
     ): ReadWriteProperty<WidgetModel, M> = prop(name, WidgetReferenceType(), initialValue)
 
     protected fun <M : WidgetModel> nullableWidgetProp(
@@ -103,7 +103,7 @@ public abstract class WidgetModel(
     protected inner class WidgetKtPropertyDelegate<T>(
         private val property: WidgetModelProperty<T>,
     ) : ReadWriteProperty<WidgetModel, T> {
-        internal constructor(name: String, type: WidgetModelPropertyType<T>, initialValue: T?) :
+        internal constructor(name: String, type: WidgetModelPropertyType<T>, initialValue: T) :
             this(WidgetModelPropertyImpl(name, type, initialValue, widgetManager))
 
         init {
@@ -143,15 +143,14 @@ public interface WidgetModelProperty<T> {
 internal class WidgetModelPropertyImpl<T>(
     override val name: String,
     override val type: WidgetModelPropertyType<T>,
-    initialValue: T?,
+    initialValue: T,
     private val widgetManager: WidgetManager,
 ) : WidgetModelProperty<T> {
-    private var _value: T? = initialValue
+    private var _value: T = initialValue
     private val listeners = mutableListOf<(newValue: Any?, fromFrontend: Boolean) -> Unit>()
 
-    @Suppress("UNCHECKED_CAST")
     override var value: T
-        get() = _value as T
+        get() = _value
         set(newValue) = setNewValue(newValue)
 
     override val serializedValue: Any? get() = type.serialize(value, widgetManager)

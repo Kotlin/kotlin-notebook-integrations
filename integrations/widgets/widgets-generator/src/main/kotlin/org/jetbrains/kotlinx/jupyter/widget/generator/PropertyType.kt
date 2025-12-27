@@ -171,10 +171,11 @@ private class ReferencePropertyType(
             else -> if (widget.endsWith("Widget")) widget else "${widget}Widget"
         },
 ) : BasicPropertyType(
-        kotlinType = targetClass,
-        typeExpression = "WidgetReferenceType<$targetClass>()",
+        kotlinType = "$targetClass?",
+        typeExpression = "NullableType(WidgetReferenceType<$targetClass>())",
         imports =
             buildSet {
+                add("$WIDGET_TYPES_PACKAGE.compound.NullableType")
                 add("$WIDGET_TYPES_PACKAGE.widget.WidgetReferenceType")
                 if (targetClass == "WidgetModel") {
                     add("$WIDGETS_PACKAGE.model.WidgetModel")
@@ -183,6 +184,8 @@ private class ReferencePropertyType(
         nonNullableDelegateName = "widgetProp",
         nullableDelegateName = "nullableWidgetProp",
     ) {
+    override val isNullable: Boolean get() = true
+
     override fun getDefaultValueExpression(defaultValue: JsonElement): String =
         if ((defaultValue as? JsonPrimitive)?.content == "reference to new instance") {
             "if (fromFrontend) null else widgetManager.${targetClass.toCamelCase().removeSuffix("Widget")}()"

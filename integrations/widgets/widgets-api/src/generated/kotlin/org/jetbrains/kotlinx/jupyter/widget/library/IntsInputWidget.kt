@@ -43,12 +43,12 @@ public class IntsInputWidget internal constructor(
     /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var format: String by stringProp("format", "d")
-    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var max: Int? by prop("max", NullableType(IntType), null)
     public var min: Int? by prop("min", NullableType(IntType), null)
     public var placeholder: String by stringProp("placeholder", "​")
     /** Styling customizations */
-    public var style: DescriptionStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** Use a predefined styling for the tags. */

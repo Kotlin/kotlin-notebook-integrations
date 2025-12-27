@@ -32,7 +32,7 @@ public class ControllerButtonWidget internal constructor(
 
     /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Whether the button is pressed. */
     public var pressed: Boolean by boolProp("pressed", false)
     /** Is widget tabbable? */

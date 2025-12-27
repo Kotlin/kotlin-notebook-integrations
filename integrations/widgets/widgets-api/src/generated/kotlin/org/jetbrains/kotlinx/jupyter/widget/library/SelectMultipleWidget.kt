@@ -42,11 +42,11 @@ public class SelectMultipleWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     /** Selected indices */
     public var index: List<Int?> by prop("index", ArrayType(NullableType(IntType)), emptyList())
-    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** The number of rows to display. */
     public var rows: Int by intProp("rows", 5)
     /** Styling customizations */
-    public var style: DescriptionStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

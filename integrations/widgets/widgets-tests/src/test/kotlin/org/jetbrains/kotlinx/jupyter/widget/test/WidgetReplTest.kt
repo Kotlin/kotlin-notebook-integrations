@@ -87,7 +87,7 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
     @Test
     fun `nested widget property change sends comm message`() {
         execRaw("val s2 = intSliderWidget()")
-        execRaw("s2.layout.width = \"100px\"")
+        execRaw("s2.layout?.width = \"100px\"")
 
         facility.sentEvents.shouldHaveSize(4)
         val layoutId = (facility.sentEvents[0] as CommEvent.Open).commId

@@ -49,8 +49,8 @@ public class ToggleButtonsWidget internal constructor(
     public var icons: List<String?> by prop("icons", ArrayType(NullableType(StringType)), emptyList())
     /** Selected index */
     public var index: Int? by prop("index", NullableType(IntType), null)
-    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    public var style: ToggleButtonsStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.toggleButtonsStyle())
+    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public var style: ToggleButtonsStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.toggleButtonsStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */
