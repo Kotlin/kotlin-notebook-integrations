@@ -2,7 +2,6 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
-import org.jetbrains.kotlinx.jupyter.widget.library.enums.Step
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
@@ -11,24 +10,37 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.UnionType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.DateType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val StepUnionType = UnionType<Any>(
+public sealed interface DatePickerWidgetStep {
+    @JvmInline public value class IntValue(public val value: Int) : DatePickerWidgetStep
+    public object AnyStep : DatePickerWidgetStep
+}
+
+
+private val DatePickerWidgetStepType_Option0 = IntType
+
+private val DatePickerWidgetStepType = UnionType<DatePickerWidgetStep>(
     name = "step",
-    default = 1,
-    serializerSelector = { value ->
+    default = DatePickerWidgetStep.IntValue(1),
+    serializer = { value, widgetManager ->
         when (value) {
-            is Number -> IntType
-            is WidgetEnumEntry<*> -> WidgetEnumType(Step, Step.Any)
-            else -> WidgetEnumType(Step, Step.Any)
+            is DatePickerWidgetStep.IntValue -> DatePickerWidgetStepType_Option0.serialize(value.value, widgetManager)
+            is DatePickerWidgetStep.AnyStep -> "any"
         }
     },
-    deserializers = listOf(IntType, WidgetEnumType(Step, Step.Any)),
+    deserializers = listOf(
+        { patch, widgetManager -> DatePickerWidgetStep.IntValue(DatePickerWidgetStepType_Option0.deserialize(patch, widgetManager)) },
+        { patch, _ ->
+            when (patch) {
+                "any" -> DatePickerWidgetStep.AnyStep
+                else -> throw Exception("Unknown enum value: $patch")
+            }
+        }
+    ),
 )
 
 private val datePickerSpec = WidgetSpec(
@@ -60,7 +72,7 @@ public class DatePickerWidget internal constructor(
     public var max: java.time.LocalDate? by nullableDateProp("max", null)
     public var min: java.time.LocalDate? by nullableDateProp("min", null)
     /** The date step to use for the picker, in days, or "any". */
-    public var step: Any by prop("step", StepUnionType, 1)
+    public var step: DatePickerWidgetStep by prop("step", DatePickerWidgetStepType, DatePickerWidgetStep.IntValue(1))
     /** Styling customizations */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */

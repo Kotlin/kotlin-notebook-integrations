@@ -110,7 +110,7 @@ private class WidgetGenerator(
         val properties =
             info.schema.attributes.mapNotNull { attribute ->
                 if (attribute.name in hiddenAttributeNames) return@mapNotNull null
-                createProperty(attribute, helperDeclarations, imports)
+                createProperty(info, attribute, helperDeclarations, imports)
             }
 
         builder.addHeader(packageName)
@@ -166,11 +166,12 @@ private class WidgetGenerator(
     }
 
     private fun createProperty(
+        info: WidgetInfo,
         attribute: AttributeSchema,
         helperDeclarations: MutableList<String>,
         imports: MutableSet<String>,
     ): String {
-        val propertyType = attribute.toPropertyType(json, enums)
+        val propertyType = attribute.toPropertyType(json, enums, info.className)
 
         imports.addAll(propertyType.imports)
         helperDeclarations.addAll(propertyType.helperDeclarations)

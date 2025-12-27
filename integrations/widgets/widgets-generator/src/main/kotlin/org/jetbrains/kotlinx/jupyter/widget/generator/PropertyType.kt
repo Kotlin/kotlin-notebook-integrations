@@ -27,6 +27,10 @@ internal interface PropertyType {
     val isNullable: Boolean
     val imports: Set<String> get() = emptySet()
     val helperDeclarations: List<String> get() = emptyList()
+    val isEnum: Boolean get() = false
+    val enumName: String get() = ""
+    val enumValues: List<String> get() = emptyList()
+    val optionName: String
 
     fun getDefaultValueExpression(defaultValue: JsonElement): String
 
@@ -43,6 +47,7 @@ private open class BasicPropertyType(
     override val kotlinType: String,
     override val typeExpression: String,
     override val imports: Set<String>,
+    override val optionName: String = kotlinType,
     val nonNullableDelegateName: String? = null,
     val nullableDelegateName: String? = null,
 ) : PropertyType {
@@ -101,7 +106,9 @@ private object BytesPropertyType : PrimitiveType(
     kotlinType = "ByteArray",
     typeName = "BytesType",
     nonNullableDelegateName = "bytesProp",
-)
+) {
+    override val optionName: String get() = "Bytes"
+}
 
 private object AnyPropertyType : PrimitiveType(
     kotlinType = "Any",
@@ -113,10 +120,12 @@ private open class DatetimeBasePropertyType(
     typeName: String,
     nonNullableDelegateName: String,
     nullableDelegateName: String,
+    optionName: String,
 ) : BasicPropertyType(
         kotlinType = kotlinType,
         typeExpression = typeName,
         imports = setOf("$WIDGET_TYPES_PACKAGE.datetime.$typeName"),
+        optionName = optionName,
         nonNullableDelegateName = nonNullableDelegateName,
         nullableDelegateName = nullableDelegateName,
     )
@@ -126,6 +135,7 @@ private object DatetimePropertyType : DatetimeBasePropertyType(
     typeName = "DatetimeType",
     nonNullableDelegateName = "dateTimeProp",
     nullableDelegateName = "nullableDateTimeProp",
+    optionName = "Datetime",
 )
 
 private object DatePropertyType : DatetimeBasePropertyType(
@@ -133,6 +143,7 @@ private object DatePropertyType : DatetimeBasePropertyType(
     typeName = "DateType",
     nonNullableDelegateName = "dateProp",
     nullableDelegateName = "nullableDateProp",
+    optionName = "Date",
 )
 
 private object TimePropertyType : DatetimeBasePropertyType(
@@ -140,22 +151,26 @@ private object TimePropertyType : DatetimeBasePropertyType(
     typeName = "TimeType",
     nonNullableDelegateName = "timeProp",
     nullableDelegateName = "nullableTimeProp",
+    optionName = "Time",
 )
 
 private object RawObjectPropertyType : BasicPropertyType(
     kotlinType = "Map<String, Any?>",
     typeExpression = "RawObjectType",
     imports = setOf("$WIDGET_TYPES_PACKAGE.compound.RawObjectType"),
+    optionName = "Object",
 )
 
 private class NullablePropertyType(
-    private val inner: PropertyType,
+    val inner: PropertyType,
 ) : PropertyType {
     override val kotlinType: String get() = inner.kotlinType + if (inner.isNullable) "" else "?"
     override val typeExpression: String get() = if (inner.isNullable) inner.typeExpression else "NullableType(${inner.typeExpression})"
     override val isNullable: Boolean get() = true
+    override val optionName: String get() = inner.optionName
     override val imports: Set<String> get() = inner.imports + "$WIDGET_TYPES_PACKAGE.compound.NullableType"
     override val helperDeclarations: List<String> get() = inner.helperDeclarations
+    override val isEnum: Boolean get() = inner.isEnum
 
     override fun getDefaultValueExpression(defaultValue: JsonElement): String = inner.getDefaultValueExpression(defaultValue)
 
@@ -166,17 +181,19 @@ private class ArrayPropertyType(
     attribute: AttributeSchema,
     json: Json,
     enums: MutableMap<String, EnumInfo>,
+    namePrefix: String,
 ) : PropertyType {
     private val elementType =
         run {
             val actualItems = attribute.items ?: AttributeItems(type = AttributeType.Single("any"))
             val elementSchema = AttributeSchema(name = "item", type = actualItems.type, default = JsonNull, widget = actualItems.widget)
-            elementSchema.toPropertyType(json, enums)
+            elementSchema.toPropertyType(json, enums, namePrefix)
         }
 
     override val kotlinType: String get() = "List<${elementType.kotlinType}>"
     override val typeExpression: String get() = "ArrayType(${elementType.typeExpression})"
     override val isNullable: Boolean get() = false
+    override val optionName: String get() = "List"
     override val imports: Set<String> get() = elementType.imports + "$WIDGET_TYPES_PACKAGE.compound.ArrayType"
     override val helperDeclarations: List<String> get() = elementType.helperDeclarations
 
@@ -184,8 +201,8 @@ private class ArrayPropertyType(
 }
 
 private class EnumPropertyType(
-    val enumName: String,
-    private val enumValues: List<String>,
+    override val enumName: String,
+    override val enumValues: List<String>,
     defaultValue: JsonElement,
 ) : PropertyType {
     private val defaultEntry = (defaultValue as? JsonPrimitive)?.content?.takeUnless { it == "null" }
@@ -207,6 +224,8 @@ private class EnumPropertyType(
     override val kotlinType: String get() = "WidgetEnumEntry<$enumName>"
     override val typeExpression: String get() = "WidgetEnumType($enumName, $typeDefaultExpression)"
     override val isNullable: Boolean get() = false
+    override val isEnum: Boolean get() = true
+    override val optionName: String get() = enumName
     override val imports: Set<String>
         get() =
             setOf(
@@ -237,6 +256,7 @@ private class ReferencePropertyType(
                     add("$WIDGETS_PACKAGE.model.WidgetModel")
                 }
             },
+        optionName = targetClass,
         nonNullableDelegateName = "widgetProp",
         nullableDelegateName = "nullableWidgetProp",
     ) {
@@ -250,13 +270,25 @@ private class ReferencePropertyType(
         }
 }
 
+private fun getEnumObjectName(
+    enumValue: String,
+    enumName: String,
+): String {
+    val entryName = if (enumValue.isEmpty()) "Default" else enumValue.toPascalCase()
+    return "$entryName$enumName"
+}
+
 private class UnionPropertyType(
     attribute: AttributeSchema,
     json: Json,
     enums: MutableMap<String, EnumInfo>,
+    namePrefix: String,
 ) : PropertyType {
     private val name = attribute.name
+    private val unionName = "${namePrefix}${name.toPascalCase()}"
+    private val unionTypeName = "${unionName}Type"
     private val options: List<PropertyType>
+    private val optionNames: List<String>
     private val defaultValueExpression: String
 
     init {
@@ -270,38 +302,126 @@ private class UnionPropertyType(
                 }
             }
 
-        options = optionSchemas.map { it.toPropertyType(json, enums) }
-        defaultValueExpression = options.first().getDefaultValueExpression(attribute.default)
+        options = optionSchemas.map { it.toPropertyType(json, enums, namePrefix, skipEnumRegistration = true) }
+
+        val names = options.map { it.optionName + "Value" }
+        optionNames =
+            if (names.distinct().size == names.size) {
+                names
+            } else {
+                options.indices.map { "${names[it]}$it" }
+            }
+
+        val firstOpt = options.first()
+        defaultValueExpression =
+            if (firstOpt is EnumPropertyType) {
+                val defaultEntry = (attribute.default as? JsonPrimitive)?.content?.takeUnless { it == "null" }
+                val entryName =
+                    if (defaultEntry == null || defaultEntry !in firstOpt.enumValues) {
+                        if (firstOpt.enumValues.isEmpty()) {
+                            "Default"
+                        } else {
+                            firstOpt.enumValues
+                                .first()
+                                .ifEmpty { "Default" }
+                                .toPascalCase()
+                        }
+                    } else {
+                        defaultEntry.ifEmpty { "Default" }.toPascalCase()
+                    }
+                "$unionName.$entryName${firstOpt.enumName}"
+            } else {
+                val firstOptionDefaultValue = firstOpt.getDefaultValueExpression(attribute.default)
+                "$unionName.${optionNames.first()}($firstOptionDefaultValue)"
+            }
     }
 
-    private val nameForType = "${name.toPascalCase()}UnionType"
-
-    override val kotlinType: String get() = "Any"
-    override val typeExpression: String get() = nameForType
+    override val kotlinType: String get() = unionName
+    override val typeExpression: String get() = unionTypeName
     override val isNullable: Boolean get() = false
-    override val imports: Set<String> get() = options.flatMap { it.imports }.toSet() + "$WIDGET_TYPES_PACKAGE.compound.UnionType"
+    override val optionName: String get() = "Union"
+    override val imports: Set<String> get() =
+        options.flatMap { if (it is EnumPropertyType) emptySet() else it.imports }.toSet() +
+            "$WIDGET_TYPES_PACKAGE.compound.UnionType"
 
     override val helperDeclarations: List<String>
         get() {
-            val helpers = options.flatMap { it.helperDeclarations }.toMutableList()
+            val helpers = options.flatMap { if (it is EnumPropertyType) emptyList() else it.helperDeclarations }.toMutableList()
 
-            val deserializers = options.joinToString(", ") { it.typeExpression }
-            val unionDeclaration =
-                """
-                |private val $nameForType = UnionType<Any>(
-                |    name = "$name",
-                |    default = $defaultValueExpression,
-                |    serializerSelector = { value ->
-                |        when (value) {
-                ${
-                    options.joinToString("\n") { opt ->
-                        "|            is ${opt.checkTypeExpression} -> ${opt.typeExpression}"
+            val interfaceDeclaration =
+                buildString {
+                    appendLine("public sealed interface $unionName {")
+                    options.forEachIndexed { i, opt ->
+                        if (opt is EnumPropertyType) {
+                            opt.enumValues.forEach { enumValue ->
+                                appendLine("    public object ${getEnumObjectName(enumValue, opt.enumName)} : $unionName")
+                            }
+                        } else {
+                            appendLine(
+                                "    @JvmInline public value class ${optionNames[i]}(public val value: ${opt.kotlinType}) : $unionName",
+                            )
+                        }
+                    }
+                    appendLine("}")
+                }
+            helpers.add(interfaceDeclaration)
+
+            val typeVarNames = options.indices.map { i -> "${unionTypeName}_Option$i" }
+            options.forEachIndexed { i, opt ->
+                if (opt !is EnumPropertyType) {
+                    helpers.add("private val ${typeVarNames[i]} = ${opt.typeExpression}")
+                }
+            }
+
+            val serializer =
+                buildString {
+                    appendLine("{ value, widgetManager ->")
+                    appendLine("        when (value) {")
+                    options.forEachIndexed { i, opt ->
+                        if (opt is EnumPropertyType) {
+                            opt.enumValues.forEach { enumValue ->
+                                appendLine("            is $unionName.${getEnumObjectName(enumValue, opt.enumName)} -> \"$enumValue\"")
+                            }
+                        } else {
+                            appendLine(
+                                "            is $unionName.${optionNames[i]} -> ${typeVarNames[i]}.serialize(value.value, widgetManager)",
+                            )
+                        }
+                    }
+                    appendLine("        }")
+                    append("    }")
+                }
+
+            val deserializers =
+                options.indices.joinToString(",\n") { i ->
+                    val opt = options[i]
+                    if (opt is EnumPropertyType) {
+                        val cases =
+                            opt.enumValues.joinToString("\n") { enumValue ->
+                                "\"$enumValue\" -> $unionName.${getEnumObjectName(enumValue, opt.enumName)}"
+                            }
+                        $$"""
+                        |        { patch, _ ->
+                        |            when (patch) {
+                        |                $$cases
+                        |                else -> throw Exception("Unknown enum value: $patch")
+                        |            }
+                        |        }
+                        """.trimMargin()
+                    } else {
+                        "        { patch, widgetManager -> $unionName.${optionNames[i]}(${typeVarNames[i]}.deserialize(patch, widgetManager)) }"
                     }
                 }
-                |            else -> ${options.last().typeExpression}
-                |        }
-                |    },
-                |    deserializers = listOf($deserializers),
+
+            val unionDeclaration =
+                """
+                |private val $unionTypeName = UnionType<$unionName>(
+                |    name = "$name",
+                |    default = $defaultValueExpression,
+                |    serializer = $serializer,
+                |    deserializers = listOf(
+                |$deserializers
+                |    ),
                 |)
                 """.trimMargin()
             helpers.add(unionDeclaration)
@@ -314,6 +434,8 @@ private class UnionPropertyType(
 internal fun AttributeSchema.toPropertyType(
     json: Json,
     enums: MutableMap<String, EnumInfo>,
+    namePrefix: String,
+    skipEnumRegistration: Boolean = false,
 ): PropertyType {
     val isNullable = allowNone || default is JsonNull
     val baseType =
@@ -321,10 +443,11 @@ internal fun AttributeSchema.toPropertyType(
             is AttributeType.Single -> {
                 if (enum.isNotEmpty()) {
                     val enumName = name.toPascalCase()
-                    enums.getOrPut(enumName) { EnumInfo(enumName, enum) }.also {
-                        if (it.values != enum) error("Enum conflict for $enumName")
+                    if (!skipEnumRegistration) {
+                        enums.getOrPut(enumName) { EnumInfo(enumName, enum) }.also {
+                            if (it.values != enum) error("Enum conflict for $enumName")
+                        }
                     }
-
                     EnumPropertyType(enumName, enum, default)
                 } else {
                     when (type.name) {
@@ -339,12 +462,12 @@ internal fun AttributeSchema.toPropertyType(
                         "Time" -> TimePropertyType
                         "reference" -> ReferencePropertyType(widget ?: error("Reference widget is not specified"))
                         "object" -> RawObjectPropertyType
-                        "array" -> ArrayPropertyType(this, json, enums)
+                        "array" -> ArrayPropertyType(this, json, enums, namePrefix)
                         else -> error("Unsupported type ${type.name}")
                     }
                 }
             }
-            is AttributeType.Union -> UnionPropertyType(this, json, enums)
+            is AttributeType.Union -> UnionPropertyType(this, json, enums, namePrefix)
         }
     if (isNullable) {
         if (baseType.typeExpression == "AnyType") {
@@ -390,7 +513,8 @@ private fun renderLiteral(
                         ?: value.intOrNull
                         ?: value.doubleOrNull
                         ?: error("Unsupported primitive value for $kotlinType: $value")
-                primitiveValue.toString()
+                val rendered = primitiveValue.toString()
+                if (kotlinType == "Double" && "." !in rendered) "$rendered.0" else rendered
             }
         }
         else -> error("Unsupported literal for $kotlinType: $value")

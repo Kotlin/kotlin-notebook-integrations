@@ -19,6 +19,7 @@ import kotlinx.serialization.json.put
 import org.jetbrains.kotlinx.jupyter.protocol.api.EMPTY
 import org.jetbrains.kotlinx.jupyter.protocol.comms.CommManagerImpl
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
+import org.jetbrains.kotlinx.jupyter.widget.library.TimeWidgetStep
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -99,9 +100,9 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
     @Test
     fun `time widget with integer step`() {
         execRaw("val tw = timeWidget()")
-        execRaw("tw.step = 30")
+        execRaw("tw.step = TimeWidgetStep.DoubleValue(30.0)")
         assertOpenEvents("LayoutModel", "DescriptionStyleModel", "TimeModel")
-        assertNextUpdateEvent("step" to 30)
+        assertNextUpdateEvent("step" to 30.0)
     }
 
     @Test
@@ -201,6 +202,45 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
 
         // Reset for other tests
         execRaw("widgetManager.echoUpdateEnabled = false")
+    }
+
+    @Test
+    fun `time widget union type property`() {
+        execRaw("val t = timeWidget()")
+        assertOpenEvents("LayoutModel", "DescriptionStyleModel", "TimeModel")
+
+        execRaw("t.step = TimeWidgetStep.DoubleValue(10.5)")
+        assertNextUpdateEvent("step" to 10.5)
+
+        execRaw("t.step = TimeWidgetStep.AnyStep")
+        assertNextUpdateEvent("step" to "any")
+
+        facility.sentEvents.shouldHaveSize(5)
+    }
+
+    @Test
+    fun `time widget union type property from frontend`() {
+        execRaw("val t2 = timeWidget()")
+        assertOpenEvents("LayoutModel", "DescriptionStyleModel")
+        val timeId = assertNextOpenEvent("TimeModel").commId
+
+        sendUpdate(timeId, "step" to 42.0)
+        execRaw("t2.step").shouldBeInstanceOf<TimeWidgetStep.DoubleValue>().value shouldBe 42.0
+
+        sendUpdate(timeId, "step" to "any")
+        execRaw("t2.step") shouldBe TimeWidgetStep.AnyStep
+    }
+
+    @Test
+    fun `date picker step property`() {
+        execRaw("val dp = datePickerWidget()")
+        assertOpenEvents("LayoutModel", "DescriptionStyleModel", "DatePickerModel")
+
+        execRaw("dp.step = DatePickerWidgetStep.IntValue(5)")
+        assertNextUpdateEvent("step" to 5)
+
+        execRaw("dp.step = DatePickerWidgetStep.AnyStep")
+        assertNextUpdateEvent("step" to "any")
     }
 
     private fun assertOpenEvents(vararg expectedModelNames: String): List<CommEvent.Open> =

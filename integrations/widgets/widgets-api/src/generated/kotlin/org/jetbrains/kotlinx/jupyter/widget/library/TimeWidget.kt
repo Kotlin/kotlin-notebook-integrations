@@ -2,7 +2,6 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
-import org.jetbrains.kotlinx.jupyter.widget.library.enums.Step
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
@@ -11,24 +10,37 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.UnionType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.TimeType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
-import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val StepUnionType = UnionType<Any>(
+public sealed interface TimeWidgetStep {
+    @JvmInline public value class DoubleValue(public val value: Double) : TimeWidgetStep
+    public object AnyStep : TimeWidgetStep
+}
+
+
+private val TimeWidgetStepType_Option0 = FloatType
+
+private val TimeWidgetStepType = UnionType<TimeWidgetStep>(
     name = "step",
-    default = 60,
-    serializerSelector = { value ->
+    default = TimeWidgetStep.DoubleValue(60.0),
+    serializer = { value, widgetManager ->
         when (value) {
-            is Number -> FloatType
-            is WidgetEnumEntry<*> -> WidgetEnumType(Step, Step.Any)
-            else -> WidgetEnumType(Step, Step.Any)
+            is TimeWidgetStep.DoubleValue -> TimeWidgetStepType_Option0.serialize(value.value, widgetManager)
+            is TimeWidgetStep.AnyStep -> "any"
         }
     },
-    deserializers = listOf(FloatType, WidgetEnumType(Step, Step.Any)),
+    deserializers = listOf(
+        { patch, widgetManager -> TimeWidgetStep.DoubleValue(TimeWidgetStepType_Option0.deserialize(patch, widgetManager)) },
+        { patch, _ ->
+            when (patch) {
+                "any" -> TimeWidgetStep.AnyStep
+                else -> throw Exception("Unknown enum value: $patch")
+            }
+        }
+    ),
 )
 
 private val timeSpec = WidgetSpec(
@@ -60,7 +72,7 @@ public class TimeWidget internal constructor(
     public var max: java.time.LocalTime? by nullableTimeProp("max", null)
     public var min: java.time.LocalTime? by nullableTimeProp("min", null)
     /** The time step to use for the picker, in seconds, or "any". */
-    public var step: Any by prop("step", StepUnionType, 60)
+    public var step: TimeWidgetStep by prop("step", TimeWidgetStepType, TimeWidgetStep.DoubleValue(60.0))
     /** Styling customizations */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
