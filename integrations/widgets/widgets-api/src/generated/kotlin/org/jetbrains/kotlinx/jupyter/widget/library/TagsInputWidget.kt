@@ -29,6 +29,7 @@ public fun WidgetManager.tagsInput(): TagsInputWidget = createAndRegisterWidget(
 
 public class TagsInputWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(tagsInputSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<TagsInputWidget>(tagsInputSpec, ::TagsInputWidget)
 
@@ -40,10 +41,10 @@ public class TagsInputWidget internal constructor(
     public var description: String by stringProp("description", "")
     /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var placeholder: String by stringProp("placeholder", "​")
     /** Styling customizations */
-    public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** Use a predefined styling for the tags. */

@@ -22,6 +22,7 @@ public fun WidgetManager.progressStyle(): ProgressStyleWidget = createAndRegiste
 
 public class ProgressStyleWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(progressStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ProgressStyleWidget>(progressStyleSpec, ::ProgressStyleWidget)
 

@@ -21,6 +21,7 @@ public fun WidgetManager.toggleButtonsStyle(): ToggleButtonsStyleWidget = create
 
 public class ToggleButtonsStyleWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(toggleButtonsStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ToggleButtonsStyleWidget>(toggleButtonsStyleSpec, ::ToggleButtonsStyleWidget)
 

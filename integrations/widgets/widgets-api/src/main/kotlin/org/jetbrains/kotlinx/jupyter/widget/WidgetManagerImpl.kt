@@ -72,7 +72,7 @@ public class WidgetManagerImpl(
             val modelName = openMessage.state["_model_name"]?.jsonPrimitive?.content!!
             val widgetFactory = factoryRegistry.loadWidgetFactory(modelName, classLoaderProvider())
 
-            val widget = widgetFactory.create(this)
+            val widget = widgetFactory.create(this, fromFrontend = true)
             val patch = openMessage.toPatch(buffers)
             widget.applyFrontendPatch(patch)
 

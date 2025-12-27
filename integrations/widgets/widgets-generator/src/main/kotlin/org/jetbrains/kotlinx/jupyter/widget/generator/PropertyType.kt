@@ -41,7 +41,7 @@ private open class BasicPropertyType(
     val nullableDelegateName: String? = null,
 ) : PropertyType {
     override val isNullable: Boolean get() = false
-    override val delegateName: String? get() = nonNullableDelegateName
+    override val delegateName: String? get() = if (isNullable) nullableDelegateName else nonNullableDelegateName
 
     override fun getDefaultValueExpression(defaultValue: JsonElement): String = renderLiteral(kotlinType, defaultValue)
 }
@@ -95,8 +95,8 @@ private object RawObjectPropertyType : BasicPropertyType(
 private class NullablePropertyType(
     private val inner: PropertyType,
 ) : PropertyType {
-    override val kotlinType: String get() = "${inner.kotlinType}?"
-    override val typeExpression: String get() = "NullableType(${inner.typeExpression})"
+    override val kotlinType: String get() = inner.kotlinType + if (inner.isNullable) "" else "?"
+    override val typeExpression: String get() = if (inner.isNullable) inner.typeExpression else "NullableType(${inner.typeExpression})"
     override val isNullable: Boolean get() = true
     override val imports: Set<String> get() = inner.imports + "$WIDGET_TYPES_PACKAGE.compound.NullableType"
     override val helperDeclarations: List<String> get() = inner.helperDeclarations
@@ -185,7 +185,7 @@ private class ReferencePropertyType(
     ) {
     override fun getDefaultValueExpression(defaultValue: JsonElement): String =
         if ((defaultValue as? JsonPrimitive)?.content == "reference to new instance") {
-            "widgetManager.${targetClass.toCamelCase().removeSuffix("Widget")}()"
+            "if (fromFrontend) null else widgetManager.${targetClass.toCamelCase().removeSuffix("Widget")}()"
         } else {
             "null"
         }

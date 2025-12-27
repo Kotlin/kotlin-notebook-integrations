@@ -32,6 +32,7 @@ public fun WidgetManager.layout(): LayoutWidget = createAndRegisterWidget(Layout
 
 public class LayoutWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(layoutSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LayoutWidget>(layoutSpec, ::LayoutWidget)
 

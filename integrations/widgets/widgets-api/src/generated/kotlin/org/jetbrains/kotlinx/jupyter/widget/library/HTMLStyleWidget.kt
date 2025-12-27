@@ -22,6 +22,7 @@ public fun WidgetManager.htmlStyle(): HTMLStyleWidget = createAndRegisterWidget(
 
 public class HTMLStyleWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(htmlStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<HTMLStyleWidget>(htmlStyleSpec, ::HTMLStyleWidget)
 

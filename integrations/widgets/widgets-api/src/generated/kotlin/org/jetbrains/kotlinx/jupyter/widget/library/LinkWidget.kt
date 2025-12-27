@@ -22,6 +22,7 @@ public fun WidgetManager.link(): LinkWidget = createAndRegisterWidget(LinkWidget
 
 public class LinkWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(linkSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LinkWidget>(linkSpec, ::LinkWidget)
 

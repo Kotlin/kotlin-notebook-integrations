@@ -25,6 +25,7 @@ public fun WidgetManager.valid(): ValidWidget = createAndRegisterWidget(ValidWid
 
 public class ValidWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(validSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ValidWidget>(validSpec, ::ValidWidget)
 
@@ -36,11 +37,11 @@ public class ValidWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     /** Enable or disable user changes. */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Message displayed when the value is False */
     public var readout: String by stringProp("readout", "Invalid")
     /** Styling customizations */
-    public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

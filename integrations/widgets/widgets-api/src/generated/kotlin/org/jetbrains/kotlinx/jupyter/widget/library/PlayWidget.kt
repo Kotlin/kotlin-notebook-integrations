@@ -26,6 +26,7 @@ public fun WidgetManager.play(): PlayWidget = createAndRegisterWidget(PlayWidget
 
 public class PlayWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(playSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<PlayWidget>(playSpec, ::PlayWidget)
 
@@ -39,7 +40,7 @@ public class PlayWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     /** The time between two animation steps (ms). */
     public var interval: Int by intProp("interval", 100)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Max value */
     public var max: Int by intProp("max", 100)
     /** Min value */
@@ -53,7 +54,7 @@ public class PlayWidget internal constructor(
     /** Increment step */
     public var step: Int by intProp("step", 1)
     /** Styling customizations */
-    public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

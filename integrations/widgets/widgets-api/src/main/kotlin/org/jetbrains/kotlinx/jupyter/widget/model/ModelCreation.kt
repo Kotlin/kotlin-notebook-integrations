@@ -10,17 +10,20 @@ public fun <M : WidgetModel> WidgetManager.createAndRegisterWidget(factory: Widg
 public interface WidgetFactory<M : WidgetModel> {
     public val spec: WidgetSpec
 
-    public fun create(widgetManager: WidgetManager): M
+    public fun create(
+        widgetManager: WidgetManager,
+        fromFrontend: Boolean = false,
+    ): M
 }
 
 public abstract class DefaultWidgetFactory<M : DefaultWidgetModel>(
     override val spec: WidgetSpec,
-    private val factory: (widgetManager: WidgetManager) -> M,
+    private val factory: (widgetManager: WidgetManager, fromFrontend: Boolean) -> M,
 ) : WidgetFactory<M> {
-    public constructor(spec: WidgetSpec, factory: () -> M) :
-        this(spec, { _ -> factory() })
-
-    override fun create(widgetManager: WidgetManager): M = factory(widgetManager)
+    override fun create(
+        widgetManager: WidgetManager,
+        fromFrontend: Boolean,
+    ): M = factory(widgetManager, fromFrontend)
 }
 
 public open class DefaultWidgetModel(

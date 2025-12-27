@@ -22,6 +22,7 @@ public fun WidgetManager.htmlMathStyle(): HTMLMathStyleWidget = createAndRegiste
 
 public class HTMLMathStyleWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(htmlMathStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<HTMLMathStyleWidget>(htmlMathStyleSpec, ::HTMLMathStyleWidget)
 

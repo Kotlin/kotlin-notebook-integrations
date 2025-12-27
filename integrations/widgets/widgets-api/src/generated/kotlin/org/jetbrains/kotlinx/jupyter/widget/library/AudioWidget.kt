@@ -26,6 +26,7 @@ public fun WidgetManager.audio(): AudioWidget = createAndRegisterWidget(AudioWid
 
 public class AudioWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(audioSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<AudioWidget>(audioSpec, ::AudioWidget)
 
@@ -37,7 +38,7 @@ public class AudioWidget internal constructor(
     public var controls: Boolean by boolProp("controls", true)
     /** The format of the audio. */
     public var format: String by stringProp("format", "mp3")
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** When true, the audio will start from the beginning after finishing */
     public var loop: Boolean by boolProp("loop", true)
     /** Is widget tabbable? */

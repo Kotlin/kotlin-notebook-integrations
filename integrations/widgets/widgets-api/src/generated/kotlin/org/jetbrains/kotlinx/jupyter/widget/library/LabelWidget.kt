@@ -25,6 +25,7 @@ public fun WidgetManager.label(): LabelWidget = createAndRegisterWidget(LabelWid
 
 public class LabelWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(labelSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LabelWidget>(labelSpec, ::LabelWidget)
 
@@ -34,10 +35,10 @@ public class LabelWidget internal constructor(
     public var description: String by stringProp("description", "")
     /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Placeholder text to display when nothing has been typed */
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: LabelStyleWidget by widgetProp("style", widgetManager.labelStyle())
+    public var style: LabelStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.labelStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

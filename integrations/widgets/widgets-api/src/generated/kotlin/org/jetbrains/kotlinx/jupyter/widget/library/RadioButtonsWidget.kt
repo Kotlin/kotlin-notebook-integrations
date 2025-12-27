@@ -29,6 +29,7 @@ public fun WidgetManager.radioButtons(): RadioButtonsWidget = createAndRegisterW
 
 public class RadioButtonsWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(radioButtonsSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<RadioButtonsWidget>(radioButtonsSpec, ::RadioButtonsWidget)
 
@@ -44,11 +45,11 @@ public class RadioButtonsWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     /** Selected index */
     public var index: Int? by prop("index", NullableType(IntType), null)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Vertical or horizontal. */
     public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Vertical), Orientation.Vertical)
     /** Styling customizations */
-    public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

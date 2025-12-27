@@ -22,6 +22,7 @@ public fun WidgetManager.checkboxStyle(): CheckboxStyleWidget = createAndRegiste
 
 public class CheckboxStyleWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(checkboxStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<CheckboxStyleWidget>(checkboxStyleSpec, ::CheckboxStyleWidget)
 

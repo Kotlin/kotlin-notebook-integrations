@@ -31,6 +31,7 @@ public fun WidgetManager.intRangeSlider(): IntRangeSliderWidget = createAndRegis
 
 public class IntRangeSliderWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(intRangeSliderSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<IntRangeSliderWidget>(intRangeSliderSpec, ::IntRangeSliderWidget)
 
@@ -46,7 +47,7 @@ public class IntRangeSliderWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Max value */
     public var max: Int by intProp("max", 100)
     /** Min value */
@@ -60,7 +61,7 @@ public class IntRangeSliderWidget internal constructor(
     /** Minimum step that the value can take */
     public var step: Int by intProp("step", 1)
     /** Slider style customizations. */
-    public var style: SliderStyleWidget by widgetProp("style", widgetManager.sliderStyle())
+    public var style: SliderStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.sliderStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

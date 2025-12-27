@@ -26,6 +26,7 @@ public fun WidgetManager.intText(): IntTextWidget = createAndRegisterWidget(IntT
 
 public class IntTextWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(intTextSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<IntTextWidget>(intTextSpec, ::IntTextWidget)
 
@@ -39,11 +40,11 @@ public class IntTextWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Minimum step to increment the value */
     public var step: Int by intProp("step", 1)
     /** Styling customizations */
-    public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

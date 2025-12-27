@@ -22,6 +22,7 @@ public fun WidgetManager.labelStyle(): LabelStyleWidget = createAndRegisterWidge
 
 public class LabelStyleWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(labelStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LabelStyleWidget>(labelStyleSpec, ::LabelStyleWidget)
 

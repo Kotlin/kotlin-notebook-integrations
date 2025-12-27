@@ -26,12 +26,13 @@ public fun WidgetManager.domwidget(): DOMWidget = createAndRegisterWidget(DOMWid
 
 public class DOMWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(domwidgetSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DOMWidget>(domwidgetSpec, ::DOMWidget)
 
     /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

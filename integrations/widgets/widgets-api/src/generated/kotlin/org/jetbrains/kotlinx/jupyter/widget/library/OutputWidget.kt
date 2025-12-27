@@ -26,12 +26,13 @@ public fun WidgetManager.output(): OutputWidget = createAndRegisterWidget(Output
 
 public class OutputWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(outputSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<OutputWidget>(outputSpec, ::OutputWidget)
 
     /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Parent message id of messages to capture */
     public var msgId: String by stringProp("msg_id", "")
     /** The output messages synced from the frontend. */

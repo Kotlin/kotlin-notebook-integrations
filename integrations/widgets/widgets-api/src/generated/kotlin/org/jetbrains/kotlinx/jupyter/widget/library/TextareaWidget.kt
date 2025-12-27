@@ -26,6 +26,7 @@ public fun WidgetManager.textarea(): TextareaWidget = createAndRegisterWidget(Te
 
 public class TextareaWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(textareaSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<TextareaWidget>(textareaSpec, ::TextareaWidget)
 
@@ -39,12 +40,12 @@ public class TextareaWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Placeholder text to display when nothing has been typed */
     public var placeholder: String by stringProp("placeholder", "​")
     /** The number of rows to display. */
     public var rows: Int? by prop("rows", NullableType(IntType), null)
-    public var style: TextStyleWidget by widgetProp("style", widgetManager.textStyle())
+    public var style: TextStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.textStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

@@ -21,6 +21,7 @@ public fun WidgetManager.descriptionStyle(): DescriptionStyleWidget = createAndR
 
 public class DescriptionStyleWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(descriptionStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DescriptionStyleWidget>(descriptionStyleSpec, ::DescriptionStyleWidget)
 

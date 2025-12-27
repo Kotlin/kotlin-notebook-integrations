@@ -30,6 +30,7 @@ public fun WidgetManager.selectionRangeSlider(): SelectionRangeSliderWidget = cr
 
 public class SelectionRangeSliderWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(selectionRangeSliderSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<SelectionRangeSliderWidget>(selectionRangeSliderSpec, ::SelectionRangeSliderWidget)
 
@@ -49,12 +50,12 @@ public class SelectionRangeSliderWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     /** Min and max selected indices */
     public var index: List<Any?> by prop("index", ArrayType(AnyType), listOf(0, 0))
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Vertical or horizontal. */
     public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
     /** Display the current selected label next to the slider */
     public var readout: Boolean by boolProp("readout", true)
-    public var style: SliderStyleWidget by widgetProp("style", widgetManager.sliderStyle())
+    public var style: SliderStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.sliderStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

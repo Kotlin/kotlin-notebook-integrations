@@ -22,6 +22,7 @@ public fun WidgetManager.directionalLink(): DirectionalLinkWidget = createAndReg
 
 public class DirectionalLinkWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(directionalLinkSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DirectionalLinkWidget>(directionalLinkSpec, ::DirectionalLinkWidget)
 

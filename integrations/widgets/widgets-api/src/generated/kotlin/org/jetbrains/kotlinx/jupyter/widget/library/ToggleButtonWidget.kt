@@ -28,6 +28,7 @@ public fun WidgetManager.toggleButton(): ToggleButtonWidget = createAndRegisterW
 
 public class ToggleButtonWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(toggleButtonSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ToggleButtonWidget>(toggleButtonSpec, ::ToggleButtonWidget)
 
@@ -43,9 +44,9 @@ public class ToggleButtonWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     /** Font-awesome icon. */
     public var icon: String by stringProp("icon", "")
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Styling customizations */
-    public var style: ToggleButtonStyleWidget by widgetProp("style", widgetManager.toggleButtonStyle())
+    public var style: ToggleButtonStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.toggleButtonStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

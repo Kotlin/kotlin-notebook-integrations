@@ -22,6 +22,7 @@ public fun WidgetManager.sliderStyle(): SliderStyleWidget = createAndRegisterWid
 
 public class SliderStyleWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(sliderStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<SliderStyleWidget>(sliderStyleSpec, ::SliderStyleWidget)
 

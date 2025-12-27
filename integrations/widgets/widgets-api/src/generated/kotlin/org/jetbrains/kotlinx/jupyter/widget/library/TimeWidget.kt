@@ -44,6 +44,7 @@ public fun WidgetManager.time(): TimeWidget = createAndRegisterWidget(TimeWidget
 
 public class TimeWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(timeSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<TimeWidget>(timeSpec, ::TimeWidget)
 
@@ -55,13 +56,13 @@ public class TimeWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     /** Enable or disable user changes. */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var max: java.time.LocalTime? by prop("max", NullableType(TimeType), null)
     public var min: java.time.LocalTime? by prop("min", NullableType(TimeType), null)
     /** The time step to use for the picker, in seconds, or "any". */
     public var step: Any by prop("step", StepUnionType, 60)
     /** Styling customizations */
-    public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

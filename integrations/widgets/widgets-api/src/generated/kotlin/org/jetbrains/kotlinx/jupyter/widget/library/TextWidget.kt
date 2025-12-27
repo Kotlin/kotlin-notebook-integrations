@@ -25,6 +25,7 @@ public fun WidgetManager.text(): TextWidget = createAndRegisterWidget(TextWidget
 
 public class TextWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(textSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<TextWidget>(textSpec, ::TextWidget)
 
@@ -38,10 +39,10 @@ public class TextWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Placeholder text to display when nothing has been typed */
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: TextStyleWidget by widgetProp("style", widgetManager.textStyle())
+    public var style: TextStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.textStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

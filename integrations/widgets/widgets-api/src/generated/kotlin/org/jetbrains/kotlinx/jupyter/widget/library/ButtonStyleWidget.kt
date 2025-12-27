@@ -22,6 +22,7 @@ public fun WidgetManager.buttonStyle(): ButtonStyleWidget = createAndRegisterWid
 
 public class ButtonStyleWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(buttonStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ButtonStyleWidget>(buttonStyleSpec, ::ButtonStyleWidget)
 

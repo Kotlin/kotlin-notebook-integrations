@@ -30,6 +30,7 @@ public fun WidgetManager.stack(): StackWidget = createAndRegisterWidget(StackWid
 
 public class StackWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(stackSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<StackWidget>(stackSpec, ::StackWidget)
 
@@ -39,7 +40,7 @@ public class StackWidget internal constructor(
     public var boxStyle: WidgetEnumEntry<BoxStyle> by prop("box_style", WidgetEnumType(BoxStyle, BoxStyle.Default), BoxStyle.Default)
     /** List of widget children */
     public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** The index of the selected page. This is either an integer selecting a particular sub-widget, or None to have no widgets selected. */
     public var selectedIndex: Int? by prop("selected_index", NullableType(IntType), null)
     /** Is widget tabbable? */

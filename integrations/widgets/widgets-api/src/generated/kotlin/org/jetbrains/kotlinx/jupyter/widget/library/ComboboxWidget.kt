@@ -25,6 +25,7 @@ public fun WidgetManager.combobox(): ComboboxWidget = createAndRegisterWidget(Co
 
 public class ComboboxWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(comboboxSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ComboboxWidget>(comboboxSpec, ::ComboboxWidget)
 
@@ -40,12 +41,12 @@ public class ComboboxWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     /** If set, ensure value is in options. Implies continuous_update=False. */
     public var ensureOption: Boolean by boolProp("ensure_option", false)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Dropdown options for the combobox */
     public var options: List<String?> by prop("options", ArrayType(NullableType(StringType)), emptyList())
     /** Placeholder text to display when nothing has been typed */
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: TextStyleWidget by widgetProp("style", widgetManager.textStyle())
+    public var style: TextStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.textStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

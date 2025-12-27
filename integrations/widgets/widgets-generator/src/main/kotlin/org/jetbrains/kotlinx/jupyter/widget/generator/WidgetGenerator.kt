@@ -143,6 +143,7 @@ private class WidgetGenerator(
         builder.appendLine()
         builder.appendLine("public class ${info.className} internal constructor(")
         builder.appendLine("    widgetManager: WidgetManager,")
+        builder.appendLine("    fromFrontend: Boolean,")
         builder.appendLine(") : DefaultWidgetModel($specName, widgetManager) {")
         builder.appendLine("    internal object Factory : DefaultWidgetFactory<${info.className}>($specName, ::${info.className})")
         builder.appendLine()

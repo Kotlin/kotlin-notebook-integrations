@@ -26,12 +26,13 @@ public fun WidgetManager.controllerButton(): ControllerButtonWidget = createAndR
 
 public class ControllerButtonWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(controllerButtonSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ControllerButtonWidget>(controllerButtonSpec, ::ControllerButtonWidget)
 
     /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Whether the button is pressed. */
     public var pressed: Boolean by boolProp("pressed", false)
     /** Is widget tabbable? */

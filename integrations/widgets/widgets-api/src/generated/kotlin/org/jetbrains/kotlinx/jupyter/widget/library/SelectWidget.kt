@@ -26,6 +26,7 @@ public fun WidgetManager.select(): SelectWidget = createAndRegisterWidget(Select
 
 public class SelectWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(selectSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<SelectWidget>(selectSpec, ::SelectWidget)
 
@@ -41,11 +42,11 @@ public class SelectWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     /** Selected index */
     public var index: Int? by prop("index", NullableType(IntType), null)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** The number of rows to display. */
     public var rows: Int by intProp("rows", 5)
     /** Styling customizations */
-    public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

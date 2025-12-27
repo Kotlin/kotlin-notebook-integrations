@@ -22,6 +22,7 @@ public fun WidgetManager.textStyle(): TextStyleWidget = createAndRegisterWidget(
 
 public class TextStyleWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(textStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<TextStyleWidget>(textStyleSpec, ::TextStyleWidget)
 

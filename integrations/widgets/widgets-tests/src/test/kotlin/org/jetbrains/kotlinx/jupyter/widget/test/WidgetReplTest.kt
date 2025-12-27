@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.jupyter.widget.test
 
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -177,6 +178,9 @@ class WidgetReplTest : JupyterReplTestCase(provider) {
             }
 
         commManager.processCommOpen("new_slider_id", "jupyter.widget", openData, null, emptyList())
+
+        // Frontend already has all the widgets, so no events should be sent
+        facility.sentEvents.shouldBeEmpty()
 
         execRaw("import org.jetbrains.kotlinx.jupyter.widget.library.IntSliderWidget")
         execRaw("val createdSlider = widgetManager.getWidget(\"new_slider_id\") as IntSliderWidget")

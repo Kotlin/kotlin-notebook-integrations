@@ -26,6 +26,7 @@ public fun WidgetManager.dropdown(): DropdownWidget = createAndRegisterWidget(Dr
 
 public class DropdownWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(dropdownSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DropdownWidget>(dropdownSpec, ::DropdownWidget)
 
@@ -41,9 +42,9 @@ public class DropdownWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     /** Selected index */
     public var index: Int? by prop("index", NullableType(IntType), null)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Styling customizations */
-    public var style: DescriptionStyleWidget by widgetProp("style", widgetManager.descriptionStyle())
+    public var style: DescriptionStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

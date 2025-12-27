@@ -30,6 +30,7 @@ public fun WidgetManager.intSlider(): IntSliderWidget = createAndRegisterWidget(
 
 public class IntSliderWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(intSliderSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<IntSliderWidget>(intSliderSpec, ::IntSliderWidget)
 
@@ -45,7 +46,7 @@ public class IntSliderWidget internal constructor(
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Max value */
     public var max: Int by intProp("max", 100)
     /** Min value */
@@ -58,7 +59,7 @@ public class IntSliderWidget internal constructor(
     public var readoutFormat: String by stringProp("readout_format", "d")
     /** Minimum step to increment the value */
     public var step: Int by intProp("step", 1)
-    public var style: SliderStyleWidget by widgetProp("style", widgetManager.sliderStyle())
+    public var style: SliderStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.sliderStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */

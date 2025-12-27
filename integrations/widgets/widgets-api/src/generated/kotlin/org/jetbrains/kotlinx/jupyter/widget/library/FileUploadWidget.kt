@@ -29,6 +29,7 @@ public fun WidgetManager.fileUpload(): FileUploadWidget = createAndRegisterWidge
 
 public class FileUploadWidget internal constructor(
     widgetManager: WidgetManager,
+    fromFrontend: Boolean,
 ) : DefaultWidgetModel(fileUploadSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<FileUploadWidget>(fileUploadSpec, ::FileUploadWidget)
 
@@ -48,10 +49,10 @@ public class FileUploadWidget internal constructor(
     public var error: String by stringProp("error", "")
     /** Font-awesome icon name, without the 'fa-' prefix. */
     public var icon: String by stringProp("icon", "upload")
-    public var layout: LayoutWidget by widgetProp("layout", widgetManager.layout())
+    public var layout: LayoutWidget by widgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** If True, allow for multiple files upload */
     public var multiple: Boolean by boolProp("multiple", false)
-    public var style: ButtonStyleWidget by widgetProp("style", widgetManager.buttonStyle())
+    public var style: ButtonStyleWidget by widgetProp("style", if (fromFrontend) null else widgetManager.buttonStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by prop("tabbable", NullableType(BooleanType), null)
     /** A tooltip caption. */
