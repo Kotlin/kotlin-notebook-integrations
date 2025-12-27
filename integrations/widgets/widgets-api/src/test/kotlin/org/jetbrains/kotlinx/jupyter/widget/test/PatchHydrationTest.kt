@@ -1,13 +1,18 @@
-package org.jetbrains.kotlinx.jupyter.widget.protocol
+package org.jetbrains.kotlinx.jupyter.widget.test
 
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import org.jetbrains.kotlinx.jupyter.widget.protocol.WireMessage
+import org.jetbrains.kotlinx.jupyter.widget.protocol.getPatch
+import org.jetbrains.kotlinx.jupyter.widget.protocol.getWireMessage
+import kotlin.collections.get
 import kotlin.test.Test
 
 class PatchHydrationTest {
     @Test
-    fun testGetPatchSimple() {
+    fun `get patch should work for simple objects`() {
         val bytes = byteArrayOf(1, 2, 3)
         val state =
             buildJsonObject {
@@ -25,7 +30,7 @@ class PatchHydrationTest {
     }
 
     @Test
-    fun testGetPatchNested() {
+    fun `get patch should work for nested objects`() {
         val bytes = byteArrayOf(4, 5, 6)
         val state =
             buildJsonObject {
@@ -49,7 +54,7 @@ class PatchHydrationTest {
     }
 
     @Test
-    fun testGetWireMessage() {
+    fun `get wire message should work`() {
         val bytes1 = byteArrayOf(1)
         val bytes2 = byteArrayOf(2)
         val patch =
@@ -66,11 +71,11 @@ class PatchHydrationTest {
         wire.buffers shouldBe listOf(bytes1, bytes2)
         wire.bufferPaths shouldBe listOf(listOf("a"), listOf("b", "c"))
 
-        wire.state["a"] shouldBe kotlinx.serialization.json.JsonNull
+        wire.state["a"] shouldBe JsonNull
     }
 
     @Test
-    fun testRoundtrip() {
+    fun `roundtrip should work`() {
         val patch =
             mapOf(
                 "list" to
