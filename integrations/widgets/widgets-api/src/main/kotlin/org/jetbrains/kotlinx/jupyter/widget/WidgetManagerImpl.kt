@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.jupyter.api.libraries.Comm
 import org.jetbrains.kotlinx.jupyter.api.libraries.CommManager
 import org.jetbrains.kotlinx.jupyter.widget.model.DEFAULT_MAJOR_VERSION
 import org.jetbrains.kotlinx.jupyter.widget.model.DEFAULT_MINOR_VERSION
+import org.jetbrains.kotlinx.jupyter.widget.model.DEFAULT_PATCH_VERSION
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetFactoryRegistry
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
@@ -35,7 +36,7 @@ import org.jetbrains.kotlinx.jupyter.widget.protocol.toPatch
 
 private val widgetOpenMetadataJson =
     buildJsonObject {
-        put("version", "${DEFAULT_MAJOR_VERSION}.${DEFAULT_MINOR_VERSION}")
+        put("version", "${DEFAULT_MAJOR_VERSION}.${DEFAULT_MINOR_VERSION}.${DEFAULT_PATCH_VERSION}")
     }
 
 public class WidgetManagerImpl(

@@ -3,7 +3,8 @@ package org.jetbrains.kotlinx.jupyter.widget.model
 import kotlinx.serialization.Serializable
 
 internal const val DEFAULT_MAJOR_VERSION = 2
-internal const val DEFAULT_MINOR_VERSION = 0
+internal const val DEFAULT_MINOR_VERSION = 1
+internal const val DEFAULT_PATCH_VERSION = 0
 
 internal val versionConstraintRegex = Regex("""\D*(\d+)\.(\d+)""")
 
