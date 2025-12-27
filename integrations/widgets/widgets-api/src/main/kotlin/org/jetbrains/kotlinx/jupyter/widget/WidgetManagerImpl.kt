@@ -125,7 +125,7 @@ public class WidgetManagerImpl(
                 var modelName: String? = null
                 if (widget is DefaultWidgetModel) {
                     modelName = widget.modelName
-                    val version = widget.modelModuleVersion
+                    val version = widget.viewModuleVersion
                     val matchResult = versionConstraintRegex.find(version)
                     if (matchResult != null) {
                         versionMajor = matchResult.groupValues[1].toInt()
