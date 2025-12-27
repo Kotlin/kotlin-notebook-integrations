@@ -22,10 +22,6 @@ dependencies {
     testImplementation(libs.test.kotlintest.assertions)
 }
 
-kotlinJupyter {
-    addApiDependency()
-}
-
 tasks.processJupyterApiResources {
     libraryProducers = listOf("org.jetbrains.kotlinx.jupyter.database.internal.DatabaseJupyterIntegration")
 }

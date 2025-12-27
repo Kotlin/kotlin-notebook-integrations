@@ -16,10 +16,6 @@ allprojects {
     version = rootProject.version
 }
 
-kotlinJupyter {
-    addApiDependency()
-}
-
 tasks.processJupyterApiResources {
     libraryProducers = listOf("org.jetbrains.kotlinx.jupyter.intellij.IntelliJPlatformJupyterIntegration")
 }

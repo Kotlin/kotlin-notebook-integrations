@@ -13,10 +13,6 @@ dependencies {
     testImplementation(libs.kotlinx.serialization.json)
 }
 
-kotlinJupyter {
-    addApiDependency()
-}
-
 tasks.processJupyterApiResources {
     libraryProducers =
         listOf(

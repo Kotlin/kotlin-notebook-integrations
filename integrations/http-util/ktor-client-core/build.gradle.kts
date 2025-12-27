@@ -4,10 +4,6 @@ plugins {
     alias(libs.plugins.publisher)
 }
 
-kotlinJupyter {
-    addApiDependency()
-}
-
 tasks.processJupyterApiResources {
     libraryProducers =
         listOf(
