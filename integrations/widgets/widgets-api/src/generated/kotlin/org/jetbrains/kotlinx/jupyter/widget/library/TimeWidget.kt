@@ -57,8 +57,8 @@ public class TimeWidget internal constructor(
     /** Enable or disable user changes. */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    public var max: java.time.LocalTime? by prop("max", NullableType(TimeType), null)
-    public var min: java.time.LocalTime? by prop("min", NullableType(TimeType), null)
+    public var max: java.time.LocalTime? by nullableTimeProp("max", null)
+    public var min: java.time.LocalTime? by nullableTimeProp("min", null)
     /** The time step to use for the picker, in seconds, or "any". */
     public var step: Any by prop("step", StepUnionType, 60)
     /** Styling customizations */
@@ -67,5 +67,5 @@ public class TimeWidget internal constructor(
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    public var value: java.time.LocalTime? by prop("value", NullableType(TimeType), null)
+    public var value: java.time.LocalTime? by nullableTimeProp("value", null)
 }

@@ -111,17 +111,36 @@ private object AnyPropertyType : PrimitiveType(
 private open class DatetimeBasePropertyType(
     kotlinType: String,
     typeName: String,
+    nonNullableDelegateName: String,
+    nullableDelegateName: String,
 ) : BasicPropertyType(
         kotlinType = kotlinType,
         typeExpression = typeName,
         imports = setOf("$WIDGET_TYPES_PACKAGE.datetime.$typeName"),
+        nonNullableDelegateName = nonNullableDelegateName,
+        nullableDelegateName = nullableDelegateName,
     )
 
-private object DatetimePropertyType : DatetimeBasePropertyType("java.time.Instant", "DatetimeType")
+private object DatetimePropertyType : DatetimeBasePropertyType(
+    kotlinType = "java.time.Instant",
+    typeName = "DatetimeType",
+    nonNullableDelegateName = "dateTimeProp",
+    nullableDelegateName = "nullableDateTimeProp",
+)
 
-private object DatePropertyType : DatetimeBasePropertyType("java.time.LocalDate", "DateType")
+private object DatePropertyType : DatetimeBasePropertyType(
+    kotlinType = "java.time.LocalDate",
+    typeName = "DateType",
+    nonNullableDelegateName = "dateProp",
+    nullableDelegateName = "nullableDateProp",
+)
 
-private object TimePropertyType : DatetimeBasePropertyType("java.time.LocalTime", "TimeType")
+private object TimePropertyType : DatetimeBasePropertyType(
+    kotlinType = "java.time.LocalTime",
+    typeName = "TimeType",
+    nonNullableDelegateName = "timeProp",
+    nullableDelegateName = "nullableTimeProp",
+)
 
 private object RawObjectPropertyType : BasicPropertyType(
     kotlinType = "Map<String, Any?>",

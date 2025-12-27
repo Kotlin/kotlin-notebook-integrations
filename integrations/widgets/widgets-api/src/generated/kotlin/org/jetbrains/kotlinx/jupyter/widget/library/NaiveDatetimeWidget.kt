@@ -39,13 +39,13 @@ public class NaiveDatetimeWidget internal constructor(
     /** Enable or disable user changes. */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    public var max: java.time.Instant? by prop("max", NullableType(DatetimeType), null)
-    public var min: java.time.Instant? by prop("min", NullableType(DatetimeType), null)
+    public var max: java.time.Instant? by nullableDateTimeProp("max", null)
+    public var min: java.time.Instant? by nullableDateTimeProp("min", null)
     /** Styling customizations */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    public var value: java.time.Instant? by prop("value", NullableType(DatetimeType), null)
+    public var value: java.time.Instant? by nullableDateTimeProp("value", null)
 }

@@ -57,8 +57,8 @@ public class DatePickerWidget internal constructor(
     /** Enable or disable user changes. */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    public var max: java.time.LocalDate? by prop("max", NullableType(DateType), null)
-    public var min: java.time.LocalDate? by prop("min", NullableType(DateType), null)
+    public var max: java.time.LocalDate? by nullableDateProp("max", null)
+    public var min: java.time.LocalDate? by nullableDateProp("min", null)
     /** The date step to use for the picker, in days, or "any". */
     public var step: Any by prop("step", StepUnionType, 1)
     /** Styling customizations */
@@ -67,5 +67,5 @@ public class DatePickerWidget internal constructor(
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    public var value: java.time.LocalDate? by prop("value", NullableType(DateType), null)
+    public var value: java.time.LocalDate? by nullableDateProp("value", null)
 }

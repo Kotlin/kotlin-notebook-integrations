@@ -3,6 +3,9 @@ package org.jetbrains.kotlinx.jupyter.widget.model
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.WidgetModelPropertyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.DateType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.DatetimeType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.TimeType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BytesType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
@@ -10,6 +13,9 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 import org.jetbrains.kotlinx.jupyter.widget.protocol.Patch
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalTime
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -122,6 +128,42 @@ public abstract class WidgetModel(
         initialValue: ByteArray = byteArrayOf(),
         echoUpdate: Boolean = true,
     ): ReadWriteProperty<WidgetModel, ByteArray> = prop(name, BytesType, initialValue, echoUpdate)
+
+    protected fun dateProp(
+        name: String,
+        initialValue: LocalDate,
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, LocalDate> = prop(name, DateType, initialValue, echoUpdate)
+
+    protected fun nullableDateProp(
+        name: String,
+        initialValue: LocalDate? = null,
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, LocalDate?> = prop(name, NullableType(DateType), initialValue, echoUpdate)
+
+    protected fun dateTimeProp(
+        name: String,
+        initialValue: Instant,
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, Instant> = prop(name, DatetimeType, initialValue, echoUpdate)
+
+    protected fun nullableDateTimeProp(
+        name: String,
+        initialValue: Instant? = null,
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, Instant?> = prop(name, NullableType(DatetimeType), initialValue, echoUpdate)
+
+    protected fun timeProp(
+        name: String,
+        initialValue: LocalTime,
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, LocalTime> = prop(name, TimeType, initialValue, echoUpdate)
+
+    protected fun nullableTimeProp(
+        name: String,
+        initialValue: LocalTime? = null,
+        echoUpdate: Boolean = true,
+    ): ReadWriteProperty<WidgetModel, LocalTime?> = prop(name, NullableType(TimeType), initialValue, echoUpdate)
 
     protected fun <M : WidgetModel> widgetProp(
         name: String,
