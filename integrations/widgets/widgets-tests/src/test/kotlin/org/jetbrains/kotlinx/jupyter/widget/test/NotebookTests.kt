@@ -9,15 +9,14 @@ import java.io.File
 import kotlin.test.Test
 
 class NotebookTests : AbstractWidgetReplTest() {
-
     @Test
-    fun widgets() = notebookTest(
-        notebookName = "widgets",
-        replacer = {
-            it.replace("WidgetArch.png", "$NOTEBOOK_EXAMPLES_PATH/WidgetArch.png")
-        },
-    )
-
+    fun widgets() =
+        notebookTest(
+            notebookName = "widgets",
+            replacer = {
+                it.replace("WidgetArch.png", "$NOTEBOOK_EXAMPLES_PATH/WidgetArch.png")
+            },
+        )
 
     private fun notebookTest(
         notebookName: String,
@@ -39,9 +38,10 @@ class NotebookTests : AbstractWidgetReplTest() {
         val notebook = JupyterParser.parse(notebookFile)
         val finalClause = cellClause and CellClause.IS_CODE
 
-        val codeCellsData = notebook.cells
-            .filter { finalClause.isAccepted(it) }
-            .map { CodeCellData(it.source, (it as? CodeCell)?.outputs.orEmpty()) }
+        val codeCellsData =
+            notebook.cells
+                .filter { finalClause.isAccepted(it) }
+                .map { CodeCellData(it.source, (it as? CodeCell)?.outputs.orEmpty()) }
 
         try {
             for (codeCellData in codeCellsData) {
@@ -61,7 +61,6 @@ class NotebookTests : AbstractWidgetReplTest() {
             cleanup()
         }
     }
-
 
     companion object {
         const val NOTEBOOK_EXAMPLES_PATH = "../notebooks"
@@ -113,4 +112,7 @@ fun CellClause.Companion.stopAfter(breakClause: CellClause) =
         }
     }
 
-data class CodeCellData(val code: String, val outputs: List<Output>)
+data class CodeCellData(
+    val code: String,
+    val outputs: List<Output>,
+)

@@ -1,5 +1,7 @@
 [*.kt]
 ktlint_standard_filename = disabled
 
-[**/build/generated/**]
+[**/generated/**]
 ktlint = disabled
+generated_code = true
+ij_formatter_enabled = false
