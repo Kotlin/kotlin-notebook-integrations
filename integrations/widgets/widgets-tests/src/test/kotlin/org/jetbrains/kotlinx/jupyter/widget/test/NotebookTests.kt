@@ -72,15 +72,6 @@ fun interface CodeReplacer {
 
     companion object {
         val DEFAULT = CodeReplacer { it }
-
-        fun byMap(replacements: Map<String, String>) =
-            CodeReplacer { code ->
-                replacements.entries.fold(code) { acc, (key, replacement) ->
-                    acc.replace(key, replacement)
-                }
-            }
-
-        fun byMap(vararg replacements: Pair<String, String>): CodeReplacer = byMap(mapOf(*replacements))
     }
 }
 
@@ -100,16 +91,6 @@ infix fun CellClause.and(other: CellClause): CellClause =
         val acceptedThis = this.isAccepted(cell)
         val acceptedOther = other.isAccepted(cell)
         acceptedThis && acceptedOther
-    }
-
-fun CellClause.Companion.stopAfter(breakClause: CellClause) =
-    object : CellClause {
-        var clauseTriggered: Boolean = false
-
-        override fun isAccepted(cell: Cell): Boolean {
-            clauseTriggered = clauseTriggered || breakClause.isAccepted(cell)
-            return !clauseTriggered
-        }
     }
 
 data class CodeCellData(
