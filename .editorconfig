@@ -1,6 +1,8 @@
+# noinspection EditorConfigKeyCorrectness
 [*.kt]
 ktlint_standard_filename = disabled
 
+# noinspection EditorConfigKeyCorrectness
 [**/generated/**]
 ktlint = disabled
 generated_code = true
