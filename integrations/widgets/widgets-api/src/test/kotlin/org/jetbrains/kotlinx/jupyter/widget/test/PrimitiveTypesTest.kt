@@ -62,6 +62,6 @@ class PrimitiveTypesTest {
     }
 
     companion object {
-        private fun notImplemented(): Nothing = error("Not implemented")
+        private fun notImplemented(): Nothing = throw NotImplementedError("Not implemented")
     }
 }
