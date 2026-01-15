@@ -12,7 +12,6 @@ import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonEncoder
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
 
 internal object BufferPathsSerializer : KSerializer<List<List<Any>>> {
@@ -38,7 +37,7 @@ internal object BufferPathsSerializer : KSerializer<List<List<Any>>> {
                         path.map { el ->
                             when (el) {
                                 is String -> JsonPrimitive(el)
-                                is Number -> JsonPrimitive(el)
+                                is Int -> JsonPrimitive(el)
                                 else -> error("Unsupported buffer path element: $el (${el::class.simpleName})")
                             }
                         },
@@ -61,7 +60,7 @@ internal object BufferPathsSerializer : KSerializer<List<List<Any>>> {
             pathEl.map { element ->
                 element as? JsonPrimitive ?: error("Expected JSON primitive inside buffer_paths, got: $element")
                 if (element.isString) return@map element.content
-                element.intOrNull ?: element.doubleOrNull ?: error("Unsupported buffer path element: $element")
+                element.intOrNull ?: error("Unsupported buffer path element: $element")
             }
         }
     }
