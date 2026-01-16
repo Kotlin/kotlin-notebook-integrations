@@ -2,12 +2,15 @@ package org.jetbrains.kotlinx.jupyter.widget.test
 
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
+import org.jetbrains.kotlinx.jupyter.protocol.api.RawMessage
 import org.jetbrains.kotlinx.jupyter.protocol.comms.CommCommunicationFacility
 
 class TestServerCommCommunicationFacility : CommCommunicationFacility {
     private val events = mutableListOf<CommEvent>()
 
     val sentEvents: MutableList<CommEvent> get() = events
+
+    override val contextMessage: RawMessage? get() = null
 
     override fun sendCommOpen(
         commId: String,

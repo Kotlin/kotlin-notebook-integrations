@@ -4,6 +4,7 @@ import io.kotest.matchers.shouldBe
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import org.jetbrains.kotlinx.jupyter.api.DisplayResult
+import org.jetbrains.kotlinx.jupyter.protocol.api.RawMessage
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetFactoryRegistry
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
@@ -15,6 +16,8 @@ class PrimitiveTypesTest {
     private val widgetManager =
         object : WidgetManager {
             override val factoryRegistry: WidgetFactoryRegistry get() = notImplemented()
+
+            override val contextMessage: RawMessage get() = notImplemented()
 
             override var echoUpdateEnabled: Boolean
                 get() = false

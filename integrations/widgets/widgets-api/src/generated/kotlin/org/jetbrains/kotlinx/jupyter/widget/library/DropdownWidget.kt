@@ -4,12 +4,12 @@ package org.jetbrains.kotlinx.jupyter.widget.library
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
+import org.jetbrains.kotlinx.jupyter.widget.model.SelectionWidgetBase
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
@@ -27,21 +27,17 @@ public fun WidgetManager.dropdown(): DropdownWidget = createAndRegisterWidget(Dr
 public class DropdownWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(dropdownSpec, widgetManager) {
+) : SelectionWidgetBase(dropdownSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DropdownWidget>(dropdownSpec, ::DropdownWidget)
 
     /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    /** The labels for the options. */
-    public var optionsLabels: List<String?> by prop("_options_labels", ArrayType(NullableType(StringType)), emptyList())
     /** Description of the control. */
     public var description: String by stringProp("description", "")
     /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
-    /** Selected index */
-    public var index: Int? by nullableIntProp("index", null)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Styling customizations */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())

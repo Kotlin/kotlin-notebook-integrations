@@ -46,7 +46,6 @@ import org.jetbrains.kotlinx.jupyter.widget.library.LabelWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.LayoutWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.LinkWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.NaiveDatetimeWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.OutputWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.PasswordWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.PlayWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ProgressStyleWidget
@@ -115,7 +114,6 @@ import org.jetbrains.kotlinx.jupyter.widget.library.labelStyle
 import org.jetbrains.kotlinx.jupyter.widget.library.layout
 import org.jetbrains.kotlinx.jupyter.widget.library.link
 import org.jetbrains.kotlinx.jupyter.widget.library.naiveDatetime
-import org.jetbrains.kotlinx.jupyter.widget.library.output
 import org.jetbrains.kotlinx.jupyter.widget.library.password
 import org.jetbrains.kotlinx.jupyter.widget.library.play
 import org.jetbrains.kotlinx.jupyter.widget.library.progressStyle
@@ -229,8 +227,6 @@ public fun layoutWidget(): LayoutWidget = globalWidgetManager.layout()
 public fun linkWidget(): LinkWidget = globalWidgetManager.link()
 
 public fun naiveDatetimeWidget(): NaiveDatetimeWidget = globalWidgetManager.naiveDatetime()
-
-public fun outputWidget(): OutputWidget = globalWidgetManager.output()
 
 public fun passwordWidget(): PasswordWidget = globalWidgetManager.password()
 

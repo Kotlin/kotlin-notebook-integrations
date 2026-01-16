@@ -22,6 +22,27 @@ private val hiddenAttributeNames =
         "_view_module_version",
     )
 
+private data class TraitInfo(
+    val baseClassName: String,
+    val traitProperties: Map<String, String?>,
+    val import: String? = null,
+)
+
+private val traits =
+    listOf(
+        TraitInfo(
+            baseClassName = "SelectionWidgetBase",
+            traitProperties =
+                mapOf(
+                    "_options_labels" to null,
+                    "index" to "Int?",
+                ),
+            import = "$WIDGETS_PACKAGE.model.SelectionWidgetBase",
+        ),
+    )
+
+private val baseWidgets = setOf("OutputWidget")
+
 @Serializable
 private data class WidgetSchema(
     val attributes: List<AttributeSchema>,
@@ -82,9 +103,13 @@ private class WidgetGenerator(
             model.name?.removeSuffix("Model")
                 ?: view.name?.removeSuffix("View")
                 ?: error("Either model or view name must be specified")
-        val className = if (baseName.endsWith("Widget")) baseName else "${baseName}Widget"
+        val classNamePrefix = if (baseName.endsWith("Widget")) baseName else "${baseName}Widget"
+
+        val isBaseWidget = classNamePrefix in baseWidgets
+        val className = if (isBaseWidget) "${classNamePrefix}Base" else classNamePrefix
+
         val functionName = baseName.toCamelCase()
-        return WidgetInfo(baseName, className, functionName, this)
+        return WidgetInfo(baseName, className, functionName, isBaseWidget, this)
     }
 
     private fun generateWidgetFile(info: WidgetInfo) {
@@ -92,7 +117,18 @@ private class WidgetGenerator(
         val filePath = apiOutput / packageName.replace('.', '/') / "${info.className}.kt"
         filePath.parent.createDirectories()
 
-        val builder = StringBuilder()
+        val attributeProperties =
+            info.schema.attributes.associate {
+                it.name to it.toPropertyType(json, enums, info.className)
+            }
+        val trait =
+            traits.find { trait ->
+                trait.traitProperties.all { (name, type) ->
+                    val attrType = attributeProperties[name] ?: return@all false
+                    type == null || attrType.kotlinType == type
+                }
+            }
+
         val imports =
             sortedSetOf<String>().apply {
                 for (importName in listOf(
@@ -110,69 +146,90 @@ private class WidgetGenerator(
         val properties =
             info.schema.attributes.mapNotNull { attribute ->
                 if (attribute.name in hiddenAttributeNames) return@mapNotNull null
-                createProperty(info, attribute, helperDeclarations, imports)
+                if (trait != null && attribute.name in trait.traitProperties) return@mapNotNull null
+                val propertyType = attributeProperties[attribute.name]!!
+                createProperty(attribute, propertyType, helperDeclarations, imports)
             }
-
-        builder.addHeader(packageName)
-        if (imports.isNotEmpty()) {
-            for (import in imports) {
-                builder.appendLine("import $import")
-            }
-            builder.appendLine()
-        }
-
-        for (declaration in helperDeclarations) {
-            builder.appendLine(declaration)
-            builder.appendLine()
-        }
 
         val specName = "${info.functionName}Spec"
-        builder.appendLine("private val $specName = WidgetSpec(")
+        val specVisibility = if (info.isBaseWidget) "internal" else "private"
+        val spec =
+            buildString {
+                appendLine("$specVisibility val $specName = WidgetSpec(")
 
-        fun addArgument(
-            name: String,
-            value: String?,
-        ) {
-            builder.appendLine("    $name = ${value?.let { "\"$it\"" } ?: "null"},")
-        }
+                fun addArgument(
+                    name: String,
+                    value: String?,
+                ) {
+                    appendLine("    $name = ${value?.let { "\"$it\"" } ?: "null"},")
+                }
 
-        addArgument("modelName", info.schema.model.name)
-        addArgument("modelModule", info.schema.model.module)
-        addArgument("modelModuleVersion", info.schema.model.version)
-        addArgument("viewName", info.schema.view.name)
-        addArgument("viewModule", info.schema.view.module)
-        addArgument("viewModuleVersion", info.schema.view.version)
-        builder.appendLine(")")
-        builder.appendLine()
+                addArgument("modelName", info.schema.model.name)
+                addArgument("modelModule", info.schema.model.module)
+                addArgument("modelModuleVersion", info.schema.model.version)
+                addArgument("viewName", info.schema.view.name)
+                addArgument("viewModule", info.schema.view.module)
+                addArgument("viewModuleVersion", info.schema.view.version)
+                appendLine(")")
+                appendLine()
 
-        builder.appendLine(
-            "public fun WidgetManager.${info.functionName}(): ${info.className} = createAndRegisterWidget(${info.className}.Factory)",
-        )
-        builder.appendLine()
-        builder.appendLine("public class ${info.className} internal constructor(")
-        builder.appendLine("    widgetManager: WidgetManager,")
-        builder.appendLine("    fromFrontend: Boolean,")
-        builder.appendLine(") : DefaultWidgetModel($specName, widgetManager) {")
-        builder.appendLine("    internal object Factory : DefaultWidgetFactory<${info.className}>($specName, ::${info.className})")
-        builder.appendLine()
+                if (!info.isBaseWidget) {
+                    appendLine(
+                        "public fun WidgetManager.${info.functionName}(): ${info.className} = createAndRegisterWidget(${info.className}.Factory)",
+                    )
+                    appendLine()
+                }
+            }
 
-        for (property in properties) {
-            builder.appendLine(property)
-        }
+        val body =
+            buildString {
+                val abstractModifier = if (info.isBaseWidget) "abstract " else ""
+                val superClassName = trait?.baseClassName ?: "DefaultWidgetModel"
+                if (trait?.import != null) {
+                    imports.add(trait.import)
+                }
 
-        builder.appendLine("}")
+                appendLine("public ${abstractModifier}class ${info.className} internal constructor(")
+                appendLine("    widgetManager: WidgetManager,")
+                appendLine("    fromFrontend: Boolean,")
+                appendLine(") : $superClassName($specName, widgetManager) {")
+                if (!info.isBaseWidget) {
+                    appendLine("    internal object Factory : DefaultWidgetFactory<${info.className}>($specName, ::${info.className})")
+                }
+                appendLine()
 
-        filePath.writeText(builder.toString())
+                for (property in properties) {
+                    appendLine(property)
+                }
+
+                appendLine("}")
+            }
+
+        val header =
+            buildString {
+                addHeader(packageName)
+                if (imports.isNotEmpty()) {
+                    for (import in imports) {
+                        appendLine("import $import")
+                    }
+                    appendLine()
+                }
+
+                for (declaration in helperDeclarations) {
+                    appendLine(declaration)
+                    appendLine()
+                }
+            }
+
+        filePath.writeText(header + spec + body)
     }
 
     private fun createProperty(
-        info: WidgetInfo,
         attribute: AttributeSchema,
+        propertyType: PropertyType,
         helperDeclarations: MutableList<String>,
         imports: MutableSet<String>,
     ): String {
-        val propertyType = attribute.toPropertyType(json, enums, info.className)
-
         imports.addAll(propertyType.imports)
         helperDeclarations.addAll(propertyType.helperDeclarations)
 
@@ -225,7 +282,8 @@ private class WidgetGenerator(
         val filePath = apiOutput / packageName.replace('.', '/') / "DefaultWidgetFactories.kt"
         filePath.parent.createDirectories()
 
-        val sortedInfos = widgetInfos.sortedInImportsOrder { it.className }
+        val registryInfos = widgetInfos.filter { !it.isBaseWidget }
+        val sortedInfos = registryInfos.sortedInImportsOrder { it.className }
         val content =
             buildString {
                 addHeader(packageName)
@@ -249,11 +307,12 @@ private class WidgetGenerator(
         val filePath = jupyterOutput / packageName.replace('.', '/') / "JupyterWidgetLibrary.kt"
         filePath.parent.createDirectories()
 
-        val sortedInfos = widgetInfos.sortedInImportsOrder { it.functionName }
+        val helperInfos = widgetInfos.filter { !it.isBaseWidget }
+        val sortedInfos = helperInfos.sortedInImportsOrder { it.functionName }
         val content =
             buildString {
                 addHeader(packageName)
-                for (info in widgetInfos.sortedInImportsOrder { it.className }) {
+                for (info in helperInfos.sortedInImportsOrder { it.className }) {
                     appendLine("import $WIDGET_LIBRARY_PACKAGE.${info.className}")
                 }
                 for (info in sortedInfos) {
@@ -300,5 +359,6 @@ private data class WidgetInfo(
     val baseName: String,
     val className: String,
     val functionName: String,
+    val isBaseWidget: Boolean,
     val schema: WidgetSchema,
 )

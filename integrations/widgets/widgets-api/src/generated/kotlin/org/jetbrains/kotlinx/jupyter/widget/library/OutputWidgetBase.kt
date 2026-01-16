@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val outputSpec = WidgetSpec(
+internal val outputSpec = WidgetSpec(
     modelName = "OutputModel",
     modelModule = "@jupyter-widgets/output",
     modelModuleVersion = "1.0.0",
@@ -22,13 +22,10 @@ private val outputSpec = WidgetSpec(
     viewModuleVersion = "1.0.0",
 )
 
-public fun WidgetManager.output(): OutputWidget = createAndRegisterWidget(OutputWidget.Factory)
-
-public class OutputWidget internal constructor(
+public abstract class OutputWidgetBase internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
 ) : DefaultWidgetModel(outputSpec, widgetManager) {
-    internal object Factory : DefaultWidgetFactory<OutputWidget>(outputSpec, ::OutputWidget)
 
     /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())

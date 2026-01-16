@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.jupyter.widget
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import org.jetbrains.kotlinx.jupyter.api.DisplayResult
+import org.jetbrains.kotlinx.jupyter.protocol.api.RawMessage
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetFactoryRegistry
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
 
@@ -10,6 +11,8 @@ public interface WidgetManager {
     public val factoryRegistry: WidgetFactoryRegistry
 
     public var echoUpdateEnabled: Boolean
+
+    public val contextMessage: RawMessage?
 
     public fun getWidget(modelId: String): WidgetModel?
 

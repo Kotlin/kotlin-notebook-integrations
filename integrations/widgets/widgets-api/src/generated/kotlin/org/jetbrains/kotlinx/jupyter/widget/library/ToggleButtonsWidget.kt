@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.library.enums.ButtonStyle
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
+import org.jetbrains.kotlinx.jupyter.widget.model.SelectionWidgetBase
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
@@ -12,7 +13,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
@@ -30,13 +30,11 @@ public fun WidgetManager.toggleButtons(): ToggleButtonsWidget = createAndRegiste
 public class ToggleButtonsWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(toggleButtonsSpec, widgetManager) {
+) : SelectionWidgetBase(toggleButtonsSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ToggleButtonsWidget>(toggleButtonsSpec, ::ToggleButtonsWidget)
 
     /** CSS classes applied to widget DOM element */
     public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    /** The labels for the options. */
-    public var optionsLabels: List<String?> by prop("_options_labels", ArrayType(NullableType(StringType)), emptyList())
     /** Use a predefined styling for the buttons. */
     public var buttonStyle: WidgetEnumEntry<ButtonStyle>? by prop("button_style", NullableType(WidgetEnumType(ButtonStyle, ButtonStyle.Default)), ButtonStyle.Default)
     /** Description of the control. */
@@ -47,8 +45,6 @@ public class ToggleButtonsWidget internal constructor(
     public var disabled: Boolean by boolProp("disabled", false)
     /** Icons names for each button (FontAwesome names without the fa- prefix). */
     public var icons: List<String?> by prop("icons", ArrayType(NullableType(StringType)), emptyList())
-    /** Selected index */
-    public var index: Int? by nullableIntProp("index", null)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var style: ToggleButtonsStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.toggleButtonsStyle())
     /** Is widget tabbable? */

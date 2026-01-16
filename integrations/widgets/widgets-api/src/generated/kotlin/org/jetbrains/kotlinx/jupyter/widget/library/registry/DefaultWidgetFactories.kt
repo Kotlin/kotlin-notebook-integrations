@@ -46,7 +46,6 @@ import org.jetbrains.kotlinx.jupyter.widget.library.LabelWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.LayoutWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.LinkWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.NaiveDatetimeWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.OutputWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.PasswordWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.PlayWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ProgressStyleWidget
@@ -118,7 +117,6 @@ internal val defaultWidgetFactories = listOf<WidgetFactory<*>>(
     LayoutWidget.Factory,
     LinkWidget.Factory,
     NaiveDatetimeWidget.Factory,
-    OutputWidget.Factory,
     PasswordWidget.Factory,
     PlayWidget.Factory,
     ProgressStyleWidget.Factory,

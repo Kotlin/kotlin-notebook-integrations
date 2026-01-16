@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.jupyter.api.MimeTypedResultEx
 import org.jetbrains.kotlinx.jupyter.api.MimeTypes
 import org.jetbrains.kotlinx.jupyter.api.libraries.Comm
 import org.jetbrains.kotlinx.jupyter.api.libraries.CommManager
+import org.jetbrains.kotlinx.jupyter.protocol.api.RawMessage
 import org.jetbrains.kotlinx.jupyter.widget.model.DEFAULT_MAJOR_VERSION
 import org.jetbrains.kotlinx.jupyter.widget.model.DEFAULT_MINOR_VERSION
 import org.jetbrains.kotlinx.jupyter.widget.model.DEFAULT_PATCH_VERSION
@@ -50,6 +51,8 @@ public class WidgetManagerImpl(
     private val commByWidget = mutableMapOf<WidgetModel, Comm>()
 
     override val factoryRegistry: WidgetFactoryRegistry = WidgetFactoryRegistry()
+
+    override val contextMessage: RawMessage? get() = commManager.contextMessage
 
     override var echoUpdateEnabled: Boolean =
         System.getenv("JUPYTER_WIDGETS_ECHO")?.let { it.lowercase() == "true" } ?: false
