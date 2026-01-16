@@ -3,7 +3,6 @@
 package org.jetbrains.kotlinx.jupyter.intellij
 
 import com.intellij.jupyter.core.executor.JupyterExecutionListener
-import com.intellij.jupyter.core.jupyter.connections.action.JupyterRestartKernelListener
 import com.intellij.jupyter.core.jupyter.connections.execution.core.JupyterNotebookSession
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationNamesInfo
@@ -48,7 +47,7 @@ class IntelliJPlatformJupyterIntegration : JupyterIntegration() {
 
             val productVersion = ApplicationInfo.getInstance().run { "$majorVersion.$minorVersion" }
             if (productVersion.toVersion() >= MINIMAL_SUPPORTED_IDE_VERSION) {
-                initializeDisposable(notebook)
+                initializeDisposable()
                 initializeIntelliJPlatformClassloader(notebook)
             } else {
                 val productName = ApplicationNamesInfo.getInstance().fullProductName
@@ -95,7 +94,7 @@ class IntelliJPlatformJupyterIntegration : JupyterIntegration() {
         }.excludeUnwantedClasspathEntries()
     }
 
-    private fun KotlinKernelHost.initializeDisposable(notebook: Notebook) {
+    private fun KotlinKernelHost.initializeDisposable() {
         fun disposeIntegration() {
             Disposer.dispose(notebookDisposable)
             displayText("IntelliJ Platform integration is disposed")
@@ -112,16 +111,6 @@ class IntelliJPlatformJupyterIntegration : JupyterIntegration() {
                 },
             )
         } catch (_: LinkageError) {
-            val topic = JupyterRestartKernelListener.TOPIC
-            requireNotNull(currentProjectFromNotebook(notebook))
-                .messageBus
-                .connect(notebookDisposable)
-                .subscribe(
-                    topic,
-                    JupyterRestartKernelListener {
-                        disposeIntegration()
-                    },
-                )
         }
     }
 
