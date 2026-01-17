@@ -3,6 +3,9 @@ package org.jetbrains.kotlinx.jupyter.widget.model.types.compound
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
 
+/**
+ * Property type for generic JSON-like objects (represented as a [Map] in Kotlin).
+ */
 public object RawObjectType : AbstractWidgetModelPropertyType<Map<String, Any?>>("object") {
     override val default: Map<String, Any?> = emptyMap()
 

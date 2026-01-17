@@ -14,7 +14,14 @@ import kotlinx.serialization.json.JsonEncoder
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.intOrNull
 
+/**
+ * Custom serializer for the `buffer_paths` field in the Jupyter Widgets protocol.
+ * `buffer_paths` is a list of paths, where each path is a list of strings (map keys) or integers (list indices).
+ */
 internal object BufferPathsSerializer : KSerializer<List<List<Any>>> {
+    /**
+     * Descriptor for the buffer paths structure.
+     */
     @OptIn(ExperimentalSerializationApi::class)
     override val descriptor: SerialDescriptor =
         listSerialDescriptor(
@@ -23,6 +30,9 @@ internal object BufferPathsSerializer : KSerializer<List<List<Any>>> {
             ),
         )
 
+    /**
+     * Serializes a list of buffer paths to JSON.
+     */
     override fun serialize(
         encoder: Encoder,
         value: List<List<Any>>,

@@ -268,7 +268,9 @@ private class WidgetGenerator(
         return buildString {
             val help = attribute.help
             if (help.isNotEmpty()) {
-                appendLine("    /** $help */")
+                appendLine("    /**")
+                appendLine("     * $help")
+                appendLine("     */")
             }
             append("    public var $propertyName: $kotlinType by $delegateCall")
         }

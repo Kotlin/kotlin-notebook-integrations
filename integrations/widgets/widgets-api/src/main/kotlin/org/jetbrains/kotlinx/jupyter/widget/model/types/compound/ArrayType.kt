@@ -4,7 +4,14 @@ import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.WidgetModelPropertyType
 
+/**
+ * Property type representing a [List].
+ * Serialized as a JSON array in the Jupyter protocol.
+ */
 public class ArrayType<E>(
+    /**
+     * Type information for the elements of the list.
+     */
     public val elementType: WidgetModelPropertyType<E>,
 ) : AbstractWidgetModelPropertyType<List<E>>("array<${elementType.name}>") {
     override val default: List<E> = emptyList()

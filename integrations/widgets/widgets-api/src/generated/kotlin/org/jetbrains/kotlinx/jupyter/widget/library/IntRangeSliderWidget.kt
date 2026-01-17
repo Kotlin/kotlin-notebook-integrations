@@ -36,37 +36,69 @@ public class IntRangeSliderWidget internal constructor(
 ) : DefaultWidgetModel(intRangeSliderSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<IntRangeSliderWidget>(intRangeSliderSpec, ::IntRangeSliderWidget)
 
-    /** CSS classes applied to widget DOM element */
+    /**
+     * CSS classes applied to widget DOM element
+     */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
-    /** Slider dragging behavior. */
+    /**
+     * Slider dragging behavior.
+     */
     public var behavior: WidgetEnumEntry<Behavior> by prop("behavior", WidgetEnumType(Behavior, Behavior.DragTap), Behavior.DragTap)
-    /** Update the value of the widget as the user is sliding the slider. */
+    /**
+     * Update the value of the widget as the user is sliding the slider.
+     */
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
-    /** Description of the control. */
+    /**
+     * Description of the control.
+     */
     public var description: String by stringProp("description", "")
-    /** Accept HTML in the description. */
+    /**
+     * Accept HTML in the description.
+     */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    /** Enable or disable user changes */
+    /**
+     * Enable or disable user changes
+     */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    /** Max value */
+    /**
+     * Max value
+     */
     public var max: Int by intProp("max", 100)
-    /** Min value */
+    /**
+     * Min value
+     */
     public var min: Int by intProp("min", 0)
-    /** Vertical or horizontal. */
+    /**
+     * Vertical or horizontal.
+     */
     public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
-    /** Display the current value of the slider next to it. */
+    /**
+     * Display the current value of the slider next to it.
+     */
     public var readout: Boolean by boolProp("readout", true)
-    /** Format for the readout */
+    /**
+     * Format for the readout
+     */
     public var readoutFormat: String by stringProp("readout_format", "d")
-    /** Minimum step that the value can take */
+    /**
+     * Minimum step that the value can take
+     */
     public var step: Int by intProp("step", 1)
-    /** Slider style customizations. */
+    /**
+     * Slider style customizations.
+     */
     public var style: SliderStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.sliderStyle())
-    /** Is widget tabbable? */
+    /**
+     * Is widget tabbable?
+     */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-    /** A tooltip caption. */
+    /**
+     * A tooltip caption.
+     */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    /** Tuple of (lower, upper) bounds */
+    /**
+     * Tuple of (lower, upper) bounds
+     */
     public var value: IntRange? by prop("value", NullableType(IntRangeType), 0..1)
 }

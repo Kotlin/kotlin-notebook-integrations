@@ -27,8 +27,12 @@ public class CheckboxStyleWidget internal constructor(
 ) : DefaultWidgetModel(checkboxStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<CheckboxStyleWidget>(checkboxStyleSpec, ::CheckboxStyleWidget)
 
-    /** Background specifications. */
+    /**
+     * Background specifications.
+     */
     public var background: String? by nullableStringProp("background", null)
-    /** Width of the description to the side of the control. */
+    /**
+     * Width of the description to the side of the control.
+     */
     public var descriptionWidth: String by stringProp("description_width", "")
 }

@@ -27,8 +27,12 @@ public class SliderStyleWidget internal constructor(
 ) : DefaultWidgetModel(sliderStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<SliderStyleWidget>(sliderStyleSpec, ::SliderStyleWidget)
 
-    /** Width of the description to the side of the control. */
+    /**
+     * Width of the description to the side of the control.
+     */
     public var descriptionWidth: String by stringProp("description_width", "")
-    /** Color of the slider handle. */
+    /**
+     * Color of the slider handle.
+     */
     public var handleColor: String? by nullableStringProp("handle_color", null)
 }

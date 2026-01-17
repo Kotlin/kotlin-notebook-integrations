@@ -12,6 +12,10 @@ import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlin.collections.iterator
 
+/**
+ * Converts a [Patch] (Map<String, Any?>) to its JSON representation.
+ * Note: [ByteArray] values are serialized as [JsonNull] because they should be handled via binary buffers.
+ */
 internal fun serializeJsonMap(map: Patch): JsonElement = serialize(map)
 
 private fun serializeAny(obj: Any?): JsonElement =
@@ -22,7 +26,7 @@ private fun serializeAny(obj: Any?): JsonElement =
         is String -> JsonPrimitive(obj)
         is Boolean -> JsonPrimitive(obj)
         is Number -> JsonPrimitive(obj)
-        is ByteArray -> JsonNull
+        is ByteArray -> JsonNull // Binary data is sent separately in the 'buffers' field
         else -> error("Don't know how to serialize object [$obj] of class ${obj::class}")
     }
 
@@ -41,6 +45,9 @@ private fun serialize(list: List<*>): JsonArray =
         }
     }
 
+/**
+ * Converts a JSON element back to a mutable map of property values.
+ */
 internal fun deserializeJsonMap(json: JsonElement): MutableMap<String, Any?> {
     if (json !is JsonObject) error("Input json should be a key-value object, but it's $json")
     return deserializeMap(json)

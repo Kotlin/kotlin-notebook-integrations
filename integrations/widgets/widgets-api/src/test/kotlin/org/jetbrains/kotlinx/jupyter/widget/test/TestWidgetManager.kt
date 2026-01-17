@@ -21,6 +21,8 @@ interface TestWidgetManager : WidgetManager {
 
     override fun registerWidget(widget: WidgetModel) = notImplemented()
 
+    override fun closeWidget(widget: WidgetModel) = notImplemented()
+
     override fun renderWidget(widget: WidgetModel): DisplayResult = notImplemented()
 
     override fun sendCustomMessage(

@@ -34,30 +34,54 @@ public class FileUploadWidget internal constructor(
 ) : DefaultWidgetModel(fileUploadSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<FileUploadWidget>(fileUploadSpec, ::FileUploadWidget)
 
-    /** CSS classes applied to widget DOM element */
+    /**
+     * CSS classes applied to widget DOM element
+     */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
-    /** File types to accept, empty string for all */
+    /**
+     * File types to accept, empty string for all
+     */
     public var accept: String by stringProp("accept", "")
-    /** Use a predefined styling for the button. */
+    /**
+     * Use a predefined styling for the button.
+     */
     public var buttonStyle: WidgetEnumEntry<ButtonStyle> by prop("button_style", WidgetEnumType(ButtonStyle, ButtonStyle.Default), ButtonStyle.Default)
-    /** Description of the control. */
+    /**
+     * Description of the control.
+     */
     public var description: String by stringProp("description", "")
-    /** Accept HTML in the description. */
+    /**
+     * Accept HTML in the description.
+     */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    /** Enable or disable button */
+    /**
+     * Enable or disable button
+     */
     public var disabled: Boolean by boolProp("disabled", false)
-    /** Error message */
+    /**
+     * Error message
+     */
     public var error: String by stringProp("error", "")
-    /** Font-awesome icon name, without the 'fa-' prefix. */
+    /**
+     * Font-awesome icon name, without the 'fa-' prefix.
+     */
     public var icon: String by stringProp("icon", "upload")
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    /** If True, allow for multiple files upload */
+    /**
+     * If True, allow for multiple files upload
+     */
     public var multiple: Boolean by boolProp("multiple", false)
     public var style: ButtonStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.buttonStyle())
-    /** Is widget tabbable? */
+    /**
+     * Is widget tabbable?
+     */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-    /** A tooltip caption. */
+    /**
+     * A tooltip caption.
+     */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    /** The file upload value */
+    /**
+     * The file upload value
+     */
     public var value: List<Map<String, Any?>> by prop("value", ArrayType(RawObjectType), emptyList())
 }

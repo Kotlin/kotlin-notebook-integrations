@@ -27,22 +27,40 @@ public class LabelStyleWidget internal constructor(
 ) : DefaultWidgetModel(labelStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LabelStyleWidget>(labelStyleSpec, ::LabelStyleWidget)
 
-    /** Background specifications. */
+    /**
+     * Background specifications.
+     */
     public var background: String? by nullableStringProp("background", null)
-    /** Width of the description to the side of the control. */
+    /**
+     * Width of the description to the side of the control.
+     */
     public var descriptionWidth: String by stringProp("description_width", "")
-    /** Label text font family. */
+    /**
+     * Label text font family.
+     */
     public var fontFamily: String? by nullableStringProp("font_family", null)
-    /** Text font size. */
+    /**
+     * Text font size.
+     */
     public var fontSize: String? by nullableStringProp("font_size", null)
-    /** Label text font style. */
+    /**
+     * Label text font style.
+     */
     public var fontStyle: String? by nullableStringProp("font_style", null)
-    /** Label text font variant. */
+    /**
+     * Label text font variant.
+     */
     public var fontVariant: String? by nullableStringProp("font_variant", null)
-    /** Label text font weight. */
+    /**
+     * Label text font weight.
+     */
     public var fontWeight: String? by nullableStringProp("font_weight", null)
-    /** Text color */
+    /**
+     * Text color
+     */
     public var textColor: String? by nullableStringProp("text_color", null)
-    /** Label text decoration. */
+    /**
+     * Label text decoration.
+     */
     public var textDecoration: String? by nullableStringProp("text_decoration", null)
 }

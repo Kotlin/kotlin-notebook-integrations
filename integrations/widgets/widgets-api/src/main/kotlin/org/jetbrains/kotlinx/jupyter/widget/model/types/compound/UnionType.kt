@@ -3,17 +3,29 @@ package org.jetbrains.kotlinx.jupyter.widget.model.types.compound
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
 
+/**
+ * Property type for values that can be of multiple different types (e.g., Int or String).
+ *
+ * It uses a list of [deserializers] and returns the result of the first one that completes without an exception.
+ */
 public class UnionType<T>(
     name: String,
     override val default: T,
     private val serializer: (T, WidgetManager) -> Any?,
     private val deserializers: List<(Any?, WidgetManager) -> T>,
 ) : AbstractWidgetModelPropertyType<T>(name) {
+    /**
+     * Serializes the value using the provided [serializer] function.
+     */
     override fun serialize(
         propertyValue: T,
         widgetManager: WidgetManager,
     ): Any? = serializer(propertyValue, widgetManager)
 
+    /**
+     * Attempts to deserialize the value by trying all provided [deserializers] in order.
+     * Throws an [IllegalStateException] if no deserializer succeeds.
+     */
     override fun deserialize(
         patchValue: Any?,
         widgetManager: WidgetManager,

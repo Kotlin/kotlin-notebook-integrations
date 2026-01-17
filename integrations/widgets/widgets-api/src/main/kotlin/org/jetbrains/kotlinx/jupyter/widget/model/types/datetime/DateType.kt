@@ -6,6 +6,10 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
 
+/**
+ * Property type for [LocalDate].
+ * Serialized as an ISO-8601 string, e.g., "2023-01-01".
+ */
 public object DateType : AbstractWidgetModelPropertyType<LocalDate>("date") {
     override val default: LocalDate = LocalDate.EPOCH
 

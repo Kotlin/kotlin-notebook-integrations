@@ -35,26 +35,46 @@ public class IntProgressWidget internal constructor(
 ) : DefaultWidgetModel(intProgressSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<IntProgressWidget>(intProgressSpec, ::IntProgressWidget)
 
-    /** CSS classes applied to widget DOM element */
+    /**
+     * CSS classes applied to widget DOM element
+     */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
-    /** Use a predefined styling for the progress bar. */
+    /**
+     * Use a predefined styling for the progress bar.
+     */
     public var barStyle: WidgetEnumEntry<BarStyle> by prop("bar_style", WidgetEnumType(BarStyle, BarStyle.Default), BarStyle.Default)
-    /** Description of the control. */
+    /**
+     * Description of the control.
+     */
     public var description: String by stringProp("description", "")
-    /** Accept HTML in the description. */
+    /**
+     * Accept HTML in the description.
+     */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    /** Max value */
+    /**
+     * Max value
+     */
     public var max: Int by intProp("max", 100)
-    /** Min value */
+    /**
+     * Min value
+     */
     public var min: Int by intProp("min", 0)
-    /** Vertical or horizontal. */
+    /**
+     * Vertical or horizontal.
+     */
     public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
     public var style: ProgressStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.progressStyle())
-    /** Is widget tabbable? */
+    /**
+     * Is widget tabbable?
+     */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-    /** A tooltip caption. */
+    /**
+     * A tooltip caption.
+     */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    /** Int value */
+    /**
+     * Int value
+     */
     public var value: Int by intProp("value", 0)
 }

@@ -31,26 +31,46 @@ public class TextareaWidget internal constructor(
 ) : DefaultWidgetModel(textareaSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<TextareaWidget>(textareaSpec, ::TextareaWidget)
 
-    /** CSS classes applied to widget DOM element */
+    /**
+     * CSS classes applied to widget DOM element
+     */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
-    /** Update the value as the user types. If False, update on submission, e.g., pressing Enter or navigating away. */
+    /**
+     * Update the value as the user types. If False, update on submission, e.g., pressing Enter or navigating away.
+     */
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
-    /** Description of the control. */
+    /**
+     * Description of the control.
+     */
     public var description: String by stringProp("description", "")
-    /** Accept HTML in the description. */
+    /**
+     * Accept HTML in the description.
+     */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    /** Enable or disable user changes */
+    /**
+     * Enable or disable user changes
+     */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    /** Placeholder text to display when nothing has been typed */
+    /**
+     * Placeholder text to display when nothing has been typed
+     */
     public var placeholder: String by stringProp("placeholder", "​")
-    /** The number of rows to display. */
+    /**
+     * The number of rows to display.
+     */
     public var rows: Int? by nullableIntProp("rows", null)
     public var style: TextStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.textStyle())
-    /** Is widget tabbable? */
+    /**
+     * Is widget tabbable?
+     */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-    /** A tooltip caption. */
+    /**
+     * A tooltip caption.
+     */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    /** String value */
+    /**
+     * String value
+     */
     public var value: String by stringProp("value", "")
 }

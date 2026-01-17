@@ -6,9 +6,19 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPrope
 
 private const val WIDGET_REF_PREFIX = "IPY_MODEL_"
 
+/**
+ * Property type for referencing other widgets.
+ * In the Jupyter protocol, widget references are strings prefixed with "IPY_MODEL_".
+ */
 public class WidgetReferenceType<M : WidgetModel> : AbstractWidgetModelPropertyType<M>("widget-ref") {
+    /**
+     * References do not have a sensible default value.
+     */
     override val default: M get() = error("No default value for widget-ref")
 
+    /**
+     * Serializes a [WidgetModel] into its string ID representation.
+     */
     override fun serialize(
         propertyValue: M,
         widgetManager: WidgetManager,

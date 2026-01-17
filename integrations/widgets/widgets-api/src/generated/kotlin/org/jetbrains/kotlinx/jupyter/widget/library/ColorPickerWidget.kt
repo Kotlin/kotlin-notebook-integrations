@@ -30,23 +30,41 @@ public class ColorPickerWidget internal constructor(
 ) : DefaultWidgetModel(colorPickerSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ColorPickerWidget>(colorPickerSpec, ::ColorPickerWidget)
 
-    /** CSS classes applied to widget DOM element */
+    /**
+     * CSS classes applied to widget DOM element
+     */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
-    /** Display short version with just a color selector. */
+    /**
+     * Display short version with just a color selector.
+     */
     public var concise: Boolean by boolProp("concise", false)
-    /** Description of the control. */
+    /**
+     * Description of the control.
+     */
     public var description: String by stringProp("description", "")
-    /** Accept HTML in the description. */
+    /**
+     * Accept HTML in the description.
+     */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    /** Enable or disable user changes. */
+    /**
+     * Enable or disable user changes.
+     */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    /** Styling customizations */
+    /**
+     * Styling customizations
+     */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
-    /** Is widget tabbable? */
+    /**
+     * Is widget tabbable?
+     */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-    /** A tooltip caption. */
+    /**
+     * A tooltip caption.
+     */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    /** The color value. */
+    /**
+     * The color value.
+     */
     public var value: String by stringProp("value", "black")
 }

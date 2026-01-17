@@ -30,8 +30,12 @@ public class LinkWidget internal constructor(
 ) : DefaultWidgetModel(linkSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LinkWidget>(linkSpec, ::LinkWidget)
 
-    /** The source (widget, 'trait_name') pair */
+    /**
+     * The source (widget, 'trait_name') pair
+     */
     public var source: Pair<WidgetModel?, String>? by prop("source", NullableType(PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType)), null to "")
-    /** The target (widget, 'trait_name') pair */
+    /**
+     * The target (widget, 'trait_name') pair
+     */
     public var target: Pair<WidgetModel?, String>? by prop("target", NullableType(PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType)), null to "")
 }

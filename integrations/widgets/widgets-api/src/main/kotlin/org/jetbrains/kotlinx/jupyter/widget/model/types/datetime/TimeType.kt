@@ -6,6 +6,10 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
 
+/**
+ * Property type for [LocalTime].
+ * Serialized as an ISO-8601 string, e.g., "12:00:00".
+ */
 public object TimeType : AbstractWidgetModelPropertyType<LocalTime>("time") {
     override val default: LocalTime = LocalTime.MIDNIGHT
 

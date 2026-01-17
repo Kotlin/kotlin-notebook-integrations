@@ -34,15 +34,25 @@ public class VBoxWidget internal constructor(
 ) : DefaultWidgetModel(vboxSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<VBoxWidget>(vboxSpec, ::VBoxWidget)
 
-    /** CSS classes applied to widget DOM element */
+    /**
+     * CSS classes applied to widget DOM element
+     */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
-    /** Use a predefined styling for the box. */
+    /**
+     * Use a predefined styling for the box.
+     */
     public var boxStyle: WidgetEnumEntry<BoxStyle> by prop("box_style", WidgetEnumType(BoxStyle, BoxStyle.Default), BoxStyle.Default)
-    /** List of widget children */
+    /**
+     * List of widget children
+     */
     public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    /** Is widget tabbable? */
+    /**
+     * Is widget tabbable?
+     */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-    /** A tooltip caption. */
+    /**
+     * A tooltip caption.
+     */
     public var tooltip: String? by nullableStringProp("tooltip", null)
 }

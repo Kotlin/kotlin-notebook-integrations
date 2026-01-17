@@ -8,7 +8,14 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
 
+/**
+ * Property type for [Instant].
+ * Serialized as an ISO-8601 string in UTC, e.g., "2023-01-01T12:00:00Z".
+ */
 public object DatetimeType : AbstractWidgetModelPropertyType<Instant>("datetime") {
+    /**
+     * Default value is [Instant.EPOCH].
+     */
     override val default: Instant = Instant.EPOCH
 
     private val formatter: DateTimeFormatter =

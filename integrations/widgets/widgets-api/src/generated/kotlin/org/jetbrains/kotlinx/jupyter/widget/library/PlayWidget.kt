@@ -31,35 +31,65 @@ public class PlayWidget internal constructor(
 ) : DefaultWidgetModel(playSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<PlayWidget>(playSpec, ::PlayWidget)
 
-    /** CSS classes applied to widget DOM element */
+    /**
+     * CSS classes applied to widget DOM element
+     */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
-    /** Description of the control. */
+    /**
+     * Description of the control.
+     */
     public var description: String by stringProp("description", "")
-    /** Accept HTML in the description. */
+    /**
+     * Accept HTML in the description.
+     */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    /** Enable or disable user changes */
+    /**
+     * Enable or disable user changes
+     */
     public var disabled: Boolean by boolProp("disabled", false)
-    /** The time between two animation steps (ms). */
+    /**
+     * The time between two animation steps (ms).
+     */
     public var interval: Int by intProp("interval", 100)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    /** Max value */
+    /**
+     * Max value
+     */
     public var max: Int by intProp("max", 100)
-    /** Min value */
+    /**
+     * Min value
+     */
     public var min: Int by intProp("min", 0)
-    /** Whether the control is currently playing. */
+    /**
+     * Whether the control is currently playing.
+     */
     public var playing: Boolean by boolProp("playing", false)
-    /** Whether the control will repeat in a continuous loop. */
+    /**
+     * Whether the control will repeat in a continuous loop.
+     */
     public var repeat: Boolean by boolProp("repeat", false)
-    /** Show the repeat toggle button in the widget. */
+    /**
+     * Show the repeat toggle button in the widget.
+     */
     public var showRepeat: Boolean by boolProp("show_repeat", true)
-    /** Increment step */
+    /**
+     * Increment step
+     */
     public var step: Int by intProp("step", 1)
-    /** Styling customizations */
+    /**
+     * Styling customizations
+     */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
-    /** Is widget tabbable? */
+    /**
+     * Is widget tabbable?
+     */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-    /** A tooltip caption. */
+    /**
+     * A tooltip caption.
+     */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    /** Int value */
+    /**
+     * Int value
+     */
     public var value: Int by intProp("value", 0)
 }

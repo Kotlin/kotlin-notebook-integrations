@@ -6,16 +6,32 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonClassDiscriminator
 import kotlinx.serialization.json.JsonObject
 
+/**
+ * Base interface for messages exchanged between the frontend and backend via Comms.
+ * These follow the Jupyter Widgets protocol.
+ */
 @OptIn(ExperimentalSerializationApi::class)
 @JsonClassDiscriminator("method")
 @Serializable
 internal sealed interface WidgetMessage
 
+/**
+ * Interface for messages that contain binary buffer path information.
+ */
 internal interface WithBufferPaths {
+    /**
+     * Paths where binary data should be inserted.
+     */
     val bufferPaths: List<List<Any>>
 }
 
+/**
+ * Interface for messages that contain the widget's property state.
+ */
 internal interface WidgetStateMessage : WithBufferPaths {
+    /**
+     * The property state of the widget.
+     */
     val state: JsonObject
 }
 

@@ -4,6 +4,10 @@ import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.WidgetModelPropertyType
 
+/**
+ * Property type for nullable values.
+ * Wraps an [inner] type and handles `null` values by serializing them as `null` in JSON.
+ */
 public class NullableType<T>(
     private val inner: WidgetModelPropertyType<T>,
 ) : AbstractWidgetModelPropertyType<T?>("${inner.name}?") {

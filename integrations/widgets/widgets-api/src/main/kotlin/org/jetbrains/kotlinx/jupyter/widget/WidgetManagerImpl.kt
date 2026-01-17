@@ -40,6 +40,10 @@ private val widgetOpenMetadataJson =
         put("version", "${DEFAULT_MAJOR_VERSION}.${DEFAULT_MINOR_VERSION}.${DEFAULT_PATCH_VERSION}")
     }
 
+/**
+ * Implementation of [WidgetManager] that interfaces with the [CommManager]
+ * to provide real-time synchronization between Kotlin and Jupyter frontend.
+ */
 public class WidgetManagerImpl(
     private val commManager: CommManager,
     private val classLoaderProvider: () -> ClassLoader,
@@ -54,6 +58,9 @@ public class WidgetManagerImpl(
 
     override val contextMessage: RawMessage? get() = commManager.contextMessage
 
+    /**
+     * Echo update can be enabled via the `JUPYTER_WIDGETS_ECHO` environment variable.
+     */
     override var echoUpdateEnabled: Boolean =
         System.getenv("JUPYTER_WIDGETS_ECHO")?.let { it.lowercase() == "true" } ?: false
 
@@ -117,6 +124,11 @@ public class WidgetManagerImpl(
             )
 
         initializeWidget(comm, widget)
+    }
+
+    override fun closeWidget(widget: WidgetModel) {
+        val comm = commByWidget[widget] ?: return
+        comm.close()
     }
 
     override fun renderWidget(widget: WidgetModel): DisplayResult =

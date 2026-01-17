@@ -31,21 +31,37 @@ public class AudioWidget internal constructor(
 ) : DefaultWidgetModel(audioSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<AudioWidget>(audioSpec, ::AudioWidget)
 
-    /** CSS classes applied to widget DOM element */
+    /**
+     * CSS classes applied to widget DOM element
+     */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
-    /** When true, the audio starts when it's displayed */
+    /**
+     * When true, the audio starts when it's displayed
+     */
     public var autoplay: Boolean by boolProp("autoplay", true)
-    /** Specifies that audio controls should be displayed (such as a play/pause button etc) */
+    /**
+     * Specifies that audio controls should be displayed (such as a play/pause button etc)
+     */
     public var controls: Boolean by boolProp("controls", true)
-    /** The format of the audio. */
+    /**
+     * The format of the audio.
+     */
     public var format: String by stringProp("format", "mp3")
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    /** When true, the audio will start from the beginning after finishing */
+    /**
+     * When true, the audio will start from the beginning after finishing
+     */
     public var loop: Boolean by boolProp("loop", true)
-    /** Is widget tabbable? */
+    /**
+     * Is widget tabbable?
+     */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-    /** A tooltip caption. */
+    /**
+     * A tooltip caption.
+     */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    /** The media data as a memory view of bytes. */
+    /**
+     * The media data as a memory view of bytes.
+     */
     public var value: ByteArray by bytesProp("value", byteArrayOf())
 }

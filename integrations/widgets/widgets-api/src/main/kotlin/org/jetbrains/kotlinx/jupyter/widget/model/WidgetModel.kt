@@ -21,6 +21,10 @@ import java.time.LocalTime
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
+/**
+ * Base class for all widget models.
+ * Manages properties, state synchronization, and messaging.
+ */
 public abstract class WidgetModel(
     protected val widgetManager: WidgetManager,
 ) {
@@ -28,10 +32,22 @@ public abstract class WidgetModel(
     private val changeListeners = mutableListOf<(Patch, Boolean) -> Unit>()
     private val customMessageListeners = mutableListOf<CustomMessageListener>()
 
+    /**
+     * Retrieves a property by name.
+     */
     public fun getProperty(name: String): WidgetModelProperty<*>? = properties[name]
 
+    /**
+     * Returns the full serialized state of all properties.
+     */
     public fun getFullState(): Patch = properties.mapValues { (_, property) -> property.serializedValue }
 
+    /**
+     * Sends a custom message to the frontend.
+     * @param content Message payload.
+     * @param metadata Optional message metadata.
+     * @param buffers Optional binary buffers.
+     */
     public fun sendCustomMessage(
         content: JsonObject,
         metadata: JsonElement? = null,
@@ -54,10 +70,16 @@ public abstract class WidgetModel(
         }
     }
 
+    /**
+     * Applies a state update received from the frontend.
+     */
     public fun applyFrontendPatch(patch: Patch) {
         applyPatchImpl(patch, fromFrontend = true)
     }
 
+    /**
+     * Applies a state update locally.
+     */
     public fun applyPatch(patch: Patch) {
         applyPatchImpl(patch, fromFrontend = false)
     }
@@ -72,6 +94,9 @@ public abstract class WidgetModel(
         }
     }
 
+    /**
+     * Adds a listener for state changes (both local and from frontend).
+     */
     public fun addChangeListener(listener: (Patch, fromFrontend: Boolean) -> Unit) {
         changeListeners.add(listener)
     }
@@ -92,6 +117,14 @@ public abstract class WidgetModel(
         }
     }
 
+    /**
+     * Creates a property delegate.
+     * @param echoUpdate If true, updates from frontend are echoed back.
+     *
+     * Note: While thread safety is not explicitly guaranteed, property updates
+     * from multiple threads should generally be safe as long as the underlying
+     * kernel messaging protocol is thread-safe.
+     */
     protected fun <T> prop(
         name: String,
         type: WidgetModelPropertyType<T>,
@@ -226,19 +259,46 @@ public abstract class WidgetModel(
     }
 }
 
+/**
+ * Represents a single property of a widget model.
+ */
 public interface WidgetModelProperty<T> {
+    /**
+     * Name of the property as it appears in the Jupyter protocol.
+     */
     public val name: String
+
+    /**
+     * Type information for serialization and validation.
+     */
     public val type: WidgetModelPropertyType<T>
+
+    /**
+     * Current value of the property.
+     */
     public var value: T
+
+    /**
+     * If true, updates from the frontend are echoed back.
+     */
     public var echoUpdate: Boolean
 
+    /**
+     * Current value serialized for the Jupyter protocol.
+     */
     public val serializedValue: Any?
 
+    /**
+     * Applies a new value received via the Jupyter protocol.
+     */
     public fun applyPatch(
         patch: Any?,
         fromFrontend: Boolean = false,
     )
 
+    /**
+     * Adds a listener for changes to this property.
+     */
     public fun addChangeListener(listener: (Any?, fromFrontend: Boolean) -> Unit)
 }
 

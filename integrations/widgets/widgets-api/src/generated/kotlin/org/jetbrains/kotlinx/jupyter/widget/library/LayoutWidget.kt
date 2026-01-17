@@ -37,82 +37,160 @@ public class LayoutWidget internal constructor(
 ) : DefaultWidgetModel(layoutSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<LayoutWidget>(layoutSpec, ::LayoutWidget)
 
-    /** The align-content CSS attribute. */
+    /**
+     * The align-content CSS attribute.
+     */
     public var alignContent: WidgetEnumEntry<AlignContent>? by prop("align_content", NullableType(WidgetEnumType(AlignContent, AlignContent.FlexStart)), null)
-    /** The align-items CSS attribute. */
+    /**
+     * The align-items CSS attribute.
+     */
     public var alignItems: WidgetEnumEntry<AlignItems>? by prop("align_items", NullableType(WidgetEnumType(AlignItems, AlignItems.FlexStart)), null)
-    /** The align-self CSS attribute. */
+    /**
+     * The align-self CSS attribute.
+     */
     public var alignSelf: WidgetEnumEntry<AlignSelf>? by prop("align_self", NullableType(WidgetEnumType(AlignSelf, AlignSelf.Auto)), null)
-    /** The border bottom CSS attribute. */
+    /**
+     * The border bottom CSS attribute.
+     */
     public var borderBottom: String? by nullableStringProp("border_bottom", null)
-    /** The border left CSS attribute. */
+    /**
+     * The border left CSS attribute.
+     */
     public var borderLeft: String? by nullableStringProp("border_left", null)
-    /** The border right CSS attribute. */
+    /**
+     * The border right CSS attribute.
+     */
     public var borderRight: String? by nullableStringProp("border_right", null)
-    /** The border top CSS attribute. */
+    /**
+     * The border top CSS attribute.
+     */
     public var borderTop: String? by nullableStringProp("border_top", null)
-    /** The bottom CSS attribute. */
+    /**
+     * The bottom CSS attribute.
+     */
     public var bottom: String? by nullableStringProp("bottom", null)
-    /** The display CSS attribute. */
+    /**
+     * The display CSS attribute.
+     */
     public var display: String? by nullableStringProp("display", null)
-    /** The flex CSS attribute. */
+    /**
+     * The flex CSS attribute.
+     */
     public var flex: String? by nullableStringProp("flex", null)
-    /** The flex-flow CSS attribute. */
+    /**
+     * The flex-flow CSS attribute.
+     */
     public var flexFlow: String? by nullableStringProp("flex_flow", null)
-    /** The grid-area CSS attribute. */
+    /**
+     * The grid-area CSS attribute.
+     */
     public var gridArea: String? by nullableStringProp("grid_area", null)
-    /** The grid-auto-columns CSS attribute. */
+    /**
+     * The grid-auto-columns CSS attribute.
+     */
     public var gridAutoColumns: String? by nullableStringProp("grid_auto_columns", null)
-    /** The grid-auto-flow CSS attribute. */
+    /**
+     * The grid-auto-flow CSS attribute.
+     */
     public var gridAutoFlow: WidgetEnumEntry<GridAutoFlow>? by prop("grid_auto_flow", NullableType(WidgetEnumType(GridAutoFlow, GridAutoFlow.Column)), null)
-    /** The grid-auto-rows CSS attribute. */
+    /**
+     * The grid-auto-rows CSS attribute.
+     */
     public var gridAutoRows: String? by nullableStringProp("grid_auto_rows", null)
-    /** The grid-column CSS attribute. */
+    /**
+     * The grid-column CSS attribute.
+     */
     public var gridColumn: String? by nullableStringProp("grid_column", null)
-    /** The grid-gap CSS attribute. */
+    /**
+     * The grid-gap CSS attribute.
+     */
     public var gridGap: String? by nullableStringProp("grid_gap", null)
-    /** The grid-row CSS attribute. */
+    /**
+     * The grid-row CSS attribute.
+     */
     public var gridRow: String? by nullableStringProp("grid_row", null)
-    /** The grid-template-areas CSS attribute. */
+    /**
+     * The grid-template-areas CSS attribute.
+     */
     public var gridTemplateAreas: String? by nullableStringProp("grid_template_areas", null)
-    /** The grid-template-columns CSS attribute. */
+    /**
+     * The grid-template-columns CSS attribute.
+     */
     public var gridTemplateColumns: String? by nullableStringProp("grid_template_columns", null)
-    /** The grid-template-rows CSS attribute. */
+    /**
+     * The grid-template-rows CSS attribute.
+     */
     public var gridTemplateRows: String? by nullableStringProp("grid_template_rows", null)
-    /** The height CSS attribute. */
+    /**
+     * The height CSS attribute.
+     */
     public var height: String? by nullableStringProp("height", null)
-    /** The justify-content CSS attribute. */
+    /**
+     * The justify-content CSS attribute.
+     */
     public var justifyContent: WidgetEnumEntry<JustifyContent>? by prop("justify_content", NullableType(WidgetEnumType(JustifyContent, JustifyContent.FlexStart)), null)
-    /** The justify-items CSS attribute. */
+    /**
+     * The justify-items CSS attribute.
+     */
     public var justifyItems: WidgetEnumEntry<JustifyItems>? by prop("justify_items", NullableType(WidgetEnumType(JustifyItems, JustifyItems.FlexStart)), null)
-    /** The left CSS attribute. */
+    /**
+     * The left CSS attribute.
+     */
     public var left: String? by nullableStringProp("left", null)
-    /** The margin CSS attribute. */
+    /**
+     * The margin CSS attribute.
+     */
     public var margin: String? by nullableStringProp("margin", null)
-    /** The max-height CSS attribute. */
+    /**
+     * The max-height CSS attribute.
+     */
     public var maxHeight: String? by nullableStringProp("max_height", null)
-    /** The max-width CSS attribute. */
+    /**
+     * The max-width CSS attribute.
+     */
     public var maxWidth: String? by nullableStringProp("max_width", null)
-    /** The min-height CSS attribute. */
+    /**
+     * The min-height CSS attribute.
+     */
     public var minHeight: String? by nullableStringProp("min_height", null)
-    /** The min-width CSS attribute. */
+    /**
+     * The min-width CSS attribute.
+     */
     public var minWidth: String? by nullableStringProp("min_width", null)
-    /** The object-fit CSS attribute. */
+    /**
+     * The object-fit CSS attribute.
+     */
     public var objectFit: WidgetEnumEntry<ObjectFit>? by prop("object_fit", NullableType(WidgetEnumType(ObjectFit, ObjectFit.Contain)), null)
-    /** The object-position CSS attribute. */
+    /**
+     * The object-position CSS attribute.
+     */
     public var objectPosition: String? by nullableStringProp("object_position", null)
-    /** The order CSS attribute. */
+    /**
+     * The order CSS attribute.
+     */
     public var order: String? by nullableStringProp("order", null)
-    /** The overflow CSS attribute. */
+    /**
+     * The overflow CSS attribute.
+     */
     public var overflow: String? by nullableStringProp("overflow", null)
-    /** The padding CSS attribute. */
+    /**
+     * The padding CSS attribute.
+     */
     public var padding: String? by nullableStringProp("padding", null)
-    /** The right CSS attribute. */
+    /**
+     * The right CSS attribute.
+     */
     public var right: String? by nullableStringProp("right", null)
-    /** The top CSS attribute. */
+    /**
+     * The top CSS attribute.
+     */
     public var top: String? by nullableStringProp("top", null)
-    /** The visibility CSS attribute. */
+    /**
+     * The visibility CSS attribute.
+     */
     public var visibility: WidgetEnumEntry<Visibility>? by prop("visibility", NullableType(WidgetEnumType(Visibility, Visibility.Visible)), null)
-    /** The width CSS attribute. */
+    /**
+     * The width CSS attribute.
+     */
     public var width: String? by nullableStringProp("width", null)
 }

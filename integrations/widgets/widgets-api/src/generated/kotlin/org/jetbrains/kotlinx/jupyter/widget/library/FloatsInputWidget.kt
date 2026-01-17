@@ -35,27 +35,43 @@ public class FloatsInputWidget internal constructor(
 ) : DefaultWidgetModel(floatsInputSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<FloatsInputWidget>(floatsInputSpec, ::FloatsInputWidget)
 
-    /** CSS classes applied to widget DOM element */
+    /**
+     * CSS classes applied to widget DOM element
+     */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
     public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
-    /** Description of the control. */
+    /**
+     * Description of the control.
+     */
     public var description: String by stringProp("description", "")
-    /** Accept HTML in the description. */
+    /**
+     * Accept HTML in the description.
+     */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var format: String by stringProp("format", ".1f")
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var max: Double? by nullableDoubleProp("max", null)
     public var min: Double? by nullableDoubleProp("min", null)
     public var placeholder: String by stringProp("placeholder", "​")
-    /** Styling customizations */
+    /**
+     * Styling customizations
+     */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
-    /** Is widget tabbable? */
+    /**
+     * Is widget tabbable?
+     */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-    /** Use a predefined styling for the tags. */
+    /**
+     * Use a predefined styling for the tags.
+     */
     public var tagStyle: WidgetEnumEntry<TagStyle> by prop("tag_style", WidgetEnumType(TagStyle, TagStyle.Default), TagStyle.Default)
-    /** A tooltip caption. */
+    /**
+     * A tooltip caption.
+     */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    /** List of float tags */
+    /**
+     * List of float tags
+     */
     public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
 }

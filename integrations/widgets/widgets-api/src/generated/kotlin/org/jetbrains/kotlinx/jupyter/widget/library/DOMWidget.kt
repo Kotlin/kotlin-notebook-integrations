@@ -31,13 +31,21 @@ public class DOMWidget internal constructor(
 ) : DefaultWidgetModel(domWidgetSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DOMWidget>(domWidgetSpec, ::DOMWidget)
 
-    /** CSS classes applied to widget DOM element */
+    /**
+     * CSS classes applied to widget DOM element
+     */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    /** Is widget tabbable? */
+    /**
+     * Is widget tabbable?
+     */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-    /** A tooltip caption. */
+    /**
+     * A tooltip caption.
+     */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    /** The media data as a memory view of bytes. */
+    /**
+     * The media data as a memory view of bytes.
+     */
     public var value: ByteArray by bytesProp("value", byteArrayOf())
 }

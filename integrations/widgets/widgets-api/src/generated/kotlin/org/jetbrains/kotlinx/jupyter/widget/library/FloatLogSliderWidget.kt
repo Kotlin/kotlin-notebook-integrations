@@ -35,38 +35,70 @@ public class FloatLogSliderWidget internal constructor(
 ) : DefaultWidgetModel(floatLogSliderSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<FloatLogSliderWidget>(floatLogSliderSpec, ::FloatLogSliderWidget)
 
-    /** CSS classes applied to widget DOM element */
+    /**
+     * CSS classes applied to widget DOM element
+     */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
-    /** Base for the logarithm */
+    /**
+     * Base for the logarithm
+     */
     public var base: Double by doubleProp("base", 10.0)
-    /** Slider dragging behavior. */
+    /**
+     * Slider dragging behavior.
+     */
     public var behavior: WidgetEnumEntry<Behavior> by prop("behavior", WidgetEnumType(Behavior, Behavior.DragTap), Behavior.DragTap)
-    /** Update the value of the widget as the user is holding the slider. */
+    /**
+     * Update the value of the widget as the user is holding the slider.
+     */
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
-    /** Description of the control. */
+    /**
+     * Description of the control.
+     */
     public var description: String by stringProp("description", "")
-    /** Accept HTML in the description. */
+    /**
+     * Accept HTML in the description.
+     */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    /** Enable or disable user changes */
+    /**
+     * Enable or disable user changes
+     */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-    /** Max value for the exponent */
+    /**
+     * Max value for the exponent
+     */
     public var max: Double by doubleProp("max", 4.0)
-    /** Min value for the exponent */
+    /**
+     * Min value for the exponent
+     */
     public var min: Double by doubleProp("min", 0.0)
-    /** Vertical or horizontal. */
+    /**
+     * Vertical or horizontal.
+     */
     public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
-    /** Display the current value of the slider next to it. */
+    /**
+     * Display the current value of the slider next to it.
+     */
     public var readout: Boolean by boolProp("readout", true)
-    /** Format for the readout */
+    /**
+     * Format for the readout
+     */
     public var readoutFormat: String by stringProp("readout_format", ".3g")
-    /** Minimum step in the exponent to increment the value */
+    /**
+     * Minimum step in the exponent to increment the value
+     */
     public var step: Double? by nullableDoubleProp("step", 0.1)
     public var style: SliderStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.sliderStyle())
-    /** Is widget tabbable? */
+    /**
+     * Is widget tabbable?
+     */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-    /** A tooltip caption. */
+    /**
+     * A tooltip caption.
+     */
     public var tooltip: String? by nullableStringProp("tooltip", null)
-    /** Float value */
+    /**
+     * Float value
+     */
     public var value: Double by doubleProp("value", 1.0)
 }

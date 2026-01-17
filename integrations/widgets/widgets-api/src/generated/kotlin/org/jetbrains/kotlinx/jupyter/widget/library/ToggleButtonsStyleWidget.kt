@@ -26,10 +26,16 @@ public class ToggleButtonsStyleWidget internal constructor(
 ) : DefaultWidgetModel(toggleButtonsStyleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ToggleButtonsStyleWidget>(toggleButtonsStyleSpec, ::ToggleButtonsStyleWidget)
 
-    /** The width of each button. */
+    /**
+     * The width of each button.
+     */
     public var buttonWidth: String by stringProp("button_width", "")
-    /** Width of the description to the side of the control. */
+    /**
+     * Width of the description to the side of the control.
+     */
     public var descriptionWidth: String by stringProp("description_width", "")
-    /** Text font weight of each button. */
+    /**
+     * Text font weight of each button.
+     */
     public var fontWeight: String by stringProp("font_weight", "")
 }
