@@ -9,11 +9,13 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.ranges.IntRangeType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.ranges.IntRangeType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val selectionRangeSliderSpec = WidgetSpec(
     modelName = "SelectionRangeSliderModel",
@@ -24,7 +26,8 @@ private val selectionRangeSliderSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.selectionRangeSlider(): SelectionRangeSliderWidget = createAndRegisterWidget(SelectionRangeSliderWidget.Factory)
+public fun WidgetManager.selectionRangeSlider(setup: SelectionRangeSliderWidget.() -> Unit = {}): SelectionRangeSliderWidget =
+    createAndRegisterWidget(SelectionRangeSliderWidget.Factory).apply(setup)
 
 public class SelectionRangeSliderWidget internal constructor(
     widgetManager: WidgetManager,
@@ -47,7 +50,7 @@ public class SelectionRangeSliderWidget internal constructor(
     /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
     /** Min and max selected indices */
-    public var index: IntRange by prop("index", IntRangeType, 0..0)
+    public var index: IntRange? by prop("index", NullableType(IntRangeType), 0..0)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Vertical or horizontal. */
     public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)

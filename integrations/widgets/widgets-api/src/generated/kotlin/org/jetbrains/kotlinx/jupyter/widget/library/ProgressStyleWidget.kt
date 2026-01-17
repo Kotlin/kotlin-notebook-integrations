@@ -18,7 +18,8 @@ private val progressStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.progressStyle(): ProgressStyleWidget = createAndRegisterWidget(ProgressStyleWidget.Factory)
+public fun WidgetManager.progressStyle(setup: ProgressStyleWidget.() -> Unit = {}): ProgressStyleWidget =
+    createAndRegisterWidget(ProgressStyleWidget.Factory).apply(setup)
 
 public class ProgressStyleWidget internal constructor(
     widgetManager: WidgetManager,

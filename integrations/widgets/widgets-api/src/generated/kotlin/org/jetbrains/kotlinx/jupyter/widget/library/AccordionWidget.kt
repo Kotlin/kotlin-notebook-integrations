@@ -26,7 +26,8 @@ private val accordionSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.accordion(): AccordionWidget = createAndRegisterWidget(AccordionWidget.Factory)
+public fun WidgetManager.accordion(setup: AccordionWidget.() -> Unit = {}): AccordionWidget =
+    createAndRegisterWidget(AccordionWidget.Factory).apply(setup)
 
 public class AccordionWidget internal constructor(
     widgetManager: WidgetManager,

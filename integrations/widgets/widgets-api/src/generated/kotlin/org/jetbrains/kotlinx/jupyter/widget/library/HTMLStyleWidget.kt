@@ -18,7 +18,8 @@ private val htmlStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.htmlStyle(): HTMLStyleWidget = createAndRegisterWidget(HTMLStyleWidget.Factory)
+public fun WidgetManager.htmlStyle(setup: HTMLStyleWidget.() -> Unit = {}): HTMLStyleWidget =
+    createAndRegisterWidget(HTMLStyleWidget.Factory).apply(setup)
 
 public class HTMLStyleWidget internal constructor(
     widgetManager: WidgetManager,

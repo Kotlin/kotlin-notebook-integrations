@@ -26,7 +26,8 @@ private val intSliderSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.intSlider(): IntSliderWidget = createAndRegisterWidget(IntSliderWidget.Factory)
+public fun WidgetManager.intSlider(setup: IntSliderWidget.() -> Unit = {}): IntSliderWidget =
+    createAndRegisterWidget(IntSliderWidget.Factory).apply(setup)
 
 public class IntSliderWidget internal constructor(
     widgetManager: WidgetManager,

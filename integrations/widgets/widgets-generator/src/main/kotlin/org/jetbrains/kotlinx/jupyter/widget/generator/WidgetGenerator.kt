@@ -175,9 +175,10 @@ private class WidgetGenerator(
 
                 if (!info.isBaseWidget) {
                     appendLine(
-                        "public fun WidgetManager.${info.functionName}(): ${info.className} = createAndRegisterWidget(${info.className}.Factory)",
+                        "public fun WidgetManager.${info.functionName}" +
+                            "(setup: ${info.className}.() -> Unit = {}): ${info.className} =\n" +
+                            "    createAndRegisterWidget(${info.className}.Factory).apply(setup)\n",
                     )
-                    appendLine()
                 }
             }
 
@@ -321,7 +322,9 @@ private class WidgetGenerator(
                 appendLine()
                 for (info in sortedInfos) {
                     val functionName = info.functionName.removeSuffix("Widget") + "Widget"
-                    appendLine("public fun $functionName(): ${info.className} = globalWidgetManager.${info.functionName}()")
+                    appendLine(
+                        "public fun $functionName(setup: ${info.className}.() -> Unit = {}): ${info.className} = globalWidgetManager.${info.functionName}(setup)",
+                    )
                     appendLine()
                 }
             }

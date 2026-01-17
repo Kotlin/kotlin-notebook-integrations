@@ -52,7 +52,8 @@ private val timeSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.time(): TimeWidget = createAndRegisterWidget(TimeWidget.Factory)
+public fun WidgetManager.time(setup: TimeWidget.() -> Unit = {}): TimeWidget =
+    createAndRegisterWidget(TimeWidget.Factory).apply(setup)
 
 public class TimeWidget internal constructor(
     widgetManager: WidgetManager,

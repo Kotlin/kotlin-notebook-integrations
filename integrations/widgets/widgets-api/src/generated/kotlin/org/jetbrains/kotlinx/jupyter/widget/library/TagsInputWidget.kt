@@ -25,7 +25,8 @@ private val tagsInputSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.tagsInput(): TagsInputWidget = createAndRegisterWidget(TagsInputWidget.Factory)
+public fun WidgetManager.tagsInput(setup: TagsInputWidget.() -> Unit = {}): TagsInputWidget =
+    createAndRegisterWidget(TagsInputWidget.Factory).apply(setup)
 
 public class TagsInputWidget internal constructor(
     widgetManager: WidgetManager,

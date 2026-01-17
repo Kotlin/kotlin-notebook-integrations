@@ -21,7 +21,8 @@ private val colorPickerSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.colorPicker(): ColorPickerWidget = createAndRegisterWidget(ColorPickerWidget.Factory)
+public fun WidgetManager.colorPicker(setup: ColorPickerWidget.() -> Unit = {}): ColorPickerWidget =
+    createAndRegisterWidget(ColorPickerWidget.Factory).apply(setup)
 
 public class ColorPickerWidget internal constructor(
     widgetManager: WidgetManager,

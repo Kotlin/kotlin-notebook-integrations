@@ -17,7 +17,8 @@ private val toggleButtonsStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.toggleButtonsStyle(): ToggleButtonsStyleWidget = createAndRegisterWidget(ToggleButtonsStyleWidget.Factory)
+public fun WidgetManager.toggleButtonsStyle(setup: ToggleButtonsStyleWidget.() -> Unit = {}): ToggleButtonsStyleWidget =
+    createAndRegisterWidget(ToggleButtonsStyleWidget.Factory).apply(setup)
 
 public class ToggleButtonsStyleWidget internal constructor(
     widgetManager: WidgetManager,

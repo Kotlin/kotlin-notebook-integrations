@@ -26,7 +26,8 @@ private val tabSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.tab(): TabWidget = createAndRegisterWidget(TabWidget.Factory)
+public fun WidgetManager.tab(setup: TabWidget.() -> Unit = {}): TabWidget =
+    createAndRegisterWidget(TabWidget.Factory).apply(setup)
 
 public class TabWidget internal constructor(
     widgetManager: WidgetManager,

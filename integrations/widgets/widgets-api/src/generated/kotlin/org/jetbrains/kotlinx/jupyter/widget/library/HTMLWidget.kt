@@ -21,7 +21,8 @@ private val htmlSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.html(): HTMLWidget = createAndRegisterWidget(HTMLWidget.Factory)
+public fun WidgetManager.html(setup: HTMLWidget.() -> Unit = {}): HTMLWidget =
+    createAndRegisterWidget(HTMLWidget.Factory).apply(setup)
 
 public class HTMLWidget internal constructor(
     widgetManager: WidgetManager,

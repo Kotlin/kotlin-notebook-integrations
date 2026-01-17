@@ -25,7 +25,8 @@ private val fileUploadSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.fileUpload(): FileUploadWidget = createAndRegisterWidget(FileUploadWidget.Factory)
+public fun WidgetManager.fileUpload(setup: FileUploadWidget.() -> Unit = {}): FileUploadWidget =
+    createAndRegisterWidget(FileUploadWidget.Factory).apply(setup)
 
 public class FileUploadWidget internal constructor(
     widgetManager: WidgetManager,

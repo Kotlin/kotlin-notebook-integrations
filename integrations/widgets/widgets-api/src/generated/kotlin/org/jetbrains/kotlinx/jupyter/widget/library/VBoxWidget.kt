@@ -25,7 +25,8 @@ private val vboxSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.vbox(): VBoxWidget = createAndRegisterWidget(VBoxWidget.Factory)
+public fun WidgetManager.vbox(setup: VBoxWidget.() -> Unit = {}): VBoxWidget =
+    createAndRegisterWidget(VBoxWidget.Factory).apply(setup)
 
 public class VBoxWidget internal constructor(
     widgetManager: WidgetManager,

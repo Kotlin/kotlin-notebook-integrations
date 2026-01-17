@@ -21,7 +21,8 @@ private val htmlMathSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.htmlMath(): HTMLMathWidget = createAndRegisterWidget(HTMLMathWidget.Factory)
+public fun WidgetManager.htmlMath(setup: HTMLMathWidget.() -> Unit = {}): HTMLMathWidget =
+    createAndRegisterWidget(HTMLMathWidget.Factory).apply(setup)
 
 public class HTMLMathWidget internal constructor(
     widgetManager: WidgetManager,

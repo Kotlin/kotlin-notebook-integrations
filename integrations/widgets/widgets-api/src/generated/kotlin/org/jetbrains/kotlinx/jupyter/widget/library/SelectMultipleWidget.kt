@@ -22,7 +22,8 @@ private val selectMultipleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.selectMultiple(): SelectMultipleWidget = createAndRegisterWidget(SelectMultipleWidget.Factory)
+public fun WidgetManager.selectMultiple(setup: SelectMultipleWidget.() -> Unit = {}): SelectMultipleWidget =
+    createAndRegisterWidget(SelectMultipleWidget.Factory).apply(setup)
 
 public class SelectMultipleWidget internal constructor(
     widgetManager: WidgetManager,

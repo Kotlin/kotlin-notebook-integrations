@@ -26,7 +26,8 @@ private val floatProgressSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.floatProgress(): FloatProgressWidget = createAndRegisterWidget(FloatProgressWidget.Factory)
+public fun WidgetManager.floatProgress(setup: FloatProgressWidget.() -> Unit = {}): FloatProgressWidget =
+    createAndRegisterWidget(FloatProgressWidget.Factory).apply(setup)
 
 public class FloatProgressWidget internal constructor(
     widgetManager: WidgetManager,

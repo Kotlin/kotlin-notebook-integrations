@@ -22,7 +22,8 @@ private val boundedIntTextSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.boundedIntText(): BoundedIntTextWidget = createAndRegisterWidget(BoundedIntTextWidget.Factory)
+public fun WidgetManager.boundedIntText(setup: BoundedIntTextWidget.() -> Unit = {}): BoundedIntTextWidget =
+    createAndRegisterWidget(BoundedIntTextWidget.Factory).apply(setup)
 
 public class BoundedIntTextWidget internal constructor(
     widgetManager: WidgetManager,

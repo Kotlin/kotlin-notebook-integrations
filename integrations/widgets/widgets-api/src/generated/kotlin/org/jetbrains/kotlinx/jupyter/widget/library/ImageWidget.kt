@@ -22,7 +22,8 @@ private val imageSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.image(): ImageWidget = createAndRegisterWidget(ImageWidget.Factory)
+public fun WidgetManager.image(setup: ImageWidget.() -> Unit = {}): ImageWidget =
+    createAndRegisterWidget(ImageWidget.Factory).apply(setup)
 
 public class ImageWidget internal constructor(
     widgetManager: WidgetManager,

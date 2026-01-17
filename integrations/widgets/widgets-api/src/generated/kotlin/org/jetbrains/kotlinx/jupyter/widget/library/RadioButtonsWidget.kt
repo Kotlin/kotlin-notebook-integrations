@@ -25,7 +25,8 @@ private val radioButtonsSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.radioButtons(): RadioButtonsWidget = createAndRegisterWidget(RadioButtonsWidget.Factory)
+public fun WidgetManager.radioButtons(setup: RadioButtonsWidget.() -> Unit = {}): RadioButtonsWidget =
+    createAndRegisterWidget(RadioButtonsWidget.Factory).apply(setup)
 
 public class RadioButtonsWidget internal constructor(
     widgetManager: WidgetManager,

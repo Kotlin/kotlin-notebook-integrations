@@ -52,7 +52,8 @@ private val datePickerSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.datePicker(): DatePickerWidget = createAndRegisterWidget(DatePickerWidget.Factory)
+public fun WidgetManager.datePicker(setup: DatePickerWidget.() -> Unit = {}): DatePickerWidget =
+    createAndRegisterWidget(DatePickerWidget.Factory).apply(setup)
 
 public class DatePickerWidget internal constructor(
     widgetManager: WidgetManager,

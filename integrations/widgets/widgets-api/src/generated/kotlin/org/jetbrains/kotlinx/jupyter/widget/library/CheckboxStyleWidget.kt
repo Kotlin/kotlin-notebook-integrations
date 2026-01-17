@@ -18,7 +18,8 @@ private val checkboxStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.checkboxStyle(): CheckboxStyleWidget = createAndRegisterWidget(CheckboxStyleWidget.Factory)
+public fun WidgetManager.checkboxStyle(setup: CheckboxStyleWidget.() -> Unit = {}): CheckboxStyleWidget =
+    createAndRegisterWidget(CheckboxStyleWidget.Factory).apply(setup)
 
 public class CheckboxStyleWidget internal constructor(
     widgetManager: WidgetManager,

@@ -22,7 +22,8 @@ private val floatTextSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.floatText(): FloatTextWidget = createAndRegisterWidget(FloatTextWidget.Factory)
+public fun WidgetManager.floatText(setup: FloatTextWidget.() -> Unit = {}): FloatTextWidget =
+    createAndRegisterWidget(FloatTextWidget.Factory).apply(setup)
 
 public class FloatTextWidget internal constructor(
     widgetManager: WidgetManager,

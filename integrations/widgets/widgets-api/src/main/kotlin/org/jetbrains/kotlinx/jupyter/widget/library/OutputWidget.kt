@@ -7,7 +7,8 @@ import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 
-public fun WidgetManager.output(): OutputWidget = createAndRegisterWidget(OutputWidget.Factory)
+public fun WidgetManager.output(setup: OutputWidget.() -> Unit = {}): OutputWidget =
+    createAndRegisterWidget(OutputWidget.Factory).apply(setup)
 
 public class OutputWidget internal constructor(
     widgetManager: WidgetManager,

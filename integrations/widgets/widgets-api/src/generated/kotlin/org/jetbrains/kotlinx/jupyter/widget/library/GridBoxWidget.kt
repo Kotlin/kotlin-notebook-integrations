@@ -25,7 +25,8 @@ private val gridBoxSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.gridBox(): GridBoxWidget = createAndRegisterWidget(GridBoxWidget.Factory)
+public fun WidgetManager.gridBox(setup: GridBoxWidget.() -> Unit = {}): GridBoxWidget =
+    createAndRegisterWidget(GridBoxWidget.Factory).apply(setup)
 
 public class GridBoxWidget internal constructor(
     widgetManager: WidgetManager,

@@ -21,7 +21,8 @@ private val checkboxSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.checkbox(): CheckboxWidget = createAndRegisterWidget(CheckboxWidget.Factory)
+public fun WidgetManager.checkbox(setup: CheckboxWidget.() -> Unit = {}): CheckboxWidget =
+    createAndRegisterWidget(CheckboxWidget.Factory).apply(setup)
 
 public class CheckboxWidget internal constructor(
     widgetManager: WidgetManager,

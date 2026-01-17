@@ -24,7 +24,8 @@ private val buttonSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.button(): ButtonWidget = createAndRegisterWidget(ButtonWidget.Factory)
+public fun WidgetManager.button(setup: ButtonWidget.() -> Unit = {}): ButtonWidget =
+    createAndRegisterWidget(ButtonWidget.Factory).apply(setup)
 
 public class ButtonWidget internal constructor(
     widgetManager: WidgetManager,

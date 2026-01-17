@@ -25,7 +25,8 @@ private val hboxSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.hbox(): HBoxWidget = createAndRegisterWidget(HBoxWidget.Factory)
+public fun WidgetManager.hbox(setup: HBoxWidget.() -> Unit = {}): HBoxWidget =
+    createAndRegisterWidget(HBoxWidget.Factory).apply(setup)
 
 public class HBoxWidget internal constructor(
     widgetManager: WidgetManager,

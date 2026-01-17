@@ -22,7 +22,8 @@ private val datetimeSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.datetime(): DatetimeWidget = createAndRegisterWidget(DatetimeWidget.Factory)
+public fun WidgetManager.datetime(setup: DatetimeWidget.() -> Unit = {}): DatetimeWidget =
+    createAndRegisterWidget(DatetimeWidget.Factory).apply(setup)
 
 public class DatetimeWidget internal constructor(
     widgetManager: WidgetManager,

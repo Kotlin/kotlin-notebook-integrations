@@ -26,7 +26,8 @@ private val intProgressSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.intProgress(): IntProgressWidget = createAndRegisterWidget(IntProgressWidget.Factory)
+public fun WidgetManager.intProgress(setup: IntProgressWidget.() -> Unit = {}): IntProgressWidget =
+    createAndRegisterWidget(IntProgressWidget.Factory).apply(setup)
 
 public class IntProgressWidget internal constructor(
     widgetManager: WidgetManager,

@@ -28,7 +28,8 @@ private val layoutSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.layout(): LayoutWidget = createAndRegisterWidget(LayoutWidget.Factory)
+public fun WidgetManager.layout(setup: LayoutWidget.() -> Unit = {}): LayoutWidget =
+    createAndRegisterWidget(LayoutWidget.Factory).apply(setup)
 
 public class LayoutWidget internal constructor(
     widgetManager: WidgetManager,

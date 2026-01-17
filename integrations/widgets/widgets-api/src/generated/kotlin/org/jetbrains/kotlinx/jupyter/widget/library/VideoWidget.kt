@@ -22,7 +22,8 @@ private val videoSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.video(): VideoWidget = createAndRegisterWidget(VideoWidget.Factory)
+public fun WidgetManager.video(setup: VideoWidget.() -> Unit = {}): VideoWidget =
+    createAndRegisterWidget(VideoWidget.Factory).apply(setup)
 
 public class VideoWidget internal constructor(
     widgetManager: WidgetManager,

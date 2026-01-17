@@ -26,7 +26,8 @@ private val intsInputSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.intsInput(): IntsInputWidget = createAndRegisterWidget(IntsInputWidget.Factory)
+public fun WidgetManager.intsInput(setup: IntsInputWidget.() -> Unit = {}): IntsInputWidget =
+    createAndRegisterWidget(IntsInputWidget.Factory).apply(setup)
 
 public class IntsInputWidget internal constructor(
     widgetManager: WidgetManager,

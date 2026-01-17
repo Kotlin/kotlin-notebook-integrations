@@ -22,7 +22,8 @@ private val dropdownSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.dropdown(): DropdownWidget = createAndRegisterWidget(DropdownWidget.Factory)
+public fun WidgetManager.dropdown(setup: DropdownWidget.() -> Unit = {}): DropdownWidget =
+    createAndRegisterWidget(DropdownWidget.Factory).apply(setup)
 
 public class DropdownWidget internal constructor(
     widgetManager: WidgetManager,

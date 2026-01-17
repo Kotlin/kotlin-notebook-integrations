@@ -21,7 +21,8 @@ private val textSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.text(): TextWidget = createAndRegisterWidget(TextWidget.Factory)
+public fun WidgetManager.text(setup: TextWidget.() -> Unit = {}): TextWidget =
+    createAndRegisterWidget(TextWidget.Factory).apply(setup)
 
 public class TextWidget internal constructor(
     widgetManager: WidgetManager,

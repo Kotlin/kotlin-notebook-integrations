@@ -22,7 +22,8 @@ private val naiveDatetimeSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.naiveDatetime(): NaiveDatetimeWidget = createAndRegisterWidget(NaiveDatetimeWidget.Factory)
+public fun WidgetManager.naiveDatetime(setup: NaiveDatetimeWidget.() -> Unit = {}): NaiveDatetimeWidget =
+    createAndRegisterWidget(NaiveDatetimeWidget.Factory).apply(setup)
 
 public class NaiveDatetimeWidget internal constructor(
     widgetManager: WidgetManager,

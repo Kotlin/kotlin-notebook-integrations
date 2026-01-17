@@ -26,7 +26,8 @@ private val stackSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.stack(): StackWidget = createAndRegisterWidget(StackWidget.Factory)
+public fun WidgetManager.stack(setup: StackWidget.() -> Unit = {}): StackWidget =
+    createAndRegisterWidget(StackWidget.Factory).apply(setup)
 
 public class StackWidget internal constructor(
     widgetManager: WidgetManager,

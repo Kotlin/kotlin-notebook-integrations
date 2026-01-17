@@ -26,7 +26,8 @@ private val selectionSliderSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.selectionSlider(): SelectionSliderWidget = createAndRegisterWidget(SelectionSliderWidget.Factory)
+public fun WidgetManager.selectionSlider(setup: SelectionSliderWidget.() -> Unit = {}): SelectionSliderWidget =
+    createAndRegisterWidget(SelectionSliderWidget.Factory).apply(setup)
 
 public class SelectionSliderWidget internal constructor(
     widgetManager: WidgetManager,

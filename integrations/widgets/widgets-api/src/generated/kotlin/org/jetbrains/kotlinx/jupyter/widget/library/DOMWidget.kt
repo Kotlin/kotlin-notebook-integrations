@@ -22,7 +22,8 @@ private val domWidgetSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.domWidget(): DOMWidget = createAndRegisterWidget(DOMWidget.Factory)
+public fun WidgetManager.domWidget(setup: DOMWidget.() -> Unit = {}): DOMWidget =
+    createAndRegisterWidget(DOMWidget.Factory).apply(setup)
 
 public class DOMWidget internal constructor(
     widgetManager: WidgetManager,

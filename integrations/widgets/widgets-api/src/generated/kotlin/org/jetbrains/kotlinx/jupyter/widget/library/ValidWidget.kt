@@ -21,7 +21,8 @@ private val validSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.valid(): ValidWidget = createAndRegisterWidget(ValidWidget.Factory)
+public fun WidgetManager.valid(setup: ValidWidget.() -> Unit = {}): ValidWidget =
+    createAndRegisterWidget(ValidWidget.Factory).apply(setup)
 
 public class ValidWidget internal constructor(
     widgetManager: WidgetManager,

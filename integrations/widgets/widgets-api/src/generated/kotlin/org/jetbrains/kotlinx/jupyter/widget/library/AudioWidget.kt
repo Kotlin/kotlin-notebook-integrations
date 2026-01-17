@@ -22,7 +22,8 @@ private val audioSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.audio(): AudioWidget = createAndRegisterWidget(AudioWidget.Factory)
+public fun WidgetManager.audio(setup: AudioWidget.() -> Unit = {}): AudioWidget =
+    createAndRegisterWidget(AudioWidget.Factory).apply(setup)
 
 public class AudioWidget internal constructor(
     widgetManager: WidgetManager,

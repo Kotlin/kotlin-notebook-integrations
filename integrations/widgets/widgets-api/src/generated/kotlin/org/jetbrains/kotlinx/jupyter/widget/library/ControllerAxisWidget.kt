@@ -22,7 +22,8 @@ private val controllerAxisSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.controllerAxis(): ControllerAxisWidget = createAndRegisterWidget(ControllerAxisWidget.Factory)
+public fun WidgetManager.controllerAxis(setup: ControllerAxisWidget.() -> Unit = {}): ControllerAxisWidget =
+    createAndRegisterWidget(ControllerAxisWidget.Factory).apply(setup)
 
 public class ControllerAxisWidget internal constructor(
     widgetManager: WidgetManager,

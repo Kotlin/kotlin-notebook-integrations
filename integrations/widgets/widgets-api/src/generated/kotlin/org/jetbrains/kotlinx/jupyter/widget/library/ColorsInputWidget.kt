@@ -22,7 +22,8 @@ private val colorsInputSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.colorsInput(): ColorsInputWidget = createAndRegisterWidget(ColorsInputWidget.Factory)
+public fun WidgetManager.colorsInput(setup: ColorsInputWidget.() -> Unit = {}): ColorsInputWidget =
+    createAndRegisterWidget(ColorsInputWidget.Factory).apply(setup)
 
 public class ColorsInputWidget internal constructor(
     widgetManager: WidgetManager,

@@ -21,7 +21,8 @@ private val linkSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.link(): LinkWidget = createAndRegisterWidget(LinkWidget.Factory)
+public fun WidgetManager.link(setup: LinkWidget.() -> Unit = {}): LinkWidget =
+    createAndRegisterWidget(LinkWidget.Factory).apply(setup)
 
 public class LinkWidget internal constructor(
     widgetManager: WidgetManager,
@@ -30,7 +31,7 @@ public class LinkWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<LinkWidget>(linkSpec, ::LinkWidget)
 
     /** The source (widget, 'trait_name') pair */
-    public var source: Pair<WidgetModel?, String> by prop("source", PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType), null to "")
+    public var source: Pair<WidgetModel?, String>? by prop("source", NullableType(PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType)), null to "")
     /** The target (widget, 'trait_name') pair */
-    public var target: Pair<WidgetModel?, String> by prop("target", PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType), null to "")
+    public var target: Pair<WidgetModel?, String>? by prop("target", NullableType(PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType)), null to "")
 }

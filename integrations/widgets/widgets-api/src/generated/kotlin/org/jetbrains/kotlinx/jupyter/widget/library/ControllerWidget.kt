@@ -23,7 +23,8 @@ private val controllerSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.controller(): ControllerWidget = createAndRegisterWidget(ControllerWidget.Factory)
+public fun WidgetManager.controller(setup: ControllerWidget.() -> Unit = {}): ControllerWidget =
+    createAndRegisterWidget(ControllerWidget.Factory).apply(setup)
 
 public class ControllerWidget internal constructor(
     widgetManager: WidgetManager,

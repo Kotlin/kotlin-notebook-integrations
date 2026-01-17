@@ -22,7 +22,8 @@ private val playSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.play(): PlayWidget = createAndRegisterWidget(PlayWidget.Factory)
+public fun WidgetManager.play(setup: PlayWidget.() -> Unit = {}): PlayWidget =
+    createAndRegisterWidget(PlayWidget.Factory).apply(setup)
 
 public class PlayWidget internal constructor(
     widgetManager: WidgetManager,

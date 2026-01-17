@@ -9,11 +9,14 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.ranges.IntRangeType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.ranges.IntRangeType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val intRangeSliderSpec = WidgetSpec(
     modelName = "IntRangeSliderModel",
@@ -24,7 +27,8 @@ private val intRangeSliderSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.intRangeSlider(): IntRangeSliderWidget = createAndRegisterWidget(IntRangeSliderWidget.Factory)
+public fun WidgetManager.intRangeSlider(setup: IntRangeSliderWidget.() -> Unit = {}): IntRangeSliderWidget =
+    createAndRegisterWidget(IntRangeSliderWidget.Factory).apply(setup)
 
 public class IntRangeSliderWidget internal constructor(
     widgetManager: WidgetManager,
@@ -64,5 +68,5 @@ public class IntRangeSliderWidget internal constructor(
     /** A tooltip caption. */
     public var tooltip: String? by nullableStringProp("tooltip", null)
     /** Tuple of (lower, upper) bounds */
-    public var value: IntRange by prop("value", IntRangeType, 0..1)
+    public var value: IntRange? by prop("value", NullableType(IntRangeType), 0..1)
 }

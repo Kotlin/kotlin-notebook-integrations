@@ -18,7 +18,8 @@ private val htmlMathStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.htmlMathStyle(): HTMLMathStyleWidget = createAndRegisterWidget(HTMLMathStyleWidget.Factory)
+public fun WidgetManager.htmlMathStyle(setup: HTMLMathStyleWidget.() -> Unit = {}): HTMLMathStyleWidget =
+    createAndRegisterWidget(HTMLMathStyleWidget.Factory).apply(setup)
 
 public class HTMLMathStyleWidget internal constructor(
     widgetManager: WidgetManager,

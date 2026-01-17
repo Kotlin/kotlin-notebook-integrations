@@ -24,7 +24,8 @@ private val toggleButtonSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.toggleButton(): ToggleButtonWidget = createAndRegisterWidget(ToggleButtonWidget.Factory)
+public fun WidgetManager.toggleButton(setup: ToggleButtonWidget.() -> Unit = {}): ToggleButtonWidget =
+    createAndRegisterWidget(ToggleButtonWidget.Factory).apply(setup)
 
 public class ToggleButtonWidget internal constructor(
     widgetManager: WidgetManager,

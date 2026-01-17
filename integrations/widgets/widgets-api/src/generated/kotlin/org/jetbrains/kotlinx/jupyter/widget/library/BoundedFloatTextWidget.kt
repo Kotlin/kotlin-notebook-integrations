@@ -22,7 +22,8 @@ private val boundedFloatTextSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.boundedFloatText(): BoundedFloatTextWidget = createAndRegisterWidget(BoundedFloatTextWidget.Factory)
+public fun WidgetManager.boundedFloatText(setup: BoundedFloatTextWidget.() -> Unit = {}): BoundedFloatTextWidget =
+    createAndRegisterWidget(BoundedFloatTextWidget.Factory).apply(setup)
 
 public class BoundedFloatTextWidget internal constructor(
     widgetManager: WidgetManager,

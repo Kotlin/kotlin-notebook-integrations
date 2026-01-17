@@ -21,7 +21,8 @@ private val passwordSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.password(): PasswordWidget = createAndRegisterWidget(PasswordWidget.Factory)
+public fun WidgetManager.password(setup: PasswordWidget.() -> Unit = {}): PasswordWidget =
+    createAndRegisterWidget(PasswordWidget.Factory).apply(setup)
 
 public class PasswordWidget internal constructor(
     widgetManager: WidgetManager,

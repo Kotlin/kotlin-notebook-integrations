@@ -138,139 +138,139 @@ import org.jetbrains.kotlinx.jupyter.widget.library.valid
 import org.jetbrains.kotlinx.jupyter.widget.library.vbox
 import org.jetbrains.kotlinx.jupyter.widget.library.video
 
-public fun accordionWidget(): AccordionWidget = globalWidgetManager.accordion()
+public fun accordionWidget(setup: AccordionWidget.() -> Unit = {}): AccordionWidget = globalWidgetManager.accordion(setup)
 
-public fun audioWidget(): AudioWidget = globalWidgetManager.audio()
+public fun audioWidget(setup: AudioWidget.() -> Unit = {}): AudioWidget = globalWidgetManager.audio(setup)
 
-public fun boundedFloatTextWidget(): BoundedFloatTextWidget = globalWidgetManager.boundedFloatText()
+public fun boundedFloatTextWidget(setup: BoundedFloatTextWidget.() -> Unit = {}): BoundedFloatTextWidget = globalWidgetManager.boundedFloatText(setup)
 
-public fun boundedIntTextWidget(): BoundedIntTextWidget = globalWidgetManager.boundedIntText()
+public fun boundedIntTextWidget(setup: BoundedIntTextWidget.() -> Unit = {}): BoundedIntTextWidget = globalWidgetManager.boundedIntText(setup)
 
-public fun boxWidget(): BoxWidget = globalWidgetManager.box()
+public fun boxWidget(setup: BoxWidget.() -> Unit = {}): BoxWidget = globalWidgetManager.box(setup)
 
-public fun buttonWidget(): ButtonWidget = globalWidgetManager.button()
+public fun buttonWidget(setup: ButtonWidget.() -> Unit = {}): ButtonWidget = globalWidgetManager.button(setup)
 
-public fun buttonStyleWidget(): ButtonStyleWidget = globalWidgetManager.buttonStyle()
+public fun buttonStyleWidget(setup: ButtonStyleWidget.() -> Unit = {}): ButtonStyleWidget = globalWidgetManager.buttonStyle(setup)
 
-public fun checkboxWidget(): CheckboxWidget = globalWidgetManager.checkbox()
+public fun checkboxWidget(setup: CheckboxWidget.() -> Unit = {}): CheckboxWidget = globalWidgetManager.checkbox(setup)
 
-public fun checkboxStyleWidget(): CheckboxStyleWidget = globalWidgetManager.checkboxStyle()
+public fun checkboxStyleWidget(setup: CheckboxStyleWidget.() -> Unit = {}): CheckboxStyleWidget = globalWidgetManager.checkboxStyle(setup)
 
-public fun colorPickerWidget(): ColorPickerWidget = globalWidgetManager.colorPicker()
+public fun colorPickerWidget(setup: ColorPickerWidget.() -> Unit = {}): ColorPickerWidget = globalWidgetManager.colorPicker(setup)
 
-public fun colorsInputWidget(): ColorsInputWidget = globalWidgetManager.colorsInput()
+public fun colorsInputWidget(setup: ColorsInputWidget.() -> Unit = {}): ColorsInputWidget = globalWidgetManager.colorsInput(setup)
 
-public fun comboboxWidget(): ComboboxWidget = globalWidgetManager.combobox()
+public fun comboboxWidget(setup: ComboboxWidget.() -> Unit = {}): ComboboxWidget = globalWidgetManager.combobox(setup)
 
-public fun controllerWidget(): ControllerWidget = globalWidgetManager.controller()
+public fun controllerWidget(setup: ControllerWidget.() -> Unit = {}): ControllerWidget = globalWidgetManager.controller(setup)
 
-public fun controllerAxisWidget(): ControllerAxisWidget = globalWidgetManager.controllerAxis()
+public fun controllerAxisWidget(setup: ControllerAxisWidget.() -> Unit = {}): ControllerAxisWidget = globalWidgetManager.controllerAxis(setup)
 
-public fun controllerButtonWidget(): ControllerButtonWidget = globalWidgetManager.controllerButton()
+public fun controllerButtonWidget(setup: ControllerButtonWidget.() -> Unit = {}): ControllerButtonWidget = globalWidgetManager.controllerButton(setup)
 
-public fun datePickerWidget(): DatePickerWidget = globalWidgetManager.datePicker()
+public fun datePickerWidget(setup: DatePickerWidget.() -> Unit = {}): DatePickerWidget = globalWidgetManager.datePicker(setup)
 
-public fun datetimeWidget(): DatetimeWidget = globalWidgetManager.datetime()
+public fun datetimeWidget(setup: DatetimeWidget.() -> Unit = {}): DatetimeWidget = globalWidgetManager.datetime(setup)
 
-public fun descriptionStyleWidget(): DescriptionStyleWidget = globalWidgetManager.descriptionStyle()
+public fun descriptionStyleWidget(setup: DescriptionStyleWidget.() -> Unit = {}): DescriptionStyleWidget = globalWidgetManager.descriptionStyle(setup)
 
-public fun directionalLinkWidget(): DirectionalLinkWidget = globalWidgetManager.directionalLink()
+public fun directionalLinkWidget(setup: DirectionalLinkWidget.() -> Unit = {}): DirectionalLinkWidget = globalWidgetManager.directionalLink(setup)
 
-public fun domWidget(): DOMWidget = globalWidgetManager.domWidget()
+public fun domWidget(setup: DOMWidget.() -> Unit = {}): DOMWidget = globalWidgetManager.domWidget(setup)
 
-public fun dropdownWidget(): DropdownWidget = globalWidgetManager.dropdown()
+public fun dropdownWidget(setup: DropdownWidget.() -> Unit = {}): DropdownWidget = globalWidgetManager.dropdown(setup)
 
-public fun fileUploadWidget(): FileUploadWidget = globalWidgetManager.fileUpload()
+public fun fileUploadWidget(setup: FileUploadWidget.() -> Unit = {}): FileUploadWidget = globalWidgetManager.fileUpload(setup)
 
-public fun floatLogSliderWidget(): FloatLogSliderWidget = globalWidgetManager.floatLogSlider()
+public fun floatLogSliderWidget(setup: FloatLogSliderWidget.() -> Unit = {}): FloatLogSliderWidget = globalWidgetManager.floatLogSlider(setup)
 
-public fun floatProgressWidget(): FloatProgressWidget = globalWidgetManager.floatProgress()
+public fun floatProgressWidget(setup: FloatProgressWidget.() -> Unit = {}): FloatProgressWidget = globalWidgetManager.floatProgress(setup)
 
-public fun floatRangeSliderWidget(): FloatRangeSliderWidget = globalWidgetManager.floatRangeSlider()
+public fun floatRangeSliderWidget(setup: FloatRangeSliderWidget.() -> Unit = {}): FloatRangeSliderWidget = globalWidgetManager.floatRangeSlider(setup)
 
-public fun floatSliderWidget(): FloatSliderWidget = globalWidgetManager.floatSlider()
+public fun floatSliderWidget(setup: FloatSliderWidget.() -> Unit = {}): FloatSliderWidget = globalWidgetManager.floatSlider(setup)
 
-public fun floatTextWidget(): FloatTextWidget = globalWidgetManager.floatText()
+public fun floatTextWidget(setup: FloatTextWidget.() -> Unit = {}): FloatTextWidget = globalWidgetManager.floatText(setup)
 
-public fun floatsInputWidget(): FloatsInputWidget = globalWidgetManager.floatsInput()
+public fun floatsInputWidget(setup: FloatsInputWidget.() -> Unit = {}): FloatsInputWidget = globalWidgetManager.floatsInput(setup)
 
-public fun gridBoxWidget(): GridBoxWidget = globalWidgetManager.gridBox()
+public fun gridBoxWidget(setup: GridBoxWidget.() -> Unit = {}): GridBoxWidget = globalWidgetManager.gridBox(setup)
 
-public fun hboxWidget(): HBoxWidget = globalWidgetManager.hbox()
+public fun hboxWidget(setup: HBoxWidget.() -> Unit = {}): HBoxWidget = globalWidgetManager.hbox(setup)
 
-public fun htmlWidget(): HTMLWidget = globalWidgetManager.html()
+public fun htmlWidget(setup: HTMLWidget.() -> Unit = {}): HTMLWidget = globalWidgetManager.html(setup)
 
-public fun htmlMathWidget(): HTMLMathWidget = globalWidgetManager.htmlMath()
+public fun htmlMathWidget(setup: HTMLMathWidget.() -> Unit = {}): HTMLMathWidget = globalWidgetManager.htmlMath(setup)
 
-public fun htmlMathStyleWidget(): HTMLMathStyleWidget = globalWidgetManager.htmlMathStyle()
+public fun htmlMathStyleWidget(setup: HTMLMathStyleWidget.() -> Unit = {}): HTMLMathStyleWidget = globalWidgetManager.htmlMathStyle(setup)
 
-public fun htmlStyleWidget(): HTMLStyleWidget = globalWidgetManager.htmlStyle()
+public fun htmlStyleWidget(setup: HTMLStyleWidget.() -> Unit = {}): HTMLStyleWidget = globalWidgetManager.htmlStyle(setup)
 
-public fun imageWidget(): ImageWidget = globalWidgetManager.image()
+public fun imageWidget(setup: ImageWidget.() -> Unit = {}): ImageWidget = globalWidgetManager.image(setup)
 
-public fun intProgressWidget(): IntProgressWidget = globalWidgetManager.intProgress()
+public fun intProgressWidget(setup: IntProgressWidget.() -> Unit = {}): IntProgressWidget = globalWidgetManager.intProgress(setup)
 
-public fun intRangeSliderWidget(): IntRangeSliderWidget = globalWidgetManager.intRangeSlider()
+public fun intRangeSliderWidget(setup: IntRangeSliderWidget.() -> Unit = {}): IntRangeSliderWidget = globalWidgetManager.intRangeSlider(setup)
 
-public fun intSliderWidget(): IntSliderWidget = globalWidgetManager.intSlider()
+public fun intSliderWidget(setup: IntSliderWidget.() -> Unit = {}): IntSliderWidget = globalWidgetManager.intSlider(setup)
 
-public fun intTextWidget(): IntTextWidget = globalWidgetManager.intText()
+public fun intTextWidget(setup: IntTextWidget.() -> Unit = {}): IntTextWidget = globalWidgetManager.intText(setup)
 
-public fun intsInputWidget(): IntsInputWidget = globalWidgetManager.intsInput()
+public fun intsInputWidget(setup: IntsInputWidget.() -> Unit = {}): IntsInputWidget = globalWidgetManager.intsInput(setup)
 
-public fun labelWidget(): LabelWidget = globalWidgetManager.label()
+public fun labelWidget(setup: LabelWidget.() -> Unit = {}): LabelWidget = globalWidgetManager.label(setup)
 
-public fun labelStyleWidget(): LabelStyleWidget = globalWidgetManager.labelStyle()
+public fun labelStyleWidget(setup: LabelStyleWidget.() -> Unit = {}): LabelStyleWidget = globalWidgetManager.labelStyle(setup)
 
-public fun layoutWidget(): LayoutWidget = globalWidgetManager.layout()
+public fun layoutWidget(setup: LayoutWidget.() -> Unit = {}): LayoutWidget = globalWidgetManager.layout(setup)
 
-public fun linkWidget(): LinkWidget = globalWidgetManager.link()
+public fun linkWidget(setup: LinkWidget.() -> Unit = {}): LinkWidget = globalWidgetManager.link(setup)
 
-public fun naiveDatetimeWidget(): NaiveDatetimeWidget = globalWidgetManager.naiveDatetime()
+public fun naiveDatetimeWidget(setup: NaiveDatetimeWidget.() -> Unit = {}): NaiveDatetimeWidget = globalWidgetManager.naiveDatetime(setup)
 
-public fun passwordWidget(): PasswordWidget = globalWidgetManager.password()
+public fun passwordWidget(setup: PasswordWidget.() -> Unit = {}): PasswordWidget = globalWidgetManager.password(setup)
 
-public fun playWidget(): PlayWidget = globalWidgetManager.play()
+public fun playWidget(setup: PlayWidget.() -> Unit = {}): PlayWidget = globalWidgetManager.play(setup)
 
-public fun progressStyleWidget(): ProgressStyleWidget = globalWidgetManager.progressStyle()
+public fun progressStyleWidget(setup: ProgressStyleWidget.() -> Unit = {}): ProgressStyleWidget = globalWidgetManager.progressStyle(setup)
 
-public fun radioButtonsWidget(): RadioButtonsWidget = globalWidgetManager.radioButtons()
+public fun radioButtonsWidget(setup: RadioButtonsWidget.() -> Unit = {}): RadioButtonsWidget = globalWidgetManager.radioButtons(setup)
 
-public fun selectWidget(): SelectWidget = globalWidgetManager.select()
+public fun selectWidget(setup: SelectWidget.() -> Unit = {}): SelectWidget = globalWidgetManager.select(setup)
 
-public fun selectMultipleWidget(): SelectMultipleWidget = globalWidgetManager.selectMultiple()
+public fun selectMultipleWidget(setup: SelectMultipleWidget.() -> Unit = {}): SelectMultipleWidget = globalWidgetManager.selectMultiple(setup)
 
-public fun selectionRangeSliderWidget(): SelectionRangeSliderWidget = globalWidgetManager.selectionRangeSlider()
+public fun selectionRangeSliderWidget(setup: SelectionRangeSliderWidget.() -> Unit = {}): SelectionRangeSliderWidget = globalWidgetManager.selectionRangeSlider(setup)
 
-public fun selectionSliderWidget(): SelectionSliderWidget = globalWidgetManager.selectionSlider()
+public fun selectionSliderWidget(setup: SelectionSliderWidget.() -> Unit = {}): SelectionSliderWidget = globalWidgetManager.selectionSlider(setup)
 
-public fun sliderStyleWidget(): SliderStyleWidget = globalWidgetManager.sliderStyle()
+public fun sliderStyleWidget(setup: SliderStyleWidget.() -> Unit = {}): SliderStyleWidget = globalWidgetManager.sliderStyle(setup)
 
-public fun stackWidget(): StackWidget = globalWidgetManager.stack()
+public fun stackWidget(setup: StackWidget.() -> Unit = {}): StackWidget = globalWidgetManager.stack(setup)
 
-public fun tabWidget(): TabWidget = globalWidgetManager.tab()
+public fun tabWidget(setup: TabWidget.() -> Unit = {}): TabWidget = globalWidgetManager.tab(setup)
 
-public fun tagsInputWidget(): TagsInputWidget = globalWidgetManager.tagsInput()
+public fun tagsInputWidget(setup: TagsInputWidget.() -> Unit = {}): TagsInputWidget = globalWidgetManager.tagsInput(setup)
 
-public fun textWidget(): TextWidget = globalWidgetManager.text()
+public fun textWidget(setup: TextWidget.() -> Unit = {}): TextWidget = globalWidgetManager.text(setup)
 
-public fun textStyleWidget(): TextStyleWidget = globalWidgetManager.textStyle()
+public fun textStyleWidget(setup: TextStyleWidget.() -> Unit = {}): TextStyleWidget = globalWidgetManager.textStyle(setup)
 
-public fun textareaWidget(): TextareaWidget = globalWidgetManager.textarea()
+public fun textareaWidget(setup: TextareaWidget.() -> Unit = {}): TextareaWidget = globalWidgetManager.textarea(setup)
 
-public fun timeWidget(): TimeWidget = globalWidgetManager.time()
+public fun timeWidget(setup: TimeWidget.() -> Unit = {}): TimeWidget = globalWidgetManager.time(setup)
 
-public fun toggleButtonWidget(): ToggleButtonWidget = globalWidgetManager.toggleButton()
+public fun toggleButtonWidget(setup: ToggleButtonWidget.() -> Unit = {}): ToggleButtonWidget = globalWidgetManager.toggleButton(setup)
 
-public fun toggleButtonStyleWidget(): ToggleButtonStyleWidget = globalWidgetManager.toggleButtonStyle()
+public fun toggleButtonStyleWidget(setup: ToggleButtonStyleWidget.() -> Unit = {}): ToggleButtonStyleWidget = globalWidgetManager.toggleButtonStyle(setup)
 
-public fun toggleButtonsWidget(): ToggleButtonsWidget = globalWidgetManager.toggleButtons()
+public fun toggleButtonsWidget(setup: ToggleButtonsWidget.() -> Unit = {}): ToggleButtonsWidget = globalWidgetManager.toggleButtons(setup)
 
-public fun toggleButtonsStyleWidget(): ToggleButtonsStyleWidget = globalWidgetManager.toggleButtonsStyle()
+public fun toggleButtonsStyleWidget(setup: ToggleButtonsStyleWidget.() -> Unit = {}): ToggleButtonsStyleWidget = globalWidgetManager.toggleButtonsStyle(setup)
 
-public fun validWidget(): ValidWidget = globalWidgetManager.valid()
+public fun validWidget(setup: ValidWidget.() -> Unit = {}): ValidWidget = globalWidgetManager.valid(setup)
 
-public fun vboxWidget(): VBoxWidget = globalWidgetManager.vbox()
+public fun vboxWidget(setup: VBoxWidget.() -> Unit = {}): VBoxWidget = globalWidgetManager.vbox(setup)
 
-public fun videoWidget(): VideoWidget = globalWidgetManager.video()
+public fun videoWidget(setup: VideoWidget.() -> Unit = {}): VideoWidget = globalWidgetManager.video(setup)
 

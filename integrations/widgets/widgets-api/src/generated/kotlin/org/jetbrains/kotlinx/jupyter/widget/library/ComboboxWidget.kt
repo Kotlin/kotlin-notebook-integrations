@@ -21,7 +21,8 @@ private val comboboxSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.combobox(): ComboboxWidget = createAndRegisterWidget(ComboboxWidget.Factory)
+public fun WidgetManager.combobox(setup: ComboboxWidget.() -> Unit = {}): ComboboxWidget =
+    createAndRegisterWidget(ComboboxWidget.Factory).apply(setup)
 
 public class ComboboxWidget internal constructor(
     widgetManager: WidgetManager,

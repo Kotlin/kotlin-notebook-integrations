@@ -25,7 +25,8 @@ private val boxSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.box(): BoxWidget = createAndRegisterWidget(BoxWidget.Factory)
+public fun WidgetManager.box(setup: BoxWidget.() -> Unit = {}): BoxWidget =
+    createAndRegisterWidget(BoxWidget.Factory).apply(setup)
 
 public class BoxWidget internal constructor(
     widgetManager: WidgetManager,

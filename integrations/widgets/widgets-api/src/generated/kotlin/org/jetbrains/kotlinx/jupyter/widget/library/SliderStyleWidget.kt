@@ -18,7 +18,8 @@ private val sliderStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.sliderStyle(): SliderStyleWidget = createAndRegisterWidget(SliderStyleWidget.Factory)
+public fun WidgetManager.sliderStyle(setup: SliderStyleWidget.() -> Unit = {}): SliderStyleWidget =
+    createAndRegisterWidget(SliderStyleWidget.Factory).apply(setup)
 
 public class SliderStyleWidget internal constructor(
     widgetManager: WidgetManager,

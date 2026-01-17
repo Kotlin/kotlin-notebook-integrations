@@ -21,7 +21,8 @@ private val directionalLinkSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.directionalLink(): DirectionalLinkWidget = createAndRegisterWidget(DirectionalLinkWidget.Factory)
+public fun WidgetManager.directionalLink(setup: DirectionalLinkWidget.() -> Unit = {}): DirectionalLinkWidget =
+    createAndRegisterWidget(DirectionalLinkWidget.Factory).apply(setup)
 
 public class DirectionalLinkWidget internal constructor(
     widgetManager: WidgetManager,
@@ -30,7 +31,7 @@ public class DirectionalLinkWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<DirectionalLinkWidget>(directionalLinkSpec, ::DirectionalLinkWidget)
 
     /** The source (widget, 'trait_name') pair */
-    public var source: Pair<WidgetModel?, String> by prop("source", PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType), null to "")
+    public var source: Pair<WidgetModel?, String>? by prop("source", NullableType(PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType)), null to "")
     /** The target (widget, 'trait_name') pair */
-    public var target: Pair<WidgetModel?, String> by prop("target", PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType), null to "")
+    public var target: Pair<WidgetModel?, String>? by prop("target", NullableType(PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType)), null to "")
 }

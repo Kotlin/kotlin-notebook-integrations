@@ -23,7 +23,8 @@ private val selectSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.select(): SelectWidget = createAndRegisterWidget(SelectWidget.Factory)
+public fun WidgetManager.select(setup: SelectWidget.() -> Unit = {}): SelectWidget =
+    createAndRegisterWidget(SelectWidget.Factory).apply(setup)
 
 public class SelectWidget internal constructor(
     widgetManager: WidgetManager,

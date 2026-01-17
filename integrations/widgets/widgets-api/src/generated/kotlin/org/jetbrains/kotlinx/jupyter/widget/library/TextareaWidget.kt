@@ -22,7 +22,8 @@ private val textareaSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.textarea(): TextareaWidget = createAndRegisterWidget(TextareaWidget.Factory)
+public fun WidgetManager.textarea(setup: TextareaWidget.() -> Unit = {}): TextareaWidget =
+    createAndRegisterWidget(TextareaWidget.Factory).apply(setup)
 
 public class TextareaWidget internal constructor(
     widgetManager: WidgetManager,

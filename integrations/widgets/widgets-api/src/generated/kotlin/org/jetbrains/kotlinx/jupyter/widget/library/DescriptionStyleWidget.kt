@@ -17,7 +17,8 @@ private val descriptionStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.descriptionStyle(): DescriptionStyleWidget = createAndRegisterWidget(DescriptionStyleWidget.Factory)
+public fun WidgetManager.descriptionStyle(setup: DescriptionStyleWidget.() -> Unit = {}): DescriptionStyleWidget =
+    createAndRegisterWidget(DescriptionStyleWidget.Factory).apply(setup)
 
 public class DescriptionStyleWidget internal constructor(
     widgetManager: WidgetManager,

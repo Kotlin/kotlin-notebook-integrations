@@ -26,7 +26,8 @@ private val floatsInputSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.floatsInput(): FloatsInputWidget = createAndRegisterWidget(FloatsInputWidget.Factory)
+public fun WidgetManager.floatsInput(setup: FloatsInputWidget.() -> Unit = {}): FloatsInputWidget =
+    createAndRegisterWidget(FloatsInputWidget.Factory).apply(setup)
 
 public class FloatsInputWidget internal constructor(
     widgetManager: WidgetManager,

@@ -22,7 +22,8 @@ private val intTextSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.intText(): IntTextWidget = createAndRegisterWidget(IntTextWidget.Factory)
+public fun WidgetManager.intText(setup: IntTextWidget.() -> Unit = {}): IntTextWidget =
+    createAndRegisterWidget(IntTextWidget.Factory).apply(setup)
 
 public class IntTextWidget internal constructor(
     widgetManager: WidgetManager,

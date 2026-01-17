@@ -26,7 +26,8 @@ private val floatSliderSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.floatSlider(): FloatSliderWidget = createAndRegisterWidget(FloatSliderWidget.Factory)
+public fun WidgetManager.floatSlider(setup: FloatSliderWidget.() -> Unit = {}): FloatSliderWidget =
+    createAndRegisterWidget(FloatSliderWidget.Factory).apply(setup)
 
 public class FloatSliderWidget internal constructor(
     widgetManager: WidgetManager,

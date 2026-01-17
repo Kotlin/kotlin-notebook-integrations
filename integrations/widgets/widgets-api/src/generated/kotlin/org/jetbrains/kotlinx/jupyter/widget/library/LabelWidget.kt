@@ -21,7 +21,8 @@ private val labelSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.label(): LabelWidget = createAndRegisterWidget(LabelWidget.Factory)
+public fun WidgetManager.label(setup: LabelWidget.() -> Unit = {}): LabelWidget =
+    createAndRegisterWidget(LabelWidget.Factory).apply(setup)
 
 public class LabelWidget internal constructor(
     widgetManager: WidgetManager,

@@ -18,7 +18,8 @@ private val buttonStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.buttonStyle(): ButtonStyleWidget = createAndRegisterWidget(ButtonStyleWidget.Factory)
+public fun WidgetManager.buttonStyle(setup: ButtonStyleWidget.() -> Unit = {}): ButtonStyleWidget =
+    createAndRegisterWidget(ButtonStyleWidget.Factory).apply(setup)
 
 public class ButtonStyleWidget internal constructor(
     widgetManager: WidgetManager,

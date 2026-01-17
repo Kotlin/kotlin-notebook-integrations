@@ -18,7 +18,8 @@ private val labelStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.labelStyle(): LabelStyleWidget = createAndRegisterWidget(LabelStyleWidget.Factory)
+public fun WidgetManager.labelStyle(setup: LabelStyleWidget.() -> Unit = {}): LabelStyleWidget =
+    createAndRegisterWidget(LabelStyleWidget.Factory).apply(setup)
 
 public class LabelStyleWidget internal constructor(
     widgetManager: WidgetManager,

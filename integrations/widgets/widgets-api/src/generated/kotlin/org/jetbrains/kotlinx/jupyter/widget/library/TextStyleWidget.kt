@@ -18,7 +18,8 @@ private val textStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.textStyle(): TextStyleWidget = createAndRegisterWidget(TextStyleWidget.Factory)
+public fun WidgetManager.textStyle(setup: TextStyleWidget.() -> Unit = {}): TextStyleWidget =
+    createAndRegisterWidget(TextStyleWidget.Factory).apply(setup)
 
 public class TextStyleWidget internal constructor(
     widgetManager: WidgetManager,
