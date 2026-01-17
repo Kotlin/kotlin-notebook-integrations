@@ -12,6 +12,9 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 
+/**
+ * Represents the schema for a single widget attribute in `schema.json`.
+ */
 @Serializable
 internal data class AttributeSchema(
     val name: String,

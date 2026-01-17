@@ -80,6 +80,9 @@ private data class WidgetTypeSchema(
     val version: String,
 )
 
+/**
+ * Main entry point for the widget generator.
+ */
 public fun main() {
     val projectRoot =
         Path
@@ -95,6 +98,14 @@ public fun main() {
     generator.generate()
 }
 
+/**
+ * Handles the generation of Kotlin widget models from a JSON schema.
+ * It produces:
+ * 1. Widget classes with property delegation for state sync.
+ * 2. Enum objects for widget-specific enums.
+ * 3. A registry of all default widget factories.
+ * 4. Global helper functions for widget creation in Jupyter notebooks.
+ */
 private class WidgetGenerator(
     projectRoot: Path,
 ) {
@@ -105,6 +116,9 @@ private class WidgetGenerator(
     private val jupyterOutput = projectRoot / "integrations/widgets/widgets-jupyter/src/generated/kotlin"
     private val enums = mutableMapOf<String, EnumInfo>()
 
+    /**
+     * Executes the generation process.
+     */
     fun generate() {
         val schemaText = schemaPath.readText()
         val widgets = json.decodeFromString<List<WidgetSchema>>(schemaText)
@@ -135,6 +149,9 @@ private class WidgetGenerator(
         return WidgetInfo(baseName, className, functionName, isBaseWidget, this)
     }
 
+    /**
+     * Generates a single Kotlin file for a widget class.
+     */
     private fun generateWidgetFile(info: WidgetInfo) {
         val packageName = "$WIDGETS_PACKAGE.library"
         val filePath = apiOutput / packageName.replace('.', '/') / "${info.className}.kt"
@@ -248,6 +265,9 @@ private class WidgetGenerator(
         filePath.writeText(header + spec + body)
     }
 
+    /**
+     * Creates a property declaration string for a widget attribute.
+     */
     private fun createProperty(
         attribute: AttributeSchema,
         propertyType: PropertyType,
@@ -303,6 +323,9 @@ private class WidgetGenerator(
         }
     }
 
+    /**
+     * Generates `DefaultWidgetFactories.kt` with a list of all registered widget factories.
+     */
     private fun generateFactoryRegistry(widgetInfos: List<WidgetInfo>) {
         val packageName = "$WIDGET_LIBRARY_PACKAGE.registry"
         val filePath = apiOutput / packageName.replace('.', '/') / "DefaultWidgetFactories.kt"

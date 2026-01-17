@@ -6,6 +6,9 @@ private val commonAbbreviations: Set<String> =
         "dom",
     )
 
+/**
+ * Converts a string to camelCase, taking into account common abbreviations.
+ */
 internal fun String.toCamelCase(): String {
     if (isEmpty()) return this
     if (length == 1) return lowercase()
@@ -26,6 +29,9 @@ internal fun String.toCamelCase(): String {
     return prefix.lowercase() + rest
 }
 
+/**
+ * Converts a snake_case, kebab-case, or space-separated string to PascalCase.
+ */
 internal fun String.toPascalCase(): String =
     split('_', '-', ' ').joinToString("") { part ->
         part.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }

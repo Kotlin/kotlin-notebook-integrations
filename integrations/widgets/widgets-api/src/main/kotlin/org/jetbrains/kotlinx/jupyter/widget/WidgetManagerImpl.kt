@@ -174,6 +174,12 @@ public class WidgetManagerImpl(
         comm.send(data, metadata, buffers)
     }
 
+    /**
+     * Initializes a widget and sets up bi-directional synchronization via Comms.
+     *
+     * @param comm The [Comm] instance for this widget.
+     * @param widget The [WidgetModel] to initialize.
+     */
     private fun initializeWidget(
         comm: Comm,
         widget: WidgetModel,

@@ -42,6 +42,10 @@ internal data class EnumInfo(
     val values: List<String>,
 )
 
+/**
+ * Represents a property type in the widget generator.
+ * Maps Jupyter widget attributes to Kotlin types and property delegates.
+ */
 internal interface PropertyType {
     val kotlinType: String
     val typeExpression: String
@@ -486,6 +490,15 @@ private class UnionPropertyType(
     override fun getDefaultValueExpression(defaultValue: JsonElement): String = defaultValueExpression
 }
 
+/**
+ * Converts an [AttributeSchema] to a [PropertyType].
+ * This involves determining the appropriate Kotlin type, default value, and imports.
+ *
+ * @param json The [Json] instance for decoding type attributes.
+ * @param enums A map to collect enum definitions discovered during conversion.
+ * @param namePrefix Prefix for generated union class names (usually the widget class name).
+ * @param skipEnumRegistration If true, discovered enums won't be added to [enums].
+ */
 internal fun AttributeSchema.toPropertyType(
     json: Json,
     enums: MutableMap<String, EnumInfo>,
