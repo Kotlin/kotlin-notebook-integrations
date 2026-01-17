@@ -4,10 +4,13 @@ package org.jetbrains.kotlinx.jupyter.widget.library
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
+import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.PairType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val directionalLinkSpec = WidgetSpec(
     modelName = "DirectionalLinkModel",
@@ -27,7 +30,7 @@ public class DirectionalLinkWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<DirectionalLinkWidget>(directionalLinkSpec, ::DirectionalLinkWidget)
 
     /** The source (widget, 'trait_name') pair */
-    public var source: List<Any?> by prop("source", ArrayType(AnyType), emptyList())
+    public var source: Pair<WidgetModel?, String> by prop("source", PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType), null to "")
     /** The target (widget, 'trait_name') pair */
-    public var target: List<Any?> by prop("target", ArrayType(AnyType), emptyList())
+    public var target: Pair<WidgetModel?, String> by prop("target", PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType), null to "")
 }

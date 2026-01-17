@@ -9,14 +9,11 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
+import org.jetbrains.kotlinx.jupyter.widget.model.types.ranges.FloatRangeType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val floatRangeSliderSpec = WidgetSpec(
     modelName = "FloatRangeSliderModel",
@@ -66,5 +63,5 @@ public class FloatRangeSliderWidget internal constructor(
     /** A tooltip caption. */
     public var tooltip: String? by nullableStringProp("tooltip", null)
     /** Tuple of (lower, upper) bounds */
-    public var value: List<Any?> by prop("value", ArrayType(AnyType), listOf(0.0, 1.0))
+    public var value: ClosedRange<Double> by prop("value", FloatRangeType, 0.0..1.0)
 }

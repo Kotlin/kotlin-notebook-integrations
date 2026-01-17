@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.jupyter.widget.generator
 
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
@@ -9,12 +10,32 @@ import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
+import kotlin.reflect.KClass
 
 internal const val WIDGETS_PACKAGE: String = "org.jetbrains.kotlinx.jupyter.widget"
 internal const val WIDGET_TYPES_PACKAGE: String = "$WIDGETS_PACKAGE.model.types"
 internal const val WIDGET_LIBRARY_PACKAGE: String = "$WIDGETS_PACKAGE.library"
 
 private val typeArgumentsRegex = Regex("<.*>")
+
+private val assignedPropertyTypes =
+    listOf(
+        AssignedPropertyType("IntRangeSliderWidget", "value", IntRangePropertyType),
+        AssignedPropertyType("FloatRangeSliderWidget", "value", FloatRangePropertyType),
+        AssignedPropertyType("SelectionRangeSliderWidget", "index", IntRangePropertyType),
+        AssignedPropertyType("LinkWidget", "source", PairPropertyType(ReferencePropertyType("Widget"), StringPropertyType, "null to \"\"")),
+        AssignedPropertyType("LinkWidget", "target", PairPropertyType(ReferencePropertyType("Widget"), StringPropertyType, "null to \"\"")),
+        AssignedPropertyType(
+            "DirectionalLinkWidget",
+            "source",
+            PairPropertyType(ReferencePropertyType("Widget"), StringPropertyType, "null to \"\""),
+        ),
+        AssignedPropertyType(
+            "DirectionalLinkWidget",
+            "target",
+            PairPropertyType(ReferencePropertyType("Widget"), StringPropertyType, "null to \"\""),
+        ),
+    )
 
 internal data class EnumInfo(
     val className: String,
@@ -111,9 +132,39 @@ private object BytesPropertyType : PrimitiveType(
 }
 
 private object AnyPropertyType : PrimitiveType(
-    kotlinType = "Any",
+    kotlinType = "Any?",
     typeName = "AnyType",
+) {
+    override val isNullable: Boolean get() = true
+}
+
+private object IntRangePropertyType : BasicPropertyType(
+    kotlinType = "IntRange",
+    typeExpression = "IntRangeType",
+    imports = setOf("$WIDGET_TYPES_PACKAGE.ranges.IntRangeType"),
 )
+
+private object FloatRangePropertyType : BasicPropertyType(
+    kotlinType = "ClosedRange<Double>",
+    typeExpression = "FloatRangeType",
+    imports = setOf("$WIDGET_TYPES_PACKAGE.ranges.FloatRangeType"),
+)
+
+private class PairPropertyType(
+    val first: PropertyType,
+    val second: PropertyType,
+    val defaultValue: String? = null,
+) : PropertyType {
+    override val kotlinType: String get() = "Pair<${first.kotlinType}, ${second.kotlinType}>"
+    override val typeExpression: String get() = "PairType(${first.typeExpression}, ${second.typeExpression})"
+    override val isNullable: Boolean get() = false
+    override val imports: Set<String> get() = first.imports + second.imports + "$WIDGET_TYPES_PACKAGE.compound.PairType"
+    override val helperDeclarations: List<String> get() = first.helperDeclarations + second.helperDeclarations
+    override val optionName: String get() = "Pair"
+
+    override fun getDefaultValueExpression(defaultValue: JsonElement): String =
+        this.defaultValue ?: "Pair(${first.getDefaultValueExpression(defaultValue)}, ${second.getDefaultValueExpression(defaultValue)})"
+}
 
 private open class DatetimeBasePropertyType(
     kotlinType: String,
@@ -164,8 +215,12 @@ private object RawObjectPropertyType : BasicPropertyType(
 private class NullablePropertyType(
     val inner: PropertyType,
 ) : PropertyType {
-    override val kotlinType: String get() = inner.kotlinType + if (inner.isNullable) "" else "?"
-    override val typeExpression: String get() = if (inner.isNullable) inner.typeExpression else "NullableType(${inner.typeExpression})"
+    init {
+        require(!inner.isNullable)
+    }
+
+    override val kotlinType: String get() = inner.kotlinType + "?"
+    override val typeExpression: String get() = "NullableType(${inner.typeExpression})"
     override val isNullable: Boolean get() = true
     override val optionName: String get() = inner.optionName
     override val imports: Set<String> get() = inner.imports + "$WIDGET_TYPES_PACKAGE.compound.NullableType"
@@ -438,6 +493,11 @@ internal fun AttributeSchema.toPropertyType(
     skipEnumRegistration: Boolean = false,
 ): PropertyType {
     val isNullable = allowNone || default is JsonNull
+
+    assignedPropertyTypes
+        .find { it.widgetName == namePrefix && it.attributeName == name }
+        ?.let { return it.propertyType.asNullable() }
+
     val baseType =
         when (type) {
             is AttributeType.Single -> {
@@ -470,13 +530,7 @@ internal fun AttributeSchema.toPropertyType(
             is AttributeType.Union -> UnionPropertyType(this, json, enums, namePrefix)
         }
     if (isNullable) {
-        if (baseType.typeExpression == "AnyType") {
-            return object : PropertyType by baseType {
-                override val kotlinType: String get() = "Any?"
-                override val isNullable: Boolean get() = true
-            }
-        }
-        return NullablePropertyType(baseType)
+        return baseType.asNullable()
     }
     return baseType
 }
@@ -489,6 +543,8 @@ private fun JsonObject.addMissingFields(base: AttributeSchema): JsonObject {
     return JsonObject(newMap)
 }
 
+private fun PropertyType.asNullable(): PropertyType = if (isNullable) this else NullablePropertyType(this)
+
 private fun renderLiteral(
     kotlinType: String,
     value: JsonElement,
@@ -496,6 +552,12 @@ private fun renderLiteral(
     val isNullable = kotlinType.endsWith("?")
     return when {
         value is JsonNull -> "null"
+        kotlinType == "IntRange" -> {
+            renderRangeLiteral(value, Int::class)
+        }
+        kotlinType == "ClosedRange<Double>" -> {
+            renderRangeLiteral(value, Double::class)
+        }
         kotlinType.startsWith("ByteArray") -> "byteArrayOf()"
         kotlinType.startsWith("Map<") -> {
             if (isNullable) "null" else "emptyMap()"
@@ -525,9 +587,34 @@ private fun defaultArrayValue(
     elementKotlinType: String,
     value: JsonElement,
 ): String =
-    if (value is kotlinx.serialization.json.JsonArray && value.isNotEmpty()) {
+    if (value is JsonArray && value.isNotEmpty()) {
         val renderedItems = value.joinToString(", ") { renderLiteral(elementKotlinType, it) }
         "listOf($renderedItems)"
     } else {
         "emptyList()"
     }
+
+private fun renderRangeLiteral(
+    jsonValue: JsonElement,
+    rangeEndType: KClass<*>,
+): String {
+    fun renderElement(element: JsonElement): String =
+        when (rangeEndType) {
+            Int::class -> element.toString()
+            Double::class -> element.toString().let { if ("." !in it) "$it.0" else it }
+            else -> error("Unsupported range end type: $rangeEndType")
+        }
+
+    return if (jsonValue is JsonArray && jsonValue.size == 2) {
+        "${renderElement(jsonValue[0])}..${renderElement(jsonValue[1])}"
+    } else {
+        val renderedElement = renderElement(JsonPrimitive(0))
+        "$renderedElement..$renderedElement"
+    }
+}
+
+private data class AssignedPropertyType(
+    val widgetName: String,
+    val attributeName: String,
+    val propertyType: PropertyType,
+)
