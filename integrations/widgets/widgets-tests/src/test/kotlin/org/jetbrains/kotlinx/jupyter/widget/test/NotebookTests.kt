@@ -18,6 +18,12 @@ class NotebookTests : AbstractWidgetReplTest() {
             },
         )
 
+    @Test
+    fun output() =
+        notebookTest(
+            notebookName = "output",
+        )
+
     private fun notebookTest(
         notebookName: String,
         replacer: CodeReplacer = CodeReplacer.DEFAULT,
