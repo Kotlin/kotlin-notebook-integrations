@@ -33,7 +33,7 @@ public class ControllerWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<ControllerWidget>(controllerSpec, ::ControllerWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** The axes on the gamepad. */
     public var axes: List<ControllerAxisWidget?> by prop("axes", ArrayType(NullableType(WidgetReferenceType<ControllerAxisWidget>())), emptyList())
     /** The buttons on the gamepad. */

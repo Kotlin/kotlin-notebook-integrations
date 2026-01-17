@@ -31,7 +31,7 @@ public class ColorPickerWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<ColorPickerWidget>(colorPickerSpec, ::ColorPickerWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Display short version with just a color selector. */
     public var concise: Boolean by boolProp("concise", false)
     /** Description of the control. */

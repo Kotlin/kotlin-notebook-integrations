@@ -35,7 +35,7 @@ public class FileUploadWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<FileUploadWidget>(fileUploadSpec, ::FileUploadWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** File types to accept, empty string for all */
     public var accept: String by stringProp("accept", "")
     /** Use a predefined styling for the button. */
@@ -59,5 +59,5 @@ public class FileUploadWidget internal constructor(
     /** A tooltip caption. */
     public var tooltip: String? by nullableStringProp("tooltip", null)
     /** The file upload value */
-    public var value: List<Map<String, Any?>?> by prop("value", ArrayType(NullableType(RawObjectType)), emptyList())
+    public var value: List<Map<String, Any?>> by prop("value", ArrayType(RawObjectType), emptyList())
 }

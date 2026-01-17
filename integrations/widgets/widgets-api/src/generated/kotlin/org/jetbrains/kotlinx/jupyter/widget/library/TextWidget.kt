@@ -31,7 +31,7 @@ public class TextWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<TextWidget>(textSpec, ::TextWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Update the value as the user types. If False, update on submission, e.g., pressing Enter or navigating away. */
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
     /** Description of the control. */

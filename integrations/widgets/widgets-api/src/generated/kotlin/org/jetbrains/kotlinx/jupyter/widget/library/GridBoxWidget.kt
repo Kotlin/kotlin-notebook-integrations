@@ -35,7 +35,7 @@ public class GridBoxWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<GridBoxWidget>(gridBoxSpec, ::GridBoxWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Use a predefined styling for the box. */
     public var boxStyle: WidgetEnumEntry<BoxStyle> by prop("box_style", WidgetEnumType(BoxStyle, BoxStyle.Default), BoxStyle.Default)
     /** List of widget children */

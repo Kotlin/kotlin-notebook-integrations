@@ -32,7 +32,7 @@ public class ImageWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<ImageWidget>(imageSpec, ::ImageWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** The format of the image. */
     public var format: String by stringProp("format", "png")
     /** Height of the image in pixels. Use layout.height for styling the widget. */

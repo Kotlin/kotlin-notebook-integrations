@@ -36,7 +36,7 @@ public class FloatProgressWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<FloatProgressWidget>(floatProgressSpec, ::FloatProgressWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Use a predefined styling for the progress bar. */
     public var barStyle: WidgetEnumEntry<BarStyle>? by prop("bar_style", NullableType(WidgetEnumType(BarStyle, BarStyle.Default)), BarStyle.Default)
     /** Description of the control. */

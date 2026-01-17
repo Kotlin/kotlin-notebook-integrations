@@ -32,7 +32,7 @@ public class DOMWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<DOMWidget>(domWidgetSpec, ::DOMWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)

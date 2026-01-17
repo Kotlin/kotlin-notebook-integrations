@@ -5,9 +5,9 @@ import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.library.enums.ButtonStyle
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
-import org.jetbrains.kotlinx.jupyter.widget.model.SelectionWidgetBase
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
+import org.jetbrains.kotlinx.jupyter.widget.model.options.SingleNullableSelectionWidgetBase
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
@@ -31,11 +31,11 @@ public fun WidgetManager.toggleButtons(setup: ToggleButtonsWidget.() -> Unit = {
 public class ToggleButtonsWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : SelectionWidgetBase(toggleButtonsSpec, widgetManager) {
+) : SingleNullableSelectionWidgetBase(toggleButtonsSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<ToggleButtonsWidget>(toggleButtonsSpec, ::ToggleButtonsWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Use a predefined styling for the buttons. */
     public var buttonStyle: WidgetEnumEntry<ButtonStyle>? by prop("button_style", NullableType(WidgetEnumType(ButtonStyle, ButtonStyle.Default)), ButtonStyle.Default)
     /** Description of the control. */
@@ -45,7 +45,7 @@ public class ToggleButtonsWidget internal constructor(
     /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
     /** Icons names for each button (FontAwesome names without the fa- prefix). */
-    public var icons: List<String?> by prop("icons", ArrayType(NullableType(StringType)), emptyList())
+    public var icons: List<String> by prop("icons", ArrayType(StringType), emptyList())
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var style: ToggleButtonsStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.toggleButtonsStyle())
     /** Is widget tabbable? */
@@ -53,5 +53,5 @@ public class ToggleButtonsWidget internal constructor(
     /** A tooltip caption. */
     public var tooltip: String? by nullableStringProp("tooltip", null)
     /** Tooltips for each button. */
-    public var tooltips: List<String?> by prop("tooltips", ArrayType(NullableType(StringType)), emptyList())
+    public var tooltips: List<String> by prop("tooltips", ArrayType(StringType), emptyList())
 }

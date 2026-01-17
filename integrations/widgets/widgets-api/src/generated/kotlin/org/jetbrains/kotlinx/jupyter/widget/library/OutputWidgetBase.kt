@@ -28,12 +28,12 @@ public abstract class OutputWidgetBase internal constructor(
 ) : DefaultWidgetModel(outputSpec, widgetManager) {
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Parent message id of messages to capture */
     public var msgId: String by stringProp("msg_id", "")
     /** The output messages synced from the frontend. */
-    public var outputs: List<Map<String, Any?>?> by prop("outputs", ArrayType(NullableType(RawObjectType)), emptyList())
+    public var outputs: List<Map<String, Any?>> by prop("outputs", ArrayType(RawObjectType), emptyList())
     /** Is widget tabbable? */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** A tooltip caption. */

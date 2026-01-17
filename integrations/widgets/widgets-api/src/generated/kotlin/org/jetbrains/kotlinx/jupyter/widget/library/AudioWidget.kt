@@ -32,7 +32,7 @@ public class AudioWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<AudioWidget>(audioSpec, ::AudioWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** When true, the audio starts when it's displayed */
     public var autoplay: Boolean by boolProp("autoplay", true)
     /** Specifies that audio controls should be displayed (such as a play/pause button etc) */

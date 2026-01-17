@@ -31,7 +31,7 @@ public class ComboboxWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<ComboboxWidget>(comboboxSpec, ::ComboboxWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Update the value as the user types. If False, update on submission, e.g., pressing Enter or navigating away. */
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
     /** Description of the control. */
@@ -44,7 +44,7 @@ public class ComboboxWidget internal constructor(
     public var ensureOption: Boolean by boolProp("ensure_option", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** Dropdown options for the combobox */
-    public var options: List<String?> by prop("options", ArrayType(NullableType(StringType)), emptyList())
+    public var options: List<String> by prop("options", ArrayType(StringType), emptyList())
     /** Placeholder text to display when nothing has been typed */
     public var placeholder: String by stringProp("placeholder", "​")
     public var style: TextStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.textStyle())

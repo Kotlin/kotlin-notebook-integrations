@@ -5,9 +5,9 @@ import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.library.enums.Orientation
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
-import org.jetbrains.kotlinx.jupyter.widget.model.SelectionWidgetBase
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
+import org.jetbrains.kotlinx.jupyter.widget.model.options.SingleNullableSelectionWidgetBase
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
@@ -31,11 +31,11 @@ public fun WidgetManager.radioButtons(setup: RadioButtonsWidget.() -> Unit = {})
 public class RadioButtonsWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : SelectionWidgetBase(radioButtonsSpec, widgetManager) {
+) : SingleNullableSelectionWidgetBase(radioButtonsSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<RadioButtonsWidget>(radioButtonsSpec, ::RadioButtonsWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Description of the control. */
     public var description: String by stringProp("description", "")
     /** Accept HTML in the description. */

@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
+import org.jetbrains.kotlinx.jupyter.widget.model.options.MultipleSelectionWidgetBase
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
@@ -28,21 +29,17 @@ public fun WidgetManager.selectMultiple(setup: SelectMultipleWidget.() -> Unit =
 public class SelectMultipleWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(selectMultipleSpec, widgetManager) {
+) : MultipleSelectionWidgetBase(selectMultipleSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<SelectMultipleWidget>(selectMultipleSpec, ::SelectMultipleWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
-    /** The labels for the options. */
-    public var optionsLabels: List<String?> by prop("_options_labels", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Description of the control. */
     public var description: String by stringProp("description", "")
     /** Accept HTML in the description. */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     /** Enable or disable user changes */
     public var disabled: Boolean by boolProp("disabled", false)
-    /** Selected indices */
-    public var index: List<Int?> by prop("index", ArrayType(NullableType(IntType)), emptyList())
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     /** The number of rows to display. */
     public var rows: Int by intProp("rows", 5)

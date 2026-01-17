@@ -32,7 +32,7 @@ public class ColorsInputWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<ColorsInputWidget>(colorsInputSpec, ::ColorsInputWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
     public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
     /** Description of the control. */

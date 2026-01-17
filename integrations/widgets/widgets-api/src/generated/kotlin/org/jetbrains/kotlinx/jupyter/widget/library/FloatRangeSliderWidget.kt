@@ -37,7 +37,7 @@ public class FloatRangeSliderWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<FloatRangeSliderWidget>(floatRangeSliderSpec, ::FloatRangeSliderWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Slider dragging behavior. */
     public var behavior: WidgetEnumEntry<Behavior> by prop("behavior", WidgetEnumType(Behavior, Behavior.DragTap), Behavior.DragTap)
     /** Update the value of the widget as the user is sliding the slider. */

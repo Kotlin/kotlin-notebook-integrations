@@ -32,7 +32,7 @@ public class VideoWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<VideoWidget>(videoSpec, ::VideoWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** When true, the video starts when it's displayed */
     public var autoplay: Boolean by boolProp("autoplay", true)
     /** Specifies that video controls should be displayed (such as a play/pause button etc) */

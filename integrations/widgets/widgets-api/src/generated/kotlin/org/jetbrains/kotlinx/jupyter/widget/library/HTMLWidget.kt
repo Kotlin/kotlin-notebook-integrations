@@ -31,7 +31,7 @@ public class HTMLWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<HTMLWidget>(htmlSpec, ::HTMLWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Description of the control. */
     public var description: String by stringProp("description", "")
     /** Accept HTML in the description. */

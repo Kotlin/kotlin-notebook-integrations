@@ -32,7 +32,7 @@ public class NaiveDatetimeWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<NaiveDatetimeWidget>(naiveDatetimeSpec, ::NaiveDatetimeWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Description of the control. */
     public var description: String by stringProp("description", "")
     /** Accept HTML in the description. */

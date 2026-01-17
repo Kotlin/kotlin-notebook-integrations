@@ -36,7 +36,7 @@ public class AccordionWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<AccordionWidget>(accordionSpec, ::AccordionWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Use a predefined styling for the box. */
     public var boxStyle: WidgetEnumEntry<BoxStyle> by prop("box_style", WidgetEnumType(BoxStyle, BoxStyle.Default), BoxStyle.Default)
     /** List of widget children */
@@ -47,7 +47,7 @@ public class AccordionWidget internal constructor(
     /** Is widget tabbable? */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
     /** Titles of the pages */
-    public var titles: List<String?> by prop("titles", ArrayType(NullableType(StringType)), emptyList())
+    public var titles: List<String> by prop("titles", ArrayType(StringType), emptyList())
     /** A tooltip caption. */
     public var tooltip: String? by nullableStringProp("tooltip", null)
 }

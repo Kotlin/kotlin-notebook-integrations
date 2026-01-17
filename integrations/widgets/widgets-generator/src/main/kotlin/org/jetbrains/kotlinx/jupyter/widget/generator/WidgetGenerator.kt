@@ -28,18 +28,41 @@ private data class TraitInfo(
     val import: String? = null,
 )
 
-private val traits =
-    listOf(
-        TraitInfo(
-            baseClassName = "SelectionWidgetBase",
-            traitProperties =
-                mapOf(
-                    "_options_labels" to null,
-                    "index" to "Int?",
-                ),
-            import = "$WIDGETS_PACKAGE.model.SelectionWidgetBase",
-        ),
+private data class OptionWidgetTraitInfo(
+    val baseClassName: String,
+    val indexType: String,
+)
+
+private fun OptionWidgetTraitInfo.toTraitInfo(): TraitInfo =
+    TraitInfo(
+        baseClassName = baseClassName,
+        traitProperties =
+            mapOf(
+                "_options_labels" to "List<String>",
+                "index" to indexType,
+            ),
+        import = "$WIDGETS_PACKAGE.model.options.$baseClassName",
     )
+
+private val traits: List<TraitInfo> =
+    listOf(
+        OptionWidgetTraitInfo(
+            baseClassName = "SingleNullableSelectionWidgetBase",
+            indexType = "Int?",
+        ),
+        OptionWidgetTraitInfo(
+            baseClassName = "SingleSelectionWidgetBase",
+            indexType = "Int",
+        ),
+        OptionWidgetTraitInfo(
+            baseClassName = "MultipleSelectionWidgetBase",
+            indexType = "List<Int>",
+        ),
+        OptionWidgetTraitInfo(
+            baseClassName = "SelectionRangeWidgetBase",
+            indexType = "IntRange?",
+        ),
+    ).map { it.toTraitInfo() }
 
 private val baseWidgets = setOf("OutputWidget")
 

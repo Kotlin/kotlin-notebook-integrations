@@ -36,7 +36,7 @@ public class FloatLogSliderWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<FloatLogSliderWidget>(floatLogSliderSpec, ::FloatLogSliderWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Base for the logarithm */
     public var base: Double by doubleProp("base", 10.0)
     /** Slider dragging behavior. */

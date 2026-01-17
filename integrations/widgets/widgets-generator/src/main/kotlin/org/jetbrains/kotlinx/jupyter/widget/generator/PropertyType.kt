@@ -492,7 +492,7 @@ internal fun AttributeSchema.toPropertyType(
     namePrefix: String,
     skipEnumRegistration: Boolean = false,
 ): PropertyType {
-    val isNullable = allowNone || default is JsonNull
+    val isNullable = allowNone
 
     assignedPropertyTypes
         .find { it.widgetName == namePrefix && it.attributeName == name }

@@ -4,9 +4,9 @@ package org.jetbrains.kotlinx.jupyter.widget.library
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
-import org.jetbrains.kotlinx.jupyter.widget.model.SelectionWidgetBase
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
+import org.jetbrains.kotlinx.jupyter.widget.model.options.SingleNullableSelectionWidgetBase
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
@@ -28,11 +28,11 @@ public fun WidgetManager.dropdown(setup: DropdownWidget.() -> Unit = {}): Dropdo
 public class DropdownWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : SelectionWidgetBase(dropdownSpec, widgetManager) {
+) : SingleNullableSelectionWidgetBase(dropdownSpec, widgetManager) {
     internal object Factory : DefaultWidgetFactory<DropdownWidget>(dropdownSpec, ::DropdownWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Description of the control. */
     public var description: String by stringProp("description", "")
     /** Accept HTML in the description. */

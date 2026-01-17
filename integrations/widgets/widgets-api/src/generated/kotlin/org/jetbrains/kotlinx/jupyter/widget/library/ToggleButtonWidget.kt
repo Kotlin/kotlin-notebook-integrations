@@ -34,7 +34,7 @@ public class ToggleButtonWidget internal constructor(
     internal object Factory : DefaultWidgetFactory<ToggleButtonWidget>(toggleButtonSpec, ::ToggleButtonWidget)
 
     /** CSS classes applied to widget DOM element */
-    public var domClasses: List<String?> by prop("_dom_classes", ArrayType(NullableType(StringType)), emptyList())
+    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     /** Use a predefined styling for the button. */
     public var buttonStyle: WidgetEnumEntry<ButtonStyle> by prop("button_style", WidgetEnumType(ButtonStyle, ButtonStyle.Default), ButtonStyle.Default)
     /** Description of the control. */
