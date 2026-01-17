@@ -41,7 +41,7 @@ private fun OptionWidgetTraitInfo.toTraitInfo(): TraitInfo =
                 "_options_labels" to "List<String>",
                 "index" to indexType,
             ),
-        import = "$WIDGETS_PACKAGE.model.options.$baseClassName",
+        import = "$WIDGETS_PACKAGE.library.options.$baseClassName",
     )
 
 private val traits: List<TraitInfo> =

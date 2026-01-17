@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.jupyter.widget.model.options
+package org.jetbrains.kotlinx.jupyter.widget.library.options
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
