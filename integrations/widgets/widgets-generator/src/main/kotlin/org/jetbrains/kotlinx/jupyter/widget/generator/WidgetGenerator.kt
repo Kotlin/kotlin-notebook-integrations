@@ -237,7 +237,6 @@ private class WidgetGenerator(
                 if (!info.isBaseWidget) {
                     appendLine("    internal object Factory : DefaultWidgetFactory<${info.className}>($specName, ::${info.className})")
                 }
-                appendLine()
 
                 for (property in properties) {
                     appendLine(property)
@@ -288,6 +287,7 @@ private class WidgetGenerator(
         return buildString {
             val help = attribute.help
             if (help.isNotEmpty()) {
+                appendLine()
                 appendLine("    /**")
                 appendLine("     * $help")
                 appendLine("     */")

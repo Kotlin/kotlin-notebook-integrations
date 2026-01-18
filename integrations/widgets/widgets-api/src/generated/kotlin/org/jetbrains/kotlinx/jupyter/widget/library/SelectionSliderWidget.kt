@@ -39,40 +39,49 @@ public class SelectionSliderWidget internal constructor(
      * CSS classes applied to widget DOM element
      */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
+
     /**
      * Slider dragging behavior.
      */
     public var behavior: WidgetEnumEntry<Behavior> by prop("behavior", WidgetEnumType(Behavior, Behavior.DragTap), Behavior.DragTap)
+
     /**
      * Update the value of the widget as the user is holding the slider.
      */
     public var continuousUpdate: Boolean by boolProp("continuous_update", true)
+
     /**
      * Description of the control.
      */
     public var description: String by stringProp("description", "")
+
     /**
      * Accept HTML in the description.
      */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+
     /**
      * Enable or disable user changes
      */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+
     /**
      * Vertical or horizontal.
      */
     public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
+
     /**
      * Display the current selected label next to the slider
      */
     public var readout: Boolean by boolProp("readout", true)
     public var style: SliderStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.sliderStyle())
+
     /**
      * Is widget tabbable?
      */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
+
     /**
      * A tooltip caption.
      */

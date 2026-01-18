@@ -36,18 +36,22 @@ public class ControllerButtonWidget internal constructor(
      */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+
     /**
      * Whether the button is pressed.
      */
     public var pressed: Boolean by boolProp("pressed", false)
+
     /**
      * Is widget tabbable?
      */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
+
     /**
      * A tooltip caption.
      */
     public var tooltip: String? by nullableStringProp("tooltip", null)
+
     /**
      * The value of the button.
      */

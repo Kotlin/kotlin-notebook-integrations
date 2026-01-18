@@ -34,28 +34,34 @@ public class HtmlMathWidget internal constructor(
      * CSS classes applied to widget DOM element
      */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
+
     /**
      * Description of the control.
      */
     public var description: String by stringProp("description", "")
+
     /**
      * Accept HTML in the description.
      */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+
     /**
      * Placeholder text to display when nothing has been typed
      */
     public var placeholder: String by stringProp("placeholder", "​")
     public var style: HtmlMathStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.htmlMathStyle())
+
     /**
      * Is widget tabbable?
      */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
+
     /**
      * A tooltip caption.
      */
     public var tooltip: String? by nullableStringProp("tooltip", null)
+
     /**
      * String value
      */

@@ -31,30 +31,37 @@ public class ToggleButtonStyleWidget internal constructor(
      * Width of the description to the side of the control.
      */
     public var descriptionWidth: String by stringProp("description_width", "")
+
     /**
      * Toggle button text font family.
      */
     public var fontFamily: String? by nullableStringProp("font_family", null)
+
     /**
      * Toggle button text font size.
      */
     public var fontSize: String? by nullableStringProp("font_size", null)
+
     /**
      * Toggle button text font style.
      */
     public var fontStyle: String? by nullableStringProp("font_style", null)
+
     /**
      * Toggle button text font variant.
      */
     public var fontVariant: String? by nullableStringProp("font_variant", null)
+
     /**
      * Toggle button text font weight.
      */
     public var fontWeight: String? by nullableStringProp("font_weight", null)
+
     /**
      * Toggle button text color
      */
     public var textColor: String? by nullableStringProp("text_color", null)
+
     /**
      * Toggle button text decoration.
      */

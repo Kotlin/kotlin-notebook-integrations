@@ -35,47 +35,58 @@ public class BoundedIntTextWidget internal constructor(
      * CSS classes applied to widget DOM element
      */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
+
     /**
      * Update the value as the user types. If False, update on submission, e.g., pressing Enter or navigating away.
      */
     public var continuousUpdate: Boolean by boolProp("continuous_update", false)
+
     /**
      * Description of the control.
      */
     public var description: String by stringProp("description", "")
+
     /**
      * Accept HTML in the description.
      */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+
     /**
      * Enable or disable user changes
      */
     public var disabled: Boolean by boolProp("disabled", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+
     /**
      * Max value
      */
     public var max: Int by intProp("max", 100)
+
     /**
      * Min value
      */
     public var min: Int by intProp("min", 0)
+
     /**
      * Minimum step to increment the value
      */
     public var step: Int by intProp("step", 1)
+
     /**
      * Styling customizations
      */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
+
     /**
      * Is widget tabbable?
      */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
+
     /**
      * A tooltip caption.
      */
     public var tooltip: String? by nullableStringProp("tooltip", null)
+
     /**
      * Int value
      */

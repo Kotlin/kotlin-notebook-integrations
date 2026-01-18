@@ -30,10 +30,12 @@ public class ToggleButtonsStyleWidget internal constructor(
      * The width of each button.
      */
     public var buttonWidth: String by stringProp("button_width", "")
+
     /**
      * Width of the description to the side of the control.
      */
     public var descriptionWidth: String by stringProp("description_width", "")
+
     /**
      * Text font weight of each button.
      */

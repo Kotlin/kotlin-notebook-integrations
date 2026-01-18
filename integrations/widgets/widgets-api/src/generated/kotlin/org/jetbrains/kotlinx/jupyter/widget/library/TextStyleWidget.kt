@@ -31,14 +31,17 @@ public class TextStyleWidget internal constructor(
      * Background specifications.
      */
     public var background: String? by nullableStringProp("background", null)
+
     /**
      * Width of the description to the side of the control.
      */
     public var descriptionWidth: String by stringProp("description_width", "")
+
     /**
      * Text font size.
      */
     public var fontSize: String? by nullableStringProp("font_size", null)
+
     /**
      * Text color
      */

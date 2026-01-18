@@ -37,39 +37,48 @@ public class ToggleButtonWidget internal constructor(
      * CSS classes applied to widget DOM element
      */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
+
     /**
      * Use a predefined styling for the button.
      */
     public var buttonStyle: WidgetEnumEntry<ButtonStyle> by prop("button_style", WidgetEnumType(ButtonStyle, ButtonStyle.Default), ButtonStyle.Default)
+
     /**
      * Description of the control.
      */
     public var description: String by stringProp("description", "")
+
     /**
      * Accept HTML in the description.
      */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+
     /**
      * Enable or disable user changes.
      */
     public var disabled: Boolean by boolProp("disabled", false)
+
     /**
      * Font-awesome icon.
      */
     public var icon: String by stringProp("icon", "")
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+
     /**
      * Styling customizations
      */
     public var style: ToggleButtonStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.toggleButtonStyle())
+
     /**
      * Is widget tabbable?
      */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
+
     /**
      * A tooltip caption.
      */
     public var tooltip: String? by nullableStringProp("tooltip", null)
+
     /**
      * Bool value
      */

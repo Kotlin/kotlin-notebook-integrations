@@ -31,6 +31,7 @@ public class CheckboxStyleWidget internal constructor(
      * Background specifications.
      */
     public var background: String? by nullableStringProp("background", null)
+
     /**
      * Width of the description to the side of the control.
      */

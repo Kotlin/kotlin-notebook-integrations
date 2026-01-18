@@ -65,14 +65,17 @@ public class TimeWidget internal constructor(
      * CSS classes applied to widget DOM element
      */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
+
     /**
      * Description of the control.
      */
     public var description: String by stringProp("description", "")
+
     /**
      * Accept HTML in the description.
      */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+
     /**
      * Enable or disable user changes.
      */
@@ -80,18 +83,22 @@ public class TimeWidget internal constructor(
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var max: java.time.LocalTime? by nullableTimeProp("max", null)
     public var min: java.time.LocalTime? by nullableTimeProp("min", null)
+
     /**
      * The time step to use for the picker, in seconds, or "any".
      */
     public var step: TimeWidgetStep by prop("step", TimeWidgetStepType, TimeWidgetStep.DoubleValue(60.0))
+
     /**
      * Styling customizations
      */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
+
     /**
      * Is widget tabbable?
      */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
+
     /**
      * A tooltip caption.
      */

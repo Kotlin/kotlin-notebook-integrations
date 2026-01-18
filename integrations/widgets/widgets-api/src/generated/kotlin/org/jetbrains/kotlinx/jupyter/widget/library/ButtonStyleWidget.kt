@@ -31,30 +31,37 @@ public class ButtonStyleWidget internal constructor(
      * Color of the button
      */
     public var buttonColor: String? by nullableStringProp("button_color", null)
+
     /**
      * Button text font family.
      */
     public var fontFamily: String? by nullableStringProp("font_family", null)
+
     /**
      * Button text font size.
      */
     public var fontSize: String? by nullableStringProp("font_size", null)
+
     /**
      * Button text font style.
      */
     public var fontStyle: String? by nullableStringProp("font_style", null)
+
     /**
      * Button text font variant.
      */
     public var fontVariant: String? by nullableStringProp("font_variant", null)
+
     /**
      * Button text font weight.
      */
     public var fontWeight: String? by nullableStringProp("font_weight", null)
+
     /**
      * Button text color.
      */
     public var textColor: String? by nullableStringProp("text_color", null)
+
     /**
      * Button text decoration.
      */

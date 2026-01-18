@@ -36,39 +36,48 @@ public class ControllerWidget internal constructor(
      * CSS classes applied to widget DOM element
      */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
+
     /**
      * The axes on the gamepad.
      */
     public var axes: List<ControllerAxisWidget?> by prop("axes", ArrayType(NullableType(WidgetReferenceType<ControllerAxisWidget>())), emptyList())
+
     /**
      * The buttons on the gamepad.
      */
     public var buttons: List<ButtonWidget?> by prop("buttons", ArrayType(NullableType(WidgetReferenceType<ButtonWidget>())), emptyList())
+
     /**
      * Whether the gamepad is connected.
      */
     public var connected: Boolean by boolProp("connected", false)
+
     /**
      * The id number of the controller.
      */
     public var index: Int by intProp("index", 0)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+
     /**
      * The name of the control mapping.
      */
     public var mapping: String by stringProp("mapping", "")
+
     /**
      * The name of the controller.
      */
     public var name: String by stringProp("name", "")
+
     /**
      * Is widget tabbable?
      */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
+
     /**
      * The last time the data from this gamepad was updated.
      */
     public var timestamp: Double by doubleProp("timestamp", 0.0)
+
     /**
      * A tooltip caption.
      */

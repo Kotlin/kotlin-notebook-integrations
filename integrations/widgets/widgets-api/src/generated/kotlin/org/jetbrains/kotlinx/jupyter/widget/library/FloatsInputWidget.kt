@@ -41,10 +41,12 @@ public class FloatsInputWidget internal constructor(
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
     public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
+
     /**
      * Description of the control.
      */
     public var description: String by stringProp("description", "")
+
     /**
      * Accept HTML in the description.
      */
@@ -54,22 +56,27 @@ public class FloatsInputWidget internal constructor(
     public var max: Double? by nullableDoubleProp("max", null)
     public var min: Double? by nullableDoubleProp("min", null)
     public var placeholder: String by stringProp("placeholder", "​")
+
     /**
      * Styling customizations
      */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
+
     /**
      * Is widget tabbable?
      */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
+
     /**
      * Use a predefined styling for the tags.
      */
     public var tagStyle: WidgetEnumEntry<TagStyle> by prop("tag_style", WidgetEnumType(TagStyle, TagStyle.Default), TagStyle.Default)
+
     /**
      * A tooltip caption.
      */
     public var tooltip: String? by nullableStringProp("tooltip", null)
+
     /**
      * List of float tags
      */

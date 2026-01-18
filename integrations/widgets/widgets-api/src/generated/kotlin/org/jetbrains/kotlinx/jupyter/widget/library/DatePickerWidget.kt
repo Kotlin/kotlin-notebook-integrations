@@ -65,14 +65,17 @@ public class DatePickerWidget internal constructor(
      * CSS classes applied to widget DOM element
      */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
+
     /**
      * Description of the control.
      */
     public var description: String by stringProp("description", "")
+
     /**
      * Accept HTML in the description.
      */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+
     /**
      * Enable or disable user changes.
      */
@@ -80,18 +83,22 @@ public class DatePickerWidget internal constructor(
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var max: java.time.LocalDate? by nullableDateProp("max", null)
     public var min: java.time.LocalDate? by nullableDateProp("min", null)
+
     /**
      * The date step to use for the picker, in days, or "any".
      */
     public var step: DatePickerWidgetStep by prop("step", DatePickerWidgetStepType, DatePickerWidgetStep.IntValue(1))
+
     /**
      * Styling customizations
      */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
+
     /**
      * Is widget tabbable?
      */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
+
     /**
      * A tooltip caption.
      */

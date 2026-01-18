@@ -39,40 +39,49 @@ public class IntProgressWidget internal constructor(
      * CSS classes applied to widget DOM element
      */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
+
     /**
      * Use a predefined styling for the progress bar.
      */
     public var barStyle: WidgetEnumEntry<BarStyle> by prop("bar_style", WidgetEnumType(BarStyle, BarStyle.Default), BarStyle.Default)
+
     /**
      * Description of the control.
      */
     public var description: String by stringProp("description", "")
+
     /**
      * Accept HTML in the description.
      */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+
     /**
      * Max value
      */
     public var max: Int by intProp("max", 100)
+
     /**
      * Min value
      */
     public var min: Int by intProp("min", 0)
+
     /**
      * Vertical or horizontal.
      */
     public var orientation: WidgetEnumEntry<Orientation> by prop("orientation", WidgetEnumType(Orientation, Orientation.Horizontal), Orientation.Horizontal)
     public var style: ProgressStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.progressStyle())
+
     /**
      * Is widget tabbable?
      */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
+
     /**
      * A tooltip caption.
      */
     public var tooltip: String? by nullableStringProp("tooltip", null)
+
     /**
      * Int value
      */

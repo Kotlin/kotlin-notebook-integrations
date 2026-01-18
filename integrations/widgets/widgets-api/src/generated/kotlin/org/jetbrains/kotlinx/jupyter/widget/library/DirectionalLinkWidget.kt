@@ -34,6 +34,7 @@ public class DirectionalLinkWidget internal constructor(
      * The source (widget, 'trait_name') pair
      */
     public var source: Pair<WidgetModel?, String>? by prop("source", NullableType(PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType)), null to "")
+
     /**
      * The target (widget, 'trait_name') pair
      */

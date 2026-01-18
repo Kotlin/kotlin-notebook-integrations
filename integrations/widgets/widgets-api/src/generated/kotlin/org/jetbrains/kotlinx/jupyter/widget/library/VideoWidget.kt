@@ -35,39 +35,48 @@ public class VideoWidget internal constructor(
      * CSS classes applied to widget DOM element
      */
     public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
+
     /**
      * When true, the video starts when it's displayed
      */
     public var autoplay: Boolean by boolProp("autoplay", true)
+
     /**
      * Specifies that video controls should be displayed (such as a play/pause button etc)
      */
     public var controls: Boolean by boolProp("controls", true)
+
     /**
      * The format of the video.
      */
     public var format: String by stringProp("format", "mp4")
+
     /**
      * Height of the video in pixels.
      */
     public var height: String by stringProp("height", "")
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+
     /**
      * When true, the video will start from the beginning after finishing
      */
     public var loop: Boolean by boolProp("loop", true)
+
     /**
      * Is widget tabbable?
      */
     public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
+
     /**
      * A tooltip caption.
      */
     public var tooltip: String? by nullableStringProp("tooltip", null)
+
     /**
      * The media data as a memory view of bytes.
      */
     public var value: ByteArray by bytesProp("value", byteArrayOf())
+
     /**
      * Width of the video in pixels.
      */

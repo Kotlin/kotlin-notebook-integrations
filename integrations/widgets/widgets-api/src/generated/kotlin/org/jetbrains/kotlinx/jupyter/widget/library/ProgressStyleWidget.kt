@@ -31,6 +31,7 @@ public class ProgressStyleWidget internal constructor(
      * Color of the progress bar.
      */
     public var barColor: String? by nullableStringProp("bar_color", null)
+
     /**
      * Width of the description to the side of the control.
      */
