@@ -31,12 +31,12 @@ abstract class AbstractWidgetReplTest(
         nextEventIndex = 0
     }
 
-    protected fun assertOpenEvents(vararg expectedModelNames: String): List<CommEvent.Open> =
-        expectedModelNames.map { assertNextOpenEvent(it) }
+    protected fun shouldHaveOpenEvents(vararg expectedModelNames: String): List<CommEvent.Open> =
+        expectedModelNames.map { shouldHaveNextOpenEvent(it) }
 
-    protected fun assertNextOpenEvent(expectedModelName: String) = assertOpenEvent(nextEventIndex++, expectedModelName)
+    protected fun shouldHaveNextOpenEvent(expectedModelName: String) = shouldHaveOpenEvent(nextEventIndex++, expectedModelName)
 
-    protected fun assertOpenEvent(
+    protected fun shouldHaveOpenEvent(
         index: Int,
         expectedModelName: String,
     ): CommEvent.Open {
@@ -49,13 +49,13 @@ abstract class AbstractWidgetReplTest(
         return openEvent
     }
 
-    protected fun assertNextUpdateEvent(vararg expectedState: Pair<String, Any?>) =
-        assertMessageEvent(nextEventIndex++, "update", *expectedState)
+    protected fun shouldHaveNextUpdateEvent(vararg expectedState: Pair<String, Any?>) =
+        shouldHaveMessageEvent(nextEventIndex++, "update", *expectedState)
 
-    protected fun assertNextEchoUpdateEvent(vararg expectedState: Pair<String, Any?>) =
-        assertMessageEvent(nextEventIndex++, "echo_update", *expectedState)
+    protected fun shouldHaveNextEchoUpdateEvent(vararg expectedState: Pair<String, Any?>) =
+        shouldHaveMessageEvent(nextEventIndex++, "echo_update", *expectedState)
 
-    protected fun assertMessageEvent(
+    protected fun shouldHaveMessageEvent(
         index: Int,
         method: String,
         vararg expectedState: Pair<String, Any?>,
@@ -69,7 +69,7 @@ abstract class AbstractWidgetReplTest(
         return msgEvent
     }
 
-    protected fun assertBufferPath(
+    protected fun shouldHaveBufferPath(
         msgEvent: CommEvent.Message,
         index: Int,
         vararg expectedPath: String,
@@ -82,7 +82,7 @@ abstract class AbstractWidgetReplTest(
         }
     }
 
-    protected fun assertWidgetDisplayJson(
+    protected fun shouldHaveWidgetDisplayJson(
         json: JsonObject?,
         expectedModelId: String,
         expectedModelName: String,

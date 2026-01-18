@@ -22,14 +22,14 @@ private val domWidgetSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.domWidget(setup: DOMWidget.() -> Unit = {}): DOMWidget =
-    createAndRegisterWidget(DOMWidget.Factory).apply(setup)
+public fun WidgetManager.domWidget(setup: DomWidget.() -> Unit = {}): DomWidget =
+    createAndRegisterWidget(DomWidget.Factory).apply(setup)
 
-public class DOMWidget internal constructor(
+public class DomWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
 ) : DefaultWidgetModel(domWidgetSpec, widgetManager) {
-    internal object Factory : DefaultWidgetFactory<DOMWidget>(domWidgetSpec, ::DOMWidget)
+    internal object Factory : DefaultWidgetFactory<DomWidget>(domWidgetSpec, ::DomWidget)
 
     /**
      * CSS classes applied to widget DOM element

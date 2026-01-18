@@ -140,13 +140,13 @@ private class WidgetGenerator(
             model.name?.removeSuffix("Model")
                 ?: view.name?.removeSuffix("View")
                 ?: error("Either model or view name must be specified")
-        val classNamePrefix = if (baseName.endsWith("Widget")) baseName else "${baseName}Widget"
+        val classNamePrefix = baseName.toWidgetClassName()
 
         val isBaseWidget = classNamePrefix in baseWidgets
         val className = if (isBaseWidget) "${classNamePrefix}Base" else classNamePrefix
 
         val functionName = baseName.toCamelCase()
-        return WidgetInfo(baseName, className, functionName, isBaseWidget, this)
+        return WidgetInfo(className, functionName, isBaseWidget, this)
     }
 
     /**
@@ -277,7 +277,7 @@ private class WidgetGenerator(
         imports.addAll(propertyType.imports)
         helperDeclarations.addAll(propertyType.helperDeclarations)
 
-        val propertyName = attribute.name.toPascalCase().toCamelCase()
+        val propertyName = attribute.name.toCamelCase()
         val kotlinType = propertyType.kotlinType
         val defaultValueExpression = propertyType.getDefaultValueExpression(attribute.default)
 
@@ -407,7 +407,6 @@ private class WidgetGenerator(
 }
 
 private data class WidgetInfo(
-    val baseName: String,
     val className: String,
     val functionName: String,
     val isBaseWidget: Boolean,

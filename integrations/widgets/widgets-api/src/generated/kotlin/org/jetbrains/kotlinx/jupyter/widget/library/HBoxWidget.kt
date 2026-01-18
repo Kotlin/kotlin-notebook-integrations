@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val hboxSpec = WidgetSpec(
+private val hBoxSpec = WidgetSpec(
     modelName = "HBoxModel",
     modelModule = "@jupyter-widgets/controls",
     modelModuleVersion = "2.0.0",
@@ -25,14 +25,14 @@ private val hboxSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.hbox(setup: HBoxWidget.() -> Unit = {}): HBoxWidget =
+public fun WidgetManager.hBox(setup: HBoxWidget.() -> Unit = {}): HBoxWidget =
     createAndRegisterWidget(HBoxWidget.Factory).apply(setup)
 
 public class HBoxWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(hboxSpec, widgetManager) {
-    internal object Factory : DefaultWidgetFactory<HBoxWidget>(hboxSpec, ::HBoxWidget)
+) : DefaultWidgetModel(hBoxSpec, widgetManager) {
+    internal object Factory : DefaultWidgetFactory<HBoxWidget>(hBoxSpec, ::HBoxWidget)
 
     /**
      * CSS classes applied to widget DOM element

@@ -18,7 +18,7 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         execRaw("val s = intSliderWidget()")
 
         // IntSlider depends on Layout and SliderStyle, so 3 widgets are registered
-        assertOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel")
+        shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel")
         facility.sentEvents.shouldHaveSize(3)
     }
 
@@ -27,15 +27,15 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         execRaw("val s = intSliderWidget()")
         execRaw("s.value = 42")
 
-        assertNextOpenEvent("LayoutModel")
-        assertNextOpenEvent("SliderStyleModel")
-        val sliderId = assertNextOpenEvent("IntSliderModel").commId
-        assertNextUpdateEvent("value" to 42)
+        shouldHaveNextOpenEvent("LayoutModel")
+        shouldHaveNextOpenEvent("SliderStyleModel")
+        val sliderId = shouldHaveNextOpenEvent("IntSliderModel").commId
+        shouldHaveNextUpdateEvent("value" to 42)
         facility.sentEvents.shouldHaveSize(4)
 
         val displayedWidget = execSuccess("s").displayValue
         val json = displayedWidget?.toJson(Json.EMPTY, null)
-        assertWidgetDisplayJson(json, sliderId, "IntSliderModel")
+        shouldHaveWidgetDisplayJson(json, sliderId, "IntSliderModel")
     }
 
     @Test
@@ -43,10 +43,10 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         execRaw("val s2 = intSliderWidget()")
         execRaw("s2.layout?.width = \"100px\"")
 
-        val layoutId = assertNextOpenEvent("LayoutModel").commId
-        assertNextOpenEvent("SliderStyleModel")
-        assertNextOpenEvent("IntSliderModel")
-        val msgEvent = assertNextUpdateEvent("width" to "100px")
+        val layoutId = shouldHaveNextOpenEvent("LayoutModel").commId
+        shouldHaveNextOpenEvent("SliderStyleModel")
+        shouldHaveNextOpenEvent("IntSliderModel")
+        val msgEvent = shouldHaveNextUpdateEvent("width" to "100px")
         msgEvent.commId shouldBe layoutId
         facility.sentEvents.shouldHaveSize(4)
     }
@@ -57,12 +57,12 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         execRaw("img.value = byteArrayOf(1, 2, 3)")
 
         // Image depends on Layout, so 2 widgets registered
-        assertNextOpenEvent("LayoutModel")
-        assertNextOpenEvent("ImageModel")
-        val msgEvent = assertNextUpdateEvent()
+        shouldHaveNextOpenEvent("LayoutModel")
+        shouldHaveNextOpenEvent("ImageModel")
+        val msgEvent = shouldHaveNextUpdateEvent()
         msgEvent.buffers.shouldHaveSize(1)
         msgEvent.buffers[0] shouldBe byteArrayOf(1, 2, 3)
-        assertBufferPath(msgEvent, 0, "value")
+        shouldHaveBufferPath(msgEvent, 0, "value")
         facility.sentEvents.shouldHaveSize(3)
     }
 
@@ -73,8 +73,8 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         execRaw("dp.value = LocalDate.of(2023, 1, 1)")
 
         // DatePicker depends on Layout and DescriptionStyle, so 3 widgets registered
-        assertOpenEvents("LayoutModel", "DescriptionStyleModel", "DatePickerModel")
-        assertNextUpdateEvent("value" to "2023-01-01")
+        shouldHaveOpenEvents("LayoutModel", "DescriptionStyleModel", "DatePickerModel")
+        shouldHaveNextUpdateEvent("value" to "2023-01-01")
         facility.sentEvents.shouldHaveSize(4)
     }
 
@@ -82,14 +82,14 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     fun `time widget with integer step`() {
         execRaw("val tw = timeWidget()")
         execRaw("tw.step = TimeWidgetStep.DoubleValue(30.0)")
-        assertOpenEvents("LayoutModel", "DescriptionStyleModel", "TimeModel")
-        assertNextUpdateEvent("step" to 30.0)
+        shouldHaveOpenEvents("LayoutModel", "DescriptionStyleModel", "TimeModel")
+        shouldHaveNextUpdateEvent("step" to 30.0)
     }
 
     @Test
     fun `frontend message updates widget property`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = assertOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
+        val sliderId = shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
 
         sendUpdate(sliderId, "value" to 42)
 
@@ -126,7 +126,7 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     fun `frontend message updates image bytes`() {
         execRaw("val img = imageWidget()")
         // Image depends on Layout, so 2 widgets registered. Image is the second one.
-        val imageId = assertOpenEvents("LayoutModel", "ImageModel").last().commId
+        val imageId = shouldHaveOpenEvents("LayoutModel", "ImageModel").last().commId
 
         val bytes = byteArrayOf(10, 20, 30)
         sendUpdate(
@@ -142,7 +142,7 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     @Test
     fun `echo_update is disabled by default`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = assertOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
+        val sliderId = shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
         resetEvents()
 
         sendUpdate(sliderId, "value" to 42)
@@ -154,12 +154,12 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     fun `echo_update can be enabled and filters properties`() {
         execRaw("widgetManager.echoUpdateEnabled = true")
         execRaw("val s = intSliderWidget()")
-        val sliderId = assertOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
+        val sliderId = shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
         resetEvents()
 
         // 1. Both properties are echoed
         sendUpdate(sliderId, "value" to 42)
-        assertNextEchoUpdateEvent()
+        shouldHaveNextEchoUpdateEvent()
         resetEvents()
 
         // 2. Disable echo for 'value' property
@@ -176,7 +176,7 @@ class WidgetReplTest : AbstractWidgetReplTest() {
 
         facility.sentEvents.shouldHaveSize(1)
 
-        val echoEvent = assertNextEchoUpdateEvent()
+        val echoEvent = shouldHaveNextEchoUpdateEvent()
         val echoState = echoEvent.data["state"]?.shouldBeInstanceOf<JsonObject>()!!
         echoState.containsKey("step") shouldBe true
         echoState.containsKey("value") shouldBe false
@@ -188,13 +188,13 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     @Test
     fun `time widget union type property`() {
         execRaw("val t = timeWidget()")
-        assertOpenEvents("LayoutModel", "DescriptionStyleModel", "TimeModel")
+        shouldHaveOpenEvents("LayoutModel", "DescriptionStyleModel", "TimeModel")
 
         execRaw("t.step = TimeWidgetStep.DoubleValue(10.5)")
-        assertNextUpdateEvent("step" to 10.5)
+        shouldHaveNextUpdateEvent("step" to 10.5)
 
         execRaw("t.step = TimeWidgetStep.AnyStep")
-        assertNextUpdateEvent("step" to "any")
+        shouldHaveNextUpdateEvent("step" to "any")
 
         facility.sentEvents.shouldHaveSize(5)
     }
@@ -202,8 +202,8 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     @Test
     fun `time widget union type property from frontend`() {
         execRaw("val t2 = timeWidget()")
-        assertOpenEvents("LayoutModel", "DescriptionStyleModel")
-        val timeId = assertNextOpenEvent("TimeModel").commId
+        shouldHaveOpenEvents("LayoutModel", "DescriptionStyleModel")
+        val timeId = shouldHaveNextOpenEvent("TimeModel").commId
 
         sendUpdate(timeId, "step" to 42.0)
         execRaw("t2.step").shouldBeInstanceOf<TimeWidgetStep.DoubleValue>().value shouldBe 42.0
@@ -215,12 +215,12 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     @Test
     fun `date picker step property`() {
         execRaw("val dp = datePickerWidget()")
-        assertOpenEvents("LayoutModel", "DescriptionStyleModel", "DatePickerModel")
+        shouldHaveOpenEvents("LayoutModel", "DescriptionStyleModel", "DatePickerModel")
 
         execRaw("dp.step = DatePickerWidgetStep.IntValue(5)")
-        assertNextUpdateEvent("step" to 5)
+        shouldHaveNextUpdateEvent("step" to 5)
 
         execRaw("dp.step = DatePickerWidgetStep.AnyStep")
-        assertNextUpdateEvent("step" to "any")
+        shouldHaveNextUpdateEvent("step" to "any")
     }
 }

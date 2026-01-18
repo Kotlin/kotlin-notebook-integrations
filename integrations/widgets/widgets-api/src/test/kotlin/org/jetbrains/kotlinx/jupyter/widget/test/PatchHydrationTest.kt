@@ -7,12 +7,12 @@ import kotlinx.serialization.json.put
 import org.jetbrains.kotlinx.jupyter.widget.protocol.WireMessage
 import org.jetbrains.kotlinx.jupyter.widget.protocol.getPatch
 import org.jetbrains.kotlinx.jupyter.widget.protocol.getWireMessage
+import org.junit.jupiter.api.Test
 import kotlin.collections.get
-import kotlin.test.Test
 
 class PatchHydrationTest {
     @Test
-    fun `get patch should work for simple objects`() {
+    fun `getPatch should work for simple objects`() {
         val bytes = byteArrayOf(1, 2, 3)
         val state =
             buildJsonObject {
@@ -30,7 +30,7 @@ class PatchHydrationTest {
     }
 
     @Test
-    fun `get patch should work for nested objects`() {
+    fun `getPatch should work for nested objects`() {
         val bytes = byteArrayOf(4, 5, 6)
         val state =
             buildJsonObject {
@@ -54,7 +54,7 @@ class PatchHydrationTest {
     }
 
     @Test
-    fun `get wire message should work`() {
+    fun `getWireMessage should work`() {
         val bytes1 = byteArrayOf(1)
         val bytes2 = byteArrayOf(2)
         val patch =
@@ -75,7 +75,7 @@ class PatchHydrationTest {
     }
 
     @Test
-    fun `roundtrip should work`() {
+    fun `getWireMessage and getPatch roundtrip should preserve state`() {
         val patch =
             mapOf(
                 "list" to

@@ -16,11 +16,11 @@ import org.jetbrains.kotlinx.jupyter.widget.library.ComboboxWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ControllerAxisWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ControllerButtonWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ControllerWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.DOMWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.DatePickerWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.DatetimeWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.DescriptionStyleWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.DirectionalLinkWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.DomWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.DropdownWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.FileUploadWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.FloatLogSliderWidget
@@ -31,10 +31,10 @@ import org.jetbrains.kotlinx.jupyter.widget.library.FloatTextWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.FloatsInputWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.GridBoxWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.HBoxWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.HTMLMathStyleWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.HTMLMathWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.HTMLStyleWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.HTMLWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.HtmlMathStyleWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.HtmlMathWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.HtmlStyleWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.HtmlWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ImageWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.IntProgressWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.IntRangeSliderWidget
@@ -87,11 +87,11 @@ internal val defaultWidgetFactories = listOf<WidgetFactory<*>>(
     ControllerAxisWidget.Factory,
     ControllerButtonWidget.Factory,
     ControllerWidget.Factory,
-    DOMWidget.Factory,
     DatePickerWidget.Factory,
     DatetimeWidget.Factory,
     DescriptionStyleWidget.Factory,
     DirectionalLinkWidget.Factory,
+    DomWidget.Factory,
     DropdownWidget.Factory,
     FileUploadWidget.Factory,
     FloatLogSliderWidget.Factory,
@@ -102,10 +102,10 @@ internal val defaultWidgetFactories = listOf<WidgetFactory<*>>(
     FloatsInputWidget.Factory,
     GridBoxWidget.Factory,
     HBoxWidget.Factory,
-    HTMLMathStyleWidget.Factory,
-    HTMLMathWidget.Factory,
-    HTMLStyleWidget.Factory,
-    HTMLWidget.Factory,
+    HtmlMathStyleWidget.Factory,
+    HtmlMathWidget.Factory,
+    HtmlStyleWidget.Factory,
+    HtmlWidget.Factory,
     ImageWidget.Factory,
     IntProgressWidget.Factory,
     IntRangeSliderWidget.Factory,

@@ -6,6 +6,12 @@ plugins {
 dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlin.reflect)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.test.kotlintest.assertions)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 kotlin {

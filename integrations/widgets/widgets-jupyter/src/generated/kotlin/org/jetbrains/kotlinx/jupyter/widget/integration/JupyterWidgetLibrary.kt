@@ -16,11 +16,11 @@ import org.jetbrains.kotlinx.jupyter.widget.library.ComboboxWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ControllerAxisWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ControllerButtonWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ControllerWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.DOMWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.DatePickerWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.DatetimeWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.DescriptionStyleWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.DirectionalLinkWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.DomWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.DropdownWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.FileUploadWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.FloatLogSliderWidget
@@ -31,10 +31,10 @@ import org.jetbrains.kotlinx.jupyter.widget.library.FloatTextWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.FloatsInputWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.GridBoxWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.HBoxWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.HTMLMathStyleWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.HTMLMathWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.HTMLStyleWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.HTMLWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.HtmlMathStyleWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.HtmlMathWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.HtmlStyleWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.HtmlWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ImageWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.IntProgressWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.IntRangeSliderWidget
@@ -98,7 +98,7 @@ import org.jetbrains.kotlinx.jupyter.widget.library.floatSlider
 import org.jetbrains.kotlinx.jupyter.widget.library.floatText
 import org.jetbrains.kotlinx.jupyter.widget.library.floatsInput
 import org.jetbrains.kotlinx.jupyter.widget.library.gridBox
-import org.jetbrains.kotlinx.jupyter.widget.library.hbox
+import org.jetbrains.kotlinx.jupyter.widget.library.hBox
 import org.jetbrains.kotlinx.jupyter.widget.library.html
 import org.jetbrains.kotlinx.jupyter.widget.library.htmlMath
 import org.jetbrains.kotlinx.jupyter.widget.library.htmlMathStyle
@@ -134,8 +134,8 @@ import org.jetbrains.kotlinx.jupyter.widget.library.toggleButton
 import org.jetbrains.kotlinx.jupyter.widget.library.toggleButtonStyle
 import org.jetbrains.kotlinx.jupyter.widget.library.toggleButtons
 import org.jetbrains.kotlinx.jupyter.widget.library.toggleButtonsStyle
+import org.jetbrains.kotlinx.jupyter.widget.library.vBox
 import org.jetbrains.kotlinx.jupyter.widget.library.valid
-import org.jetbrains.kotlinx.jupyter.widget.library.vbox
 import org.jetbrains.kotlinx.jupyter.widget.library.video
 
 public fun accordionWidget(setup: AccordionWidget.() -> Unit = {}): AccordionWidget = globalWidgetManager.accordion(setup)
@@ -176,7 +176,7 @@ public fun descriptionStyleWidget(setup: DescriptionStyleWidget.() -> Unit = {})
 
 public fun directionalLinkWidget(setup: DirectionalLinkWidget.() -> Unit = {}): DirectionalLinkWidget = globalWidgetManager.directionalLink(setup)
 
-public fun domWidget(setup: DOMWidget.() -> Unit = {}): DOMWidget = globalWidgetManager.domWidget(setup)
+public fun domWidget(setup: DomWidget.() -> Unit = {}): DomWidget = globalWidgetManager.domWidget(setup)
 
 public fun dropdownWidget(setup: DropdownWidget.() -> Unit = {}): DropdownWidget = globalWidgetManager.dropdown(setup)
 
@@ -196,15 +196,15 @@ public fun floatsInputWidget(setup: FloatsInputWidget.() -> Unit = {}): FloatsIn
 
 public fun gridBoxWidget(setup: GridBoxWidget.() -> Unit = {}): GridBoxWidget = globalWidgetManager.gridBox(setup)
 
-public fun hboxWidget(setup: HBoxWidget.() -> Unit = {}): HBoxWidget = globalWidgetManager.hbox(setup)
+public fun hBoxWidget(setup: HBoxWidget.() -> Unit = {}): HBoxWidget = globalWidgetManager.hBox(setup)
 
-public fun htmlWidget(setup: HTMLWidget.() -> Unit = {}): HTMLWidget = globalWidgetManager.html(setup)
+public fun htmlWidget(setup: HtmlWidget.() -> Unit = {}): HtmlWidget = globalWidgetManager.html(setup)
 
-public fun htmlMathWidget(setup: HTMLMathWidget.() -> Unit = {}): HTMLMathWidget = globalWidgetManager.htmlMath(setup)
+public fun htmlMathWidget(setup: HtmlMathWidget.() -> Unit = {}): HtmlMathWidget = globalWidgetManager.htmlMath(setup)
 
-public fun htmlMathStyleWidget(setup: HTMLMathStyleWidget.() -> Unit = {}): HTMLMathStyleWidget = globalWidgetManager.htmlMathStyle(setup)
+public fun htmlMathStyleWidget(setup: HtmlMathStyleWidget.() -> Unit = {}): HtmlMathStyleWidget = globalWidgetManager.htmlMathStyle(setup)
 
-public fun htmlStyleWidget(setup: HTMLStyleWidget.() -> Unit = {}): HTMLStyleWidget = globalWidgetManager.htmlStyle(setup)
+public fun htmlStyleWidget(setup: HtmlStyleWidget.() -> Unit = {}): HtmlStyleWidget = globalWidgetManager.htmlStyle(setup)
 
 public fun imageWidget(setup: ImageWidget.() -> Unit = {}): ImageWidget = globalWidgetManager.image(setup)
 
@@ -268,9 +268,9 @@ public fun toggleButtonsWidget(setup: ToggleButtonsWidget.() -> Unit = {}): Togg
 
 public fun toggleButtonsStyleWidget(setup: ToggleButtonsStyleWidget.() -> Unit = {}): ToggleButtonsStyleWidget = globalWidgetManager.toggleButtonsStyle(setup)
 
-public fun validWidget(setup: ValidWidget.() -> Unit = {}): ValidWidget = globalWidgetManager.valid(setup)
+public fun vBoxWidget(setup: VBoxWidget.() -> Unit = {}): VBoxWidget = globalWidgetManager.vBox(setup)
 
-public fun vboxWidget(setup: VBoxWidget.() -> Unit = {}): VBoxWidget = globalWidgetManager.vbox(setup)
+public fun validWidget(setup: ValidWidget.() -> Unit = {}): ValidWidget = globalWidgetManager.valid(setup)
 
 public fun videoWidget(setup: VideoWidget.() -> Unit = {}): VideoWidget = globalWidgetManager.video(setup)
 

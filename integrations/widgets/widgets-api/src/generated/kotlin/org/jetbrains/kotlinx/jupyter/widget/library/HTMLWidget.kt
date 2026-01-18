@@ -21,14 +21,14 @@ private val htmlSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.html(setup: HTMLWidget.() -> Unit = {}): HTMLWidget =
-    createAndRegisterWidget(HTMLWidget.Factory).apply(setup)
+public fun WidgetManager.html(setup: HtmlWidget.() -> Unit = {}): HtmlWidget =
+    createAndRegisterWidget(HtmlWidget.Factory).apply(setup)
 
-public class HTMLWidget internal constructor(
+public class HtmlWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
 ) : DefaultWidgetModel(htmlSpec, widgetManager) {
-    internal object Factory : DefaultWidgetFactory<HTMLWidget>(htmlSpec, ::HTMLWidget)
+    internal object Factory : DefaultWidgetFactory<HtmlWidget>(htmlSpec, ::HtmlWidget)
 
     /**
      * CSS classes applied to widget DOM element
@@ -47,7 +47,7 @@ public class HTMLWidget internal constructor(
      * Placeholder text to display when nothing has been typed
      */
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: HTMLStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.htmlStyle())
+    public var style: HtmlStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.htmlStyle())
     /**
      * Is widget tabbable?
      */

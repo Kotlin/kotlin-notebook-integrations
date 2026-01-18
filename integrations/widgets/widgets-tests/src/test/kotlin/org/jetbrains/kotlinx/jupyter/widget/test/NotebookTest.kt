@@ -5,12 +5,12 @@ import org.jetbrains.jupyter.parser.notebook.Cell
 import org.jetbrains.jupyter.parser.notebook.CodeCell
 import org.jetbrains.jupyter.parser.notebook.Output
 import org.jetbrains.kotlinx.jupyter.repl.result.EvalResultEx
+import org.junit.jupiter.api.Test
 import java.io.File
-import kotlin.test.Test
 
 class NotebookTest : AbstractWidgetReplTest() {
     @Test
-    fun widgets() =
+    fun `widgets notebook should run successfully`() =
         notebookTest(
             notebookName = "widgets",
             replacer = {
@@ -19,7 +19,7 @@ class NotebookTest : AbstractWidgetReplTest() {
         )
 
     @Test
-    fun output() =
+    fun `output notebook should run successfully`() =
         notebookTest(
             notebookName = "output",
         )

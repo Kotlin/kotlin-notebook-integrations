@@ -18,14 +18,14 @@ private val htmlMathStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.htmlMathStyle(setup: HTMLMathStyleWidget.() -> Unit = {}): HTMLMathStyleWidget =
-    createAndRegisterWidget(HTMLMathStyleWidget.Factory).apply(setup)
+public fun WidgetManager.htmlMathStyle(setup: HtmlMathStyleWidget.() -> Unit = {}): HtmlMathStyleWidget =
+    createAndRegisterWidget(HtmlMathStyleWidget.Factory).apply(setup)
 
-public class HTMLMathStyleWidget internal constructor(
+public class HtmlMathStyleWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
 ) : DefaultWidgetModel(htmlMathStyleSpec, widgetManager) {
-    internal object Factory : DefaultWidgetFactory<HTMLMathStyleWidget>(htmlMathStyleSpec, ::HTMLMathStyleWidget)
+    internal object Factory : DefaultWidgetFactory<HtmlMathStyleWidget>(htmlMathStyleSpec, ::HtmlMathStyleWidget)
 
     /**
      * Background specifications.

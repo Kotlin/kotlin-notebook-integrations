@@ -35,7 +35,7 @@ private val assignedPropertyTypes =
             "target",
             PairPropertyType(ReferencePropertyType("Widget"), StringPropertyType, "null to \"\""),
         ),
-    )
+    ).map { it.copy(widgetName = it.widgetName.toPascalCase()) }
 
 internal data class EnumInfo(
     val className: String,
@@ -302,7 +302,7 @@ private class ReferencePropertyType(
         when (widget) {
             "Widget" -> "WidgetModel"
             "Axis" -> "ControllerAxisWidget"
-            else -> if (widget.endsWith("Widget")) widget else "${widget}Widget"
+            else -> widget.toWidgetClassName()
         },
 ) : BasicPropertyType(
         kotlinType = "$targetClass?",

@@ -18,14 +18,14 @@ private val htmlStyleSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.htmlStyle(setup: HTMLStyleWidget.() -> Unit = {}): HTMLStyleWidget =
-    createAndRegisterWidget(HTMLStyleWidget.Factory).apply(setup)
+public fun WidgetManager.htmlStyle(setup: HtmlStyleWidget.() -> Unit = {}): HtmlStyleWidget =
+    createAndRegisterWidget(HtmlStyleWidget.Factory).apply(setup)
 
-public class HTMLStyleWidget internal constructor(
+public class HtmlStyleWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
 ) : DefaultWidgetModel(htmlStyleSpec, widgetManager) {
-    internal object Factory : DefaultWidgetFactory<HTMLStyleWidget>(htmlStyleSpec, ::HTMLStyleWidget)
+    internal object Factory : DefaultWidgetFactory<HtmlStyleWidget>(htmlStyleSpec, ::HtmlStyleWidget)
 
     /**
      * Background specifications.

@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val vboxSpec = WidgetSpec(
+private val vBoxSpec = WidgetSpec(
     modelName = "VBoxModel",
     modelModule = "@jupyter-widgets/controls",
     modelModuleVersion = "2.0.0",
@@ -25,14 +25,14 @@ private val vboxSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.vbox(setup: VBoxWidget.() -> Unit = {}): VBoxWidget =
+public fun WidgetManager.vBox(setup: VBoxWidget.() -> Unit = {}): VBoxWidget =
     createAndRegisterWidget(VBoxWidget.Factory).apply(setup)
 
 public class VBoxWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(vboxSpec, widgetManager) {
-    internal object Factory : DefaultWidgetFactory<VBoxWidget>(vboxSpec, ::VBoxWidget)
+) : DefaultWidgetModel(vBoxSpec, widgetManager) {
+    internal object Factory : DefaultWidgetFactory<VBoxWidget>(vBoxSpec, ::VBoxWidget)
 
     /**
      * CSS classes applied to widget DOM element

@@ -21,14 +21,14 @@ private val htmlMathSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.htmlMath(setup: HTMLMathWidget.() -> Unit = {}): HTMLMathWidget =
-    createAndRegisterWidget(HTMLMathWidget.Factory).apply(setup)
+public fun WidgetManager.htmlMath(setup: HtmlMathWidget.() -> Unit = {}): HtmlMathWidget =
+    createAndRegisterWidget(HtmlMathWidget.Factory).apply(setup)
 
-public class HTMLMathWidget internal constructor(
+public class HtmlMathWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
 ) : DefaultWidgetModel(htmlMathSpec, widgetManager) {
-    internal object Factory : DefaultWidgetFactory<HTMLMathWidget>(htmlMathSpec, ::HTMLMathWidget)
+    internal object Factory : DefaultWidgetFactory<HtmlMathWidget>(htmlMathSpec, ::HtmlMathWidget)
 
     /**
      * CSS classes applied to widget DOM element
@@ -47,7 +47,7 @@ public class HTMLMathWidget internal constructor(
      * Placeholder text to display when nothing has been typed
      */
     public var placeholder: String by stringProp("placeholder", "​")
-    public var style: HTMLMathStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.htmlMathStyle())
+    public var style: HtmlMathStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.htmlMathStyle())
     /**
      * Is widget tabbable?
      */
