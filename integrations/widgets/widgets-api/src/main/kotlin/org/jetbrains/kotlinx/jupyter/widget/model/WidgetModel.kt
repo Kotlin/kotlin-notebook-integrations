@@ -33,7 +33,7 @@ public abstract class WidgetModel(
     private val customMessageListeners = mutableListOf<CustomMessageListener>()
 
     /**
-     * Retrieves a property by name.
+     * Retrieves a property by its Jupyter protocol name (e.g., `_dom_classes`).
      */
     public fun getProperty(name: String): WidgetModelProperty<*>? = properties[name]
 

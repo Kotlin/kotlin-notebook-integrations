@@ -9,22 +9,115 @@ This integration provides a collection of interactive widgets for Kotlin Noteboo
 
 Use this API through the `%use widgets` magic command in a Kotlin Notebook.
 
+### Basic Widgets
+
 ```kotlin
 %use widgets
 
-val slider = intSliderWidget().apply {
+val slider = intSliderWidget {
     min = 0
     max = 100
     value = 50
     description = "Select a value:"
 }
 
-val label = labelWidget().apply {
+val label = labelWidget {
     value = "Current value: ${slider.value}"
 }
 
 // Display the slider
 slider
+```
+
+### Layouts and Containers
+
+Arrange widgets using `hBox`, `vBox`, `accordion`, or `tab`:
+
+```kotlin
+val slider = intSliderWidget { description = "Slider" }
+val text = textWidget { description = "Text" }
+
+val accordion = accordionWidget {
+    children = listOf(slider, text)
+    titles = listOf("Controls", "Input")
+}
+
+accordion
+```
+
+### Linking Widgets
+
+You can link properties of different widgets together:
+
+```kotlin
+val play = playWidget {
+    min = 0
+    max = 100
+    step = 1
+    interval = 500
+}
+
+val slider = intSliderWidget()
+
+linkWidget {
+    source = play to "value"
+    target = slider to "value"
+}
+
+hBoxWidget { children = listOf(play, slider) }
+```
+
+### Output Widget
+
+The `OutputWidget` can capture and display standard output and rich results:
+
+```kotlin
+val out = outputWidget()
+out // Display the widget
+
+out.withScope {
+    println("This will be printed inside the output widget")
+    DISPLAY("Rich output works too")
+}
+```
+
+### Selection Widgets
+
+Various selection widgets like `dropdown`, `selectMultiple`, and `radioButtons` are available:
+
+```kotlin
+val dropdown = dropdownWidget {
+    options = listOf(
+        "Option 1" to 1,
+        "Option 2" to 2,
+        "Option 3" to 3
+    )
+    value = 2
+    description = "Choose:"
+}
+```
+
+### Event Listeners
+
+You can react to widget property changes or custom messages from the frontend:
+
+```kotlin
+val slider = intSliderWidget { description = "Slider" }
+val label = labelWidget { value = "Value is 0" }
+
+// Listen to all property changes
+slider.addChangeListener { patch, fromFrontend ->
+    if ("value" in patch) {
+        label.value = "Value is ${slider.value}"
+    }
+}
+
+// Listen to a specific property change
+slider.getProperty("value")?.addChangeListener { newValue, fromFrontend ->
+    println("Value changed to $newValue")
+}
+
+vBoxWidget { children = listOf(slider, label) }
 ```
 
 ## Module structure
