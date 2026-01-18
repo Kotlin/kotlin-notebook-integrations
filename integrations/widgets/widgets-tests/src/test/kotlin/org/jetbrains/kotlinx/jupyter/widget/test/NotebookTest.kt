@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.jupyter.repl.result.EvalResultEx
 import java.io.File
 import kotlin.test.Test
 
-class NotebookTests : AbstractWidgetReplTest() {
+class NotebookTest : AbstractWidgetReplTest() {
     @Test
     fun widgets() =
         notebookTest(
@@ -73,7 +73,7 @@ class NotebookTests : AbstractWidgetReplTest() {
     }
 }
 
-fun interface CodeReplacer {
+private fun interface CodeReplacer {
     fun replace(code: String): String
 
     companion object {
@@ -81,7 +81,7 @@ fun interface CodeReplacer {
     }
 }
 
-fun interface CellClause {
+private fun interface CellClause {
     fun isAccepted(cell: Cell): Boolean
 
     companion object {
@@ -91,7 +91,7 @@ fun interface CellClause {
     }
 }
 
-infix fun CellClause.and(other: CellClause): CellClause =
+private infix fun CellClause.and(other: CellClause): CellClause =
     CellClause { cell ->
         // Prevent lazy evaluation
         val acceptedThis = this.isAccepted(cell)
@@ -99,7 +99,7 @@ infix fun CellClause.and(other: CellClause): CellClause =
         acceptedThis && acceptedOther
     }
 
-data class CodeCellData(
+private data class CodeCellData(
     val code: String,
     val outputs: List<Output>,
 )

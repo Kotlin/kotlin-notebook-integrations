@@ -15,6 +15,9 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import org.jetbrains.kotlinx.jupyter.protocol.comms.CommManagerImpl
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
+import org.jetbrains.kotlinx.jupyter.widget.test.util.CommEvent
+import org.jetbrains.kotlinx.jupyter.widget.test.util.TestServerCommCommunicationFacility
+import org.jetbrains.kotlinx.jupyter.widget.test.util.WidgetReplProvider
 
 abstract class AbstractWidgetReplTest(
     protected val facility: TestServerCommCommunicationFacility = TestServerCommCommunicationFacility(),

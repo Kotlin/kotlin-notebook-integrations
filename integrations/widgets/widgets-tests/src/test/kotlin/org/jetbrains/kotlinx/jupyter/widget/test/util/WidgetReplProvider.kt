@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.jupyter.widget.test
+package org.jetbrains.kotlinx.jupyter.widget.test.util
 
 import org.jetbrains.kotlinx.jupyter.api.EmbeddedKernelRunMode
 import org.jetbrains.kotlinx.jupyter.api.libraries.CommManager

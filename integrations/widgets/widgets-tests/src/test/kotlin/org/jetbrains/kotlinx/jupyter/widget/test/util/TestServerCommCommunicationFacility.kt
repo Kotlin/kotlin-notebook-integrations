@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.jupyter.widget.test
+package org.jetbrains.kotlinx.jupyter.widget.test.util
 
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
