@@ -61,12 +61,32 @@ abstract class AbstractWidgetReplTest(
         vararg expectedState: Pair<String, Any?>,
     ): CommEvent.Message {
         val msgEvent = facility.sentEvents[index].shouldBeInstanceOf<CommEvent.Message>()
-        msgEvent.data["method"]?.jsonPrimitive?.content shouldBe method
-        val state = msgEvent.data["state"].shouldBeInstanceOf<JsonObject>()
+        return msgEvent.shouldHaveMessage(method, *expectedState)
+    }
+
+    protected fun CommEvent.Message.shouldHaveMessage(
+        method: String,
+        vararg expectedState: Pair<String, Any?>,
+    ): CommEvent.Message {
+        data["method"]?.jsonPrimitive?.content shouldBe method
+        val state = data["state"].shouldBeInstanceOf<JsonObject>()
         for ((key, value) in expectedState) {
             state[key]?.jsonPrimitive?.content shouldBe value?.toString()
         }
-        return msgEvent
+        return this
+    }
+
+    protected fun shouldHaveUpdateEvent(
+        propertyName: String,
+        vararg expectedState: Pair<String, Any?>,
+    ): CommEvent.Message {
+        val event =
+            facility.sentEvents.filterIsInstance<CommEvent.Message>().find {
+                it.data["method"]?.jsonPrimitive?.content == "update" &&
+                    it.data["state"]?.shouldBeInstanceOf<JsonObject>()?.containsKey(propertyName) == true
+            }
+        event.shouldNotBeNull()
+        return event.shouldHaveMessage("update", *expectedState)
     }
 
     protected fun shouldHaveBufferPath(

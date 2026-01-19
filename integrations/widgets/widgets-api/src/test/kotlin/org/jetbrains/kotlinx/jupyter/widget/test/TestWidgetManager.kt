@@ -19,9 +19,9 @@ interface TestWidgetManager : WidgetManager {
 
     override fun getWidgetId(widget: WidgetModel): String? = notImplemented()
 
-    override fun registerWidget(widget: WidgetModel) = notImplemented()
+    override fun registerWidget(widget: WidgetModel) {}
 
-    override fun closeWidget(widget: WidgetModel) = notImplemented()
+    override fun closeWidget(widget: WidgetModel) {}
 
     override fun renderWidget(widget: WidgetModel): DisplayResult = notImplemented()
 

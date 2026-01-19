@@ -29,7 +29,8 @@ class WidgetReplTest : AbstractWidgetReplTest() {
 
         shouldHaveNextOpenEvent("LayoutModel")
         shouldHaveNextOpenEvent("SliderStyleModel")
-        val sliderId = shouldHaveNextOpenEvent("IntSliderModel").commId
+        shouldHaveNextOpenEvent("IntSliderModel")
+        val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
         shouldHaveNextUpdateEvent("value" to 42)
         facility.sentEvents.shouldHaveSize(4)
 
@@ -43,7 +44,8 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         execRaw("val s2 = intSliderWidget()")
         execRaw("s2.layout?.width = \"100px\"")
 
-        val layoutId = shouldHaveNextOpenEvent("LayoutModel").commId
+        val layoutId = execRaw("widgetManager.getWidgetId(s2.layout!!)") as String
+        shouldHaveNextOpenEvent("LayoutModel")
         shouldHaveNextOpenEvent("SliderStyleModel")
         shouldHaveNextOpenEvent("IntSliderModel")
         val msgEvent = shouldHaveNextUpdateEvent("width" to "100px")
@@ -89,7 +91,7 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     @Test
     fun `frontend message updates widget property`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
+        val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
 
         sendUpdate(sliderId, "value" to 42)
 
@@ -126,7 +128,7 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     fun `frontend message updates image bytes`() {
         execRaw("val img = imageWidget()")
         // Image depends on Layout, so 2 widgets registered. Image is the second one.
-        val imageId = shouldHaveOpenEvents("LayoutModel", "ImageModel").last().commId
+        val imageId = execRaw("widgetManager.getWidgetId(img)") as String
 
         val bytes = byteArrayOf(10, 20, 30)
         sendUpdate(
@@ -142,7 +144,7 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     @Test
     fun `echo_update is disabled by default`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
+        val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
         resetEvents()
 
         sendUpdate(sliderId, "value" to 42)
@@ -154,7 +156,7 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     fun `echo_update can be enabled and filters properties`() {
         execRaw("widgetManager.echoUpdateEnabled = true")
         execRaw("val s = intSliderWidget()")
-        val sliderId = shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel").last().commId
+        val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
         resetEvents()
 
         // 1. Both properties are echoed
@@ -202,8 +204,8 @@ class WidgetReplTest : AbstractWidgetReplTest() {
     @Test
     fun `time widget union type property from frontend`() {
         execRaw("val t2 = timeWidget()")
-        shouldHaveOpenEvents("LayoutModel", "DescriptionStyleModel")
-        val timeId = shouldHaveNextOpenEvent("TimeModel").commId
+        shouldHaveOpenEvents("LayoutModel", "DescriptionStyleModel", "TimeModel")
+        val timeId = execRaw("widgetManager.getWidgetId(t2)") as String
 
         sendUpdate(timeId, "step" to 42.0)
         execRaw("t2.step").shouldBeInstanceOf<TimeWidgetStep.DoubleValue>().value shouldBe 42.0

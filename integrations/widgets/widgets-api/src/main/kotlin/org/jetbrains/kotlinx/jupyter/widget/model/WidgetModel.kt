@@ -38,6 +38,11 @@ public abstract class WidgetModel(
     public fun getProperty(name: String): WidgetModelProperty<*>? = properties[name]
 
     /**
+     * Retrieves a property by the property delegate
+     */
+    internal fun getPropertyByDelegate(delegate: Any?): WidgetModelProperty<*>? = (delegate as? WidgetKtPropertyDelegate<*>)?.property
+
+    /**
      * Returns the full serialized state of all properties.
      */
     public fun getFullState(): Patch = properties.mapValues { (_, property) -> property.serializedValue }
@@ -235,7 +240,7 @@ public abstract class WidgetModel(
     ): ReadWriteProperty<WidgetModel, M?> = prop(name, NullableType(WidgetReferenceType()), initialValue, echoUpdate)
 
     protected inner class WidgetKtPropertyDelegate<T>(
-        private val property: WidgetModelProperty<T>,
+        internal val property: WidgetModelProperty<T>,
     ) : ReadWriteProperty<WidgetModel, T> {
         internal constructor(name: String, type: WidgetModelPropertyType<T>, initialValue: T, echoUpdate: Boolean = true) :
             this(WidgetModelPropertyImpl(name, type, initialValue, widgetManager, echoUpdate))

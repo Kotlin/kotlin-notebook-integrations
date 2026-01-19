@@ -30,6 +30,7 @@ allprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+        maxHeapSize = "4G"
         outputs.upToDateWhen { false }
     }
 }

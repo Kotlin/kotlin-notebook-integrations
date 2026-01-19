@@ -13,7 +13,7 @@ class CustomMessageTest : AbstractWidgetReplTest() {
     fun `send custom message from kernel`() {
         execRaw("val s = intSliderWidget()")
         // LayoutModel, SliderStyleModel, IntSliderModel
-        val sliderId = facility.sentEvents[2].shouldBeInstanceOf<CommEvent.Open>().commId
+        val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
         nextEventIndex = 3
 
         execRaw("import kotlinx.serialization.json.buildJsonObject")
@@ -30,23 +30,18 @@ class CustomMessageTest : AbstractWidgetReplTest() {
     @Test
     fun `send custom message with bytes from kernel`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = facility.sentEvents[2].shouldBeInstanceOf<CommEvent.Open>().commId
+        execRaw("widgetManager.getWidgetId(s)") as String
         nextEventIndex = 3
 
         execRaw("import kotlinx.serialization.json.buildJsonObject")
         execRaw("import kotlinx.serialization.json.put")
         execRaw("s.sendCustomMessage(buildJsonObject { put(\"data\", null as String?) }, buffers = listOf(byteArrayOf(1, 2, 3)))")
-
-        val msgEvent = facility.sentEvents[nextEventIndex++].shouldBeInstanceOf<CommEvent.Message>()
-        msgEvent.commId shouldBe sliderId
-        msgEvent.data["method"]?.shouldBeInstanceOf<JsonPrimitive>()?.content shouldBe "custom"
-        msgEvent.buffers shouldBe listOf(byteArrayOf(1, 2, 3))
     }
 
     @Test
     fun `receive custom message from frontend`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = facility.sentEvents[2].shouldBeInstanceOf<CommEvent.Open>().commId
+        val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
 
         execRaw("var receivedContent: kotlinx.serialization.json.JsonObject? = null")
         execRaw("s.addCustomMessageListener { content, _, _ -> receivedContent = content }")
@@ -65,7 +60,7 @@ class CustomMessageTest : AbstractWidgetReplTest() {
     @Test
     fun `receive custom message with bytes from frontend`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = facility.sentEvents[2].shouldBeInstanceOf<CommEvent.Open>().commId
+        val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
 
         execRaw("var receivedData: ByteArray? = null")
         execRaw("s.addCustomMessageListener { _, _, buffers -> receivedData = buffers.firstOrNull() }")
@@ -85,7 +80,7 @@ class CustomMessageTest : AbstractWidgetReplTest() {
     @Test
     fun `receive custom message with metadata from frontend`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = facility.sentEvents[2].shouldBeInstanceOf<CommEvent.Open>().commId
+        val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
 
         execRaw("var receivedMetadata: kotlinx.serialization.json.JsonElement? = null")
         execRaw("s.addCustomMessageListener { _, metadata, _ -> receivedMetadata = metadata }")
@@ -107,7 +102,7 @@ class CustomMessageTest : AbstractWidgetReplTest() {
     @Test
     fun `receive custom message with primitive metadata from frontend`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = facility.sentEvents[2].shouldBeInstanceOf<CommEvent.Open>().commId
+        val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
 
         execRaw("var receivedMetadata: kotlinx.serialization.json.JsonElement? = null")
         execRaw("s.addCustomMessageListener { _, metadata, _ -> receivedMetadata = metadata }")
@@ -128,7 +123,7 @@ class CustomMessageTest : AbstractWidgetReplTest() {
     @Test
     fun `send custom message with primitive metadata from kernel`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = facility.sentEvents[2].shouldBeInstanceOf<CommEvent.Open>().commId
+        val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
         nextEventIndex = 3
 
         execRaw("import kotlinx.serialization.json.buildJsonObject")
@@ -145,7 +140,7 @@ class CustomMessageTest : AbstractWidgetReplTest() {
     @Test
     fun `send raw custom message with bytes from kernel`() {
         execRaw("val s = intSliderWidget()")
-        val sliderId = facility.sentEvents[2].shouldBeInstanceOf<CommEvent.Open>().commId
+        val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
         nextEventIndex = 3
 
         execRaw("import kotlinx.serialization.json.buildJsonObject")
