@@ -19,29 +19,33 @@ class LinkWidgetTest : AbstractWidgetReplTest() {
         val playId = execRaw("widgetManager.getWidgetId(play)") as String
         val sliderId = execRaw("widgetManager.getWidgetId(slider)") as String
 
-        val link =
-            execRaw(
-                """
-                widgetManager.linkProperties(play, PlayWidget::value, slider, IntSliderWidget::value)
-                """.trimIndent(),
+        val linkingCodes =
+            listOf(
+                """widgetManager.linkProperties(play, PlayWidget::value, slider, IntSliderWidget::value)""",
+                """widgetManager.linkProperties(play, { ::value }, slider, { ::value })""",
             )
-        link.shouldBeInstanceOf<LinkWidget>()
 
-        val source =
-            shouldHaveUpdateEvent("source")
-                .data["state"]!!
-                .shouldBeInstanceOf<JsonObject>()["source"]
-                .shouldBeInstanceOf<JsonArray>()
-        source[0].jsonPrimitive.contentOrNull shouldBe "IPY_MODEL_$playId"
-        source[1].jsonPrimitive.content shouldBe "value"
+        for (code in linkingCodes) {
+            resetEvents()
+            val link = execRaw(code)
+            link.shouldBeInstanceOf<LinkWidget>()
 
-        val target =
-            shouldHaveUpdateEvent("target")
-                .data["state"]!!
-                .shouldBeInstanceOf<JsonObject>()["target"]
-                .shouldBeInstanceOf<JsonArray>()
-        target[0].jsonPrimitive.contentOrNull shouldBe "IPY_MODEL_$sliderId"
-        target[1].jsonPrimitive.content shouldBe "value"
+            val source =
+                shouldHaveUpdateEvent("source")
+                    .data["state"]!!
+                    .shouldBeInstanceOf<JsonObject>()["source"]
+                    .shouldBeInstanceOf<JsonArray>()
+            source[0].jsonPrimitive.contentOrNull shouldBe "IPY_MODEL_$playId"
+            source[1].jsonPrimitive.content shouldBe "value"
+
+            val target =
+                shouldHaveUpdateEvent("target")
+                    .data["state"]!!
+                    .shouldBeInstanceOf<JsonObject>()["target"]
+                    .shouldBeInstanceOf<JsonArray>()
+            target[0].jsonPrimitive.contentOrNull shouldBe "IPY_MODEL_$sliderId"
+            target[1].jsonPrimitive.content shouldBe "value"
+        }
     }
 
     @Test
