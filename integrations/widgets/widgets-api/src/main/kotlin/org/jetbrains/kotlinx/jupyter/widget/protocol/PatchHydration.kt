@@ -33,16 +33,16 @@ internal data class WireMessage(
  * Combines [WireMessage]'s state and buffers into a single "hydrated" [Patch].
  */
 internal fun getPatch(wireMessage: WireMessage): Patch {
-    val dehydratedMap = deserializeJsonMap(wireMessage.state)
+    val hydratedMapValue = deserializeJsonMap(wireMessage.state)
     // Insert buffers into the map at specified paths
     for ((path, buf) in wireMessage.bufferPaths.zip(wireMessage.buffers)) {
-        var obj: RawPropertyValue = RawPropertyValue.MapValue(dehydratedMap)
+        var obj: RawPropertyValue = hydratedMapValue
         for (key in path.dropLast(1)) {
             obj = getAt(obj, key)
         }
         setAt(obj, path.last(), RawPropertyValue.ByteArrayValue(buf))
     }
-    return dehydratedMap
+    return hydratedMapValue.values
 }
 
 /**
