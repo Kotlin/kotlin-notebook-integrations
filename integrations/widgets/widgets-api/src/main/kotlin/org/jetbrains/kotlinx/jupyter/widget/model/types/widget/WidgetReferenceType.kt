@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.jupyter.widget.model.types.widget
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 
 private const val WIDGET_REF_PREFIX = "IPY_MODEL_"
 
@@ -22,28 +23,26 @@ public class WidgetReferenceType<M : WidgetModel> : AbstractWidgetModelPropertyT
     override fun serialize(
         propertyValue: M,
         widgetManager: WidgetManager,
-    ): String {
+    ): RawPropertyValue {
         val widgetId =
             widgetManager.getWidgetId(propertyValue)
                 ?: error("Widget id for widget $propertyValue was not found")
-        return "$WIDGET_REF_PREFIX$widgetId"
+        return RawPropertyValue.StringValue("$WIDGET_REF_PREFIX$widgetId")
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun deserialize(
-        patchValue: Any?,
+        patchValue: RawPropertyValue,
         widgetManager: WidgetManager,
     ): M {
-        requireNotNull(patchValue) {
-            "Widget reference cannot be null"
+        require(patchValue is RawPropertyValue.StringValue) {
+            "Expected WidgetValue.StringValue for widget-ref, got ${patchValue::class.simpleName}"
         }
-        require(patchValue is String) {
-            "Expected String for widget-ref, got ${patchValue::class.simpleName}"
+        val value = patchValue.value
+        require(value.startsWith(WIDGET_REF_PREFIX)) {
+            "Invalid widget ref format: $value"
         }
-        require(patchValue.startsWith(WIDGET_REF_PREFIX)) {
-            "Invalid widget ref format: $patchValue"
-        }
-        val id = patchValue.removePrefix(WIDGET_REF_PREFIX)
+        val id = value.removePrefix(WIDGET_REF_PREFIX)
         val model =
             widgetManager.getWidget(id)
                 ?: error("Widget with id=$id not found")

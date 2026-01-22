@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.jupyter.widget.model.types.compound
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.WidgetModelPropertyType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 
 /**
  * Property type representing a [List].
@@ -19,21 +20,23 @@ public class ArrayType<E>(
     override fun serialize(
         propertyValue: List<E>,
         widgetManager: WidgetManager,
-    ): List<Any?> =
-        propertyValue.map {
-            elementType.serialize(it, widgetManager)
-        }
+    ): RawPropertyValue =
+        RawPropertyValue.ListValue(
+            propertyValue.map {
+                elementType.serialize(it, widgetManager)
+            },
+        )
 
     @Suppress("UNCHECKED_CAST")
     override fun deserialize(
-        patchValue: Any?,
+        patchValue: RawPropertyValue,
         widgetManager: WidgetManager,
     ): List<E> {
-        require(patchValue is List<*>) {
-            "Expected List for $name, got ${patchValue?.let { it::class.simpleName } ?: "null"}"
+        require(patchValue is RawPropertyValue.ListValue) {
+            "Expected WidgetValue.ListValue for $name, got ${patchValue::class.simpleName}"
         }
-        return patchValue.map { raw ->
-            elementType.deserialize(raw, widgetManager)
+        return patchValue.values.map { valItem ->
+            elementType.deserialize(valItem, widgetManager)
         }
     }
 }

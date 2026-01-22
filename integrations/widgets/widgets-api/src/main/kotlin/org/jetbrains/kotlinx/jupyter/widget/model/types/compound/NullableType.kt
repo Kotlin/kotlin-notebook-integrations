@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.jupyter.widget.model.types.compound
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.WidgetModelPropertyType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 
 /**
  * Property type for nullable values.
@@ -16,13 +17,15 @@ public class NullableType<T>(
     override fun serialize(
         propertyValue: T?,
         widgetManager: WidgetManager,
-    ): Any? =
-        propertyValue?.let {
-            inner.serialize(it, widgetManager)
+    ): RawPropertyValue =
+        if (propertyValue == null) {
+            RawPropertyValue.Null
+        } else {
+            inner.serialize(propertyValue, widgetManager)
         }
 
     override fun deserialize(
-        patchValue: Any?,
+        patchValue: RawPropertyValue,
         widgetManager: WidgetManager,
-    ): T? = if (patchValue == null) null else inner.deserialize(patchValue, widgetManager)
+    ): T? = if (patchValue is RawPropertyValue.Null) null else inner.deserialize(patchValue, widgetManager)
 }

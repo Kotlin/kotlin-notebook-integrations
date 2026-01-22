@@ -401,7 +401,8 @@ private class UnionPropertyType(
     override val optionName: String get() = "Union"
     override val imports: Set<String> get() =
         options.flatMap { if (it is EnumPropertyType) emptySet() else it.imports }.toSet() +
-            "$WIDGET_TYPES_PACKAGE.compound.UnionType"
+            "$WIDGET_TYPES_PACKAGE.compound.UnionType" +
+            "$WIDGETS_PACKAGE.protocol.RawPropertyValue"
 
     override val helperDeclarations: List<String>
         get() {
@@ -439,7 +440,12 @@ private class UnionPropertyType(
                     options.forEachIndexed { i, opt ->
                         if (opt is EnumPropertyType) {
                             opt.enumValues.forEach { enumValue ->
-                                appendLine("            is $unionName.${getEnumObjectName(enumValue, opt.enumName)} -> \"$enumValue\"")
+                                appendLine(
+                                    "            is $unionName.${getEnumObjectName(
+                                        enumValue,
+                                        opt.enumName,
+                                    )} -> RawPropertyValue.StringValue(\"$enumValue\")",
+                                )
                             }
                         } else {
                             appendLine(
@@ -457,14 +463,19 @@ private class UnionPropertyType(
                     if (opt is EnumPropertyType) {
                         val cases =
                             opt.enumValues.joinToString("\n") { enumValue ->
-                                "\"$enumValue\" -> $unionName.${getEnumObjectName(enumValue, opt.enumName)}"
+                                "is RawPropertyValue.StringValue -> " +
+                                    "if (patch.value == \"$enumValue\") $unionName.${getEnumObjectName(
+                                        enumValue,
+                                        opt.enumName,
+                                    )} else null"
                             }
                         $$"""
                         |        { patch, _ ->
-                        |            when (patch) {
+                        |            val res = when (patch) {
                         |                $$cases
-                        |                else -> throw Exception("Unknown enum value: $patch")
+                        |                else -> null
                         |            }
+                        |            res ?: throw Exception("Unknown enum value: $patch")
                         |        }
                         """.trimMargin()
                     } else {

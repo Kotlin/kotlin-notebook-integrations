@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 
 public sealed interface TimeWidgetStep {
     @JvmInline public value class DoubleValue(public val value: Double) : TimeWidgetStep
@@ -29,16 +30,17 @@ private val TimeWidgetStepType = UnionType<TimeWidgetStep>(
     serializer = { value, widgetManager ->
         when (value) {
             is TimeWidgetStep.DoubleValue -> TimeWidgetStepType_Option0.serialize(value.value, widgetManager)
-            is TimeWidgetStep.AnyStep -> "any"
+            is TimeWidgetStep.AnyStep -> RawPropertyValue.StringValue("any")
         }
     },
     deserializers = listOf(
         { patch, widgetManager -> TimeWidgetStep.DoubleValue(TimeWidgetStepType_Option0.deserialize(patch, widgetManager)) },
         { patch, _ ->
-            when (patch) {
-                "any" -> TimeWidgetStep.AnyStep
-                else -> throw Exception("Unknown enum value: $patch")
+            val res = when (patch) {
+                is RawPropertyValue.StringValue -> if (patch.value == "any") TimeWidgetStep.AnyStep else null
+                else -> null
             }
+            res ?: throw Exception("Unknown enum value: $patch")
         }
     ),
 )

@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.jupyter.widget.model.types.datetime
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -27,19 +28,20 @@ public object DatetimeType : AbstractWidgetModelPropertyType<Instant>("datetime"
     override fun serialize(
         propertyValue: Instant,
         widgetManager: WidgetManager,
-    ): Any? = formatter.format(propertyValue) // respect 'Z'
+    ): RawPropertyValue = RawPropertyValue.StringValue(formatter.format(propertyValue)) // respect 'Z'
 
     override fun deserialize(
-        patchValue: Any?,
+        patchValue: RawPropertyValue,
         widgetManager: WidgetManager,
     ): Instant {
-        require(patchValue is String) {
-            "Expected String for datetime, got ${patchValue?.let { it::class.simpleName } ?: "null"}"
+        require(patchValue is RawPropertyValue.StringValue) {
+            "Expected WidgetValue.StringValue for datetime, got ${patchValue::class.simpleName}"
         }
+        val value = patchValue.value
         return try {
-            ZonedDateTime.parse(patchValue, formatter).toInstant()
+            ZonedDateTime.parse(value, formatter).toInstant()
         } catch (e: Exception) {
-            error("Invalid datetime format '$patchValue', expected uuuu-MM-dd'T'HH:mm:ss'Z': ${e.message}")
+            error("Invalid datetime format '$value', expected uuuu-MM-dd'T'HH:mm:ss'Z': ${e.message}")
         }
     }
 }

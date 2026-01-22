@@ -15,6 +15,8 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.ranges.FloatRangeType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.ranges.IntRangeType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
+import org.jetbrains.kotlinx.jupyter.widget.protocol.toPropertyValue
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.LocalDate
@@ -24,138 +26,176 @@ class TypesTest {
     private val widgetManager = TestWidgetManager.INSTANCE
 
     @Test
-    fun `IntType should serialize to Int`() {
-        IntType.serialize(42, widgetManager) shouldBe 42
+    fun `IntType should serialize to WidgetValue`() {
+        IntType.serialize(42, widgetManager) shouldBe RawPropertyValue.NumberValue(42)
     }
 
     @Test
     fun `IntType should deserialize from various numeric types`() {
-        IntType.deserialize(42, widgetManager) shouldBe 42
-        IntType.deserialize(42L, widgetManager) shouldBe 42
-        IntType.deserialize(42.0, widgetManager) shouldBe 42
-        IntType.deserialize(42.7, widgetManager) shouldBe 42
+        IntType.deserialize(RawPropertyValue.NumberValue(42), widgetManager) shouldBe 42
+        IntType.deserialize(RawPropertyValue.NumberValue(42L), widgetManager) shouldBe 42
+        IntType.deserialize(RawPropertyValue.NumberValue(42.0), widgetManager) shouldBe 42
+        IntType.deserialize(RawPropertyValue.NumberValue(42.7), widgetManager) shouldBe 42
     }
 
     @Test
-    fun `FloatType should serialize to Double`() {
-        FloatType.serialize(3.14, widgetManager) shouldBe 3.14
+    fun `FloatType should serialize to WidgetValue`() {
+        FloatType.serialize(3.14, widgetManager) shouldBe RawPropertyValue.NumberValue(3.14)
     }
 
     @Test
     fun `FloatType should deserialize from various numeric types`() {
-        FloatType.deserialize(3.14, widgetManager) shouldBe 3.14
-        FloatType.deserialize(3, widgetManager) shouldBe 3.0
-        FloatType.deserialize(3L, widgetManager) shouldBe 3.0
+        FloatType.deserialize(RawPropertyValue.NumberValue(3.14), widgetManager) shouldBe 3.14
+        FloatType.deserialize(RawPropertyValue.NumberValue(3), widgetManager) shouldBe 3.0
+        FloatType.deserialize(RawPropertyValue.NumberValue(3L), widgetManager) shouldBe 3.0
     }
 
     @Test
     fun `IntRangeType should serialize to list of bounds`() {
-        IntRangeType.serialize(1..10, widgetManager) shouldBe listOf(1, 10)
+        IntRangeType.serialize(1..10, widgetManager) shouldBe
+            RawPropertyValue.ListValue(listOf(RawPropertyValue.NumberValue(1), RawPropertyValue.NumberValue(10)))
     }
 
     @Test
     fun `IntRangeType should deserialize from list of bounds`() {
-        IntRangeType.deserialize(listOf(1, 10), widgetManager) shouldBe 1..10
-        IntRangeType.deserialize(listOf(1L, 10L), widgetManager) shouldBe 1..10
+        IntRangeType.deserialize(
+            RawPropertyValue.ListValue(listOf(RawPropertyValue.NumberValue(1), RawPropertyValue.NumberValue(10))),
+            widgetManager,
+        ) shouldBe
+            1..10
+        IntRangeType.deserialize(
+            RawPropertyValue.ListValue(listOf(RawPropertyValue.NumberValue(1L), RawPropertyValue.NumberValue(10L))),
+            widgetManager,
+        ) shouldBe
+            1..10
     }
 
     @Test
     fun `FloatRangeType should serialize to list of bounds`() {
-        FloatRangeType.serialize(1.5..10.5, widgetManager) shouldBe listOf(1.5, 10.5)
+        FloatRangeType.serialize(1.5..10.5, widgetManager) shouldBe
+            RawPropertyValue.ListValue(listOf(RawPropertyValue.NumberValue(1.5), RawPropertyValue.NumberValue(10.5)))
     }
 
     @Test
     fun `FloatRangeType should deserialize from list of bounds`() {
-        FloatRangeType.deserialize(listOf(1.5, 10.5), widgetManager) shouldBe 1.5..10.5
-        FloatRangeType.deserialize(listOf(1, 10), widgetManager) shouldBe 1.0..10.0
+        FloatRangeType.deserialize(
+            RawPropertyValue.ListValue(listOf(RawPropertyValue.NumberValue(1.5), RawPropertyValue.NumberValue(10.5))),
+            widgetManager,
+        ) shouldBe
+            1.5..10.5
+        FloatRangeType.deserialize(
+            RawPropertyValue.ListValue(listOf(RawPropertyValue.NumberValue(1), RawPropertyValue.NumberValue(10))),
+            widgetManager,
+        ) shouldBe
+            1.0..10.0
     }
 
     @Test
     fun `PairType should serialize to list of elements`() {
         val pairType = PairType(IntType, StringType)
-        pairType.serialize(42 to "hello", widgetManager) shouldBe listOf(42, "hello")
+        pairType.serialize(42 to "hello", widgetManager) shouldBe
+            RawPropertyValue.ListValue(listOf(RawPropertyValue.NumberValue(42), RawPropertyValue.StringValue("hello")))
     }
 
     @Test
     fun `PairType should deserialize from list of elements`() {
         val pairType = PairType(IntType, StringType)
-        pairType.deserialize(listOf(42, "hello"), widgetManager) shouldBe (42 to "hello")
+        pairType.deserialize(
+            RawPropertyValue.ListValue(listOf(RawPropertyValue.NumberValue(42), RawPropertyValue.StringValue("hello"))),
+            widgetManager,
+        ) shouldBe
+            (42 to "hello")
     }
 
     @Test
     fun `ArrayType should serialize to list of elements`() {
         val arrayType = ArrayType(IntType)
-        arrayType.serialize(listOf(1, 2, 3), widgetManager) shouldBe listOf(1, 2, 3)
+        arrayType.serialize(listOf(1, 2, 3), widgetManager) shouldBe
+            RawPropertyValue.ListValue(
+                listOf(RawPropertyValue.NumberValue(1), RawPropertyValue.NumberValue(2), RawPropertyValue.NumberValue(3)),
+            )
     }
 
     @Test
     fun `ArrayType should deserialize from list of elements`() {
         val arrayType = ArrayType(IntType)
-        arrayType.deserialize(listOf(1, 2, 3), widgetManager) shouldBe listOf(1, 2, 3)
-        arrayType.deserialize(listOf(1L, 2L, 3L), widgetManager) shouldBe listOf(1, 2, 3)
+        arrayType.deserialize(
+            RawPropertyValue.ListValue(
+                listOf(RawPropertyValue.NumberValue(1), RawPropertyValue.NumberValue(2), RawPropertyValue.NumberValue(3)),
+            ),
+            widgetManager,
+        ) shouldBe
+            listOf(1, 2, 3)
+        arrayType.deserialize(
+            RawPropertyValue.ListValue(
+                listOf(RawPropertyValue.NumberValue(1L), RawPropertyValue.NumberValue(2L), RawPropertyValue.NumberValue(3L)),
+            ),
+            widgetManager,
+        ) shouldBe
+            listOf(1, 2, 3)
     }
 
     @Test
     fun `NullableType should serialize values or null`() {
         val nullableType = NullableType(IntType)
-        nullableType.serialize(42, widgetManager) shouldBe 42
-        nullableType.serialize(null, widgetManager) shouldBe null
+        nullableType.serialize(42, widgetManager) shouldBe RawPropertyValue.NumberValue(42)
+        nullableType.serialize(null, widgetManager) shouldBe RawPropertyValue.Null
     }
 
     @Test
     fun `NullableType should deserialize values or null`() {
         val nullableType = NullableType(IntType)
-        nullableType.deserialize(42, widgetManager) shouldBe 42
-        nullableType.deserialize(null, widgetManager) shouldBe null
+        nullableType.deserialize(RawPropertyValue.NumberValue(42), widgetManager) shouldBe 42
+        nullableType.deserialize(RawPropertyValue.Null, widgetManager) shouldBe null
     }
 
     @Test
-    fun `RawObjectType should serialize map as is`() {
+    fun `RawObjectType should serialize map to WidgetValue`() {
         val obj = mapOf("a" to 1, "b" to "c")
-        RawObjectType.serialize(obj, widgetManager) shouldBe obj
+        RawObjectType.serialize(obj, widgetManager) shouldBe obj.toPropertyValue()
     }
 
     @Test
     fun `RawObjectType should deserialize map or return emptyMap for null`() {
         val obj = mapOf("a" to 1, "b" to "c")
-        RawObjectType.deserialize(obj, widgetManager) shouldBe obj
-        RawObjectType.deserialize(null, widgetManager) shouldBe emptyMap()
+        RawObjectType.deserialize(obj.toPropertyValue(), widgetManager) shouldBe obj
+        RawObjectType.deserialize(RawPropertyValue.Null, widgetManager) shouldBe emptyMap<String, Any?>()
     }
 
     @Test
     fun `DatetimeType should serialize Instant to ISO-8601 string`() {
         val instant = Instant.parse("2023-01-01T12:00:00Z")
-        DatetimeType.serialize(instant, widgetManager) shouldBe "2023-01-01T12:00:00Z"
+        DatetimeType.serialize(instant, widgetManager) shouldBe RawPropertyValue.StringValue("2023-01-01T12:00:00Z")
     }
 
     @Test
     fun `DatetimeType should deserialize ISO-8601 string to Instant`() {
         val instant = Instant.parse("2023-01-01T12:00:00Z")
-        DatetimeType.deserialize("2023-01-01T12:00:00Z", widgetManager) shouldBe instant
+        DatetimeType.deserialize(RawPropertyValue.StringValue("2023-01-01T12:00:00Z"), widgetManager) shouldBe instant
     }
 
     @Test
     fun `DateType should serialize LocalDate to ISO-8601 string`() {
         val date = LocalDate.of(2023, 1, 1)
-        DateType.serialize(date, widgetManager) shouldBe "2023-01-01"
+        DateType.serialize(date, widgetManager) shouldBe RawPropertyValue.StringValue("2023-01-01")
     }
 
     @Test
     fun `DateType should deserialize ISO-8601 string to LocalDate`() {
         val date = LocalDate.of(2023, 1, 1)
-        DateType.deserialize("2023-01-01", widgetManager) shouldBe date
+        DateType.deserialize(RawPropertyValue.StringValue("2023-01-01"), widgetManager) shouldBe date
     }
 
     @Test
     fun `TimeType should serialize LocalTime to ISO-8601 string`() {
         val time = LocalTime.of(12, 0, 0)
-        TimeType.serialize(time, widgetManager) shouldBe "12:00:00"
+        TimeType.serialize(time, widgetManager) shouldBe RawPropertyValue.StringValue("12:00:00")
     }
 
     @Test
     fun `TimeType should deserialize ISO-8601 string to LocalTime`() {
         val time = LocalTime.of(12, 0, 0)
-        TimeType.deserialize("12:00:00", widgetManager) shouldBe time
+        TimeType.deserialize(RawPropertyValue.StringValue("12:00:00"), widgetManager) shouldBe time
     }
 
     @Test
@@ -167,7 +207,7 @@ class TypesTest {
                 override fun getWidgetId(widget: WidgetModel): String? = if (widget === myWidget) widgetId else null
             }
         val refType = WidgetReferenceType<WidgetModel>()
-        refType.serialize(myWidget, manager) shouldBe "IPY_MODEL_$widgetId"
+        refType.serialize(myWidget, manager) shouldBe RawPropertyValue.StringValue("IPY_MODEL_$widgetId")
     }
 
     @Test
@@ -179,6 +219,6 @@ class TypesTest {
                 override fun getWidget(modelId: String): WidgetModel? = if (modelId == widgetId) widget else null
             }
         val refType = WidgetReferenceType<WidgetModel>()
-        refType.deserialize("IPY_MODEL_$widgetId", manager) shouldBe widget
+        refType.deserialize(RawPropertyValue.StringValue("IPY_MODEL_$widgetId"), manager) shouldBe widget
     }
 }

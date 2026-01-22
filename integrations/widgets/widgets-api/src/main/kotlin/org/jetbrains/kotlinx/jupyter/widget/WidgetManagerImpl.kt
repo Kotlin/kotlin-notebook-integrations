@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.versionConstraintRegex
 import org.jetbrains.kotlinx.jupyter.widget.protocol.CustomMessage
 import org.jetbrains.kotlinx.jupyter.widget.protocol.Patch
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 import org.jetbrains.kotlinx.jupyter.widget.protocol.RequestStateMessage
 import org.jetbrains.kotlinx.jupyter.widget.protocol.RequestStatesMessage
 import org.jetbrains.kotlinx.jupyter.widget.protocol.UpdateStatesMessage
@@ -69,9 +70,9 @@ public class WidgetManagerImpl(
             comm.onMessage { msg, _, _ ->
                 when (Json.decodeFromJsonElement<WidgetMessage>(msg)) {
                     is RequestStatesMessage -> {
-                        val fullStates =
-                            widgets.mapValues { (id, widget) ->
-                                widget.getFullState()
+                        val fullStates: Map<String, RawPropertyValue> =
+                            widgets.mapValues { (_, widget) ->
+                                RawPropertyValue.MapValue(widget.getFullState())
                             }
 
                         val wireMessage = getWireMessage(fullStates)

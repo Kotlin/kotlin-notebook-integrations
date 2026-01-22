@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 
 public sealed interface DatePickerWidgetStep {
     @JvmInline public value class IntValue(public val value: Int) : DatePickerWidgetStep
@@ -29,16 +30,17 @@ private val DatePickerWidgetStepType = UnionType<DatePickerWidgetStep>(
     serializer = { value, widgetManager ->
         when (value) {
             is DatePickerWidgetStep.IntValue -> DatePickerWidgetStepType_Option0.serialize(value.value, widgetManager)
-            is DatePickerWidgetStep.AnyStep -> "any"
+            is DatePickerWidgetStep.AnyStep -> RawPropertyValue.StringValue("any")
         }
     },
     deserializers = listOf(
         { patch, widgetManager -> DatePickerWidgetStep.IntValue(DatePickerWidgetStepType_Option0.deserialize(patch, widgetManager)) },
         { patch, _ ->
-            when (patch) {
-                "any" -> DatePickerWidgetStep.AnyStep
-                else -> throw Exception("Unknown enum value: $patch")
+            val res = when (patch) {
+                is RawPropertyValue.StringValue -> if (patch.value == "any") DatePickerWidgetStep.AnyStep else null
+                else -> null
             }
+            res ?: throw Exception("Unknown enum value: $patch")
         }
     ),
 )

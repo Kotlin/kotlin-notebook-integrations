@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.jupyter.widget.model.types.primitive
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
+import org.jetbrains.kotlinx.jupyter.widget.protocol.toPropertyValue
+import org.jetbrains.kotlinx.jupyter.widget.protocol.toRawValue
 
 /**
  * Base class for simple primitive property types.
@@ -13,11 +16,11 @@ public abstract class PrimitiveWidgetModelPropertyType<T>(
     override fun serialize(
         propertyValue: T,
         widgetManager: WidgetManager,
-    ): Any? = propertyValue
+    ): RawPropertyValue = propertyValue.toPropertyValue()
 
     @Suppress("UNCHECKED_CAST")
     override fun deserialize(
-        patchValue: Any?,
+        patchValue: RawPropertyValue,
         widgetManager: WidgetManager,
-    ): T = patchValue as T
+    ): T = patchValue.toRawValue() as T
 }

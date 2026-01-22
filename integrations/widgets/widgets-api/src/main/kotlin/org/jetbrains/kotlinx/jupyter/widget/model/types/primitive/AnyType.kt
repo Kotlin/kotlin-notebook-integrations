@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.jupyter.widget.model.types.primitive
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
+import org.jetbrains.kotlinx.jupyter.widget.protocol.toPropertyValue
+import org.jetbrains.kotlinx.jupyter.widget.protocol.toRawValue
 
 public object AnyType : AbstractWidgetModelPropertyType<Any?>("any") {
     override val default: Any? = null
@@ -9,10 +12,10 @@ public object AnyType : AbstractWidgetModelPropertyType<Any?>("any") {
     override fun serialize(
         propertyValue: Any?,
         widgetManager: WidgetManager,
-    ): Any? = propertyValue
+    ): RawPropertyValue = propertyValue.toPropertyValue()
 
     override fun deserialize(
-        patchValue: Any?,
+        patchValue: RawPropertyValue,
         widgetManager: WidgetManager,
-    ): Any? = patchValue
+    ): Any? = patchValue.toRawValue()
 }

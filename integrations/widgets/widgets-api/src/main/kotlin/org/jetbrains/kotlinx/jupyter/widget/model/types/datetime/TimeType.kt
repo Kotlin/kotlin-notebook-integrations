@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.jupyter.widget.model.types.datetime
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
@@ -21,19 +22,20 @@ public object TimeType : AbstractWidgetModelPropertyType<LocalTime>("time") {
     override fun serialize(
         propertyValue: LocalTime,
         widgetManager: WidgetManager,
-    ): Any? = propertyValue.format(formatter)
+    ): RawPropertyValue = RawPropertyValue.StringValue(propertyValue.format(formatter))
 
     override fun deserialize(
-        patchValue: Any?,
+        patchValue: RawPropertyValue,
         widgetManager: WidgetManager,
     ): LocalTime {
-        require(patchValue is String) {
-            "Expected String for time, got ${patchValue?.let { it::class.simpleName } ?: "null"}"
+        require(patchValue is RawPropertyValue.StringValue) {
+            "Expected WidgetValue.StringValue for time, got ${patchValue::class.simpleName}"
         }
+        val value = patchValue.value
         return try {
-            LocalTime.parse(patchValue, formatter)
+            LocalTime.parse(value, formatter)
         } catch (e: Exception) {
-            error("Invalid time format '$patchValue', expected HH:mm:ss: ${e.message}")
+            error("Invalid time format '$value', expected HH:mm:ss: ${e.message}")
         }
     }
 }

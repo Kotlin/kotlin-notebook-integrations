@@ -22,7 +22,7 @@ internal interface WithBufferPaths {
     /**
      * Paths where binary data should be inserted.
      */
-    val bufferPaths: List<List<Any>>
+    val bufferPaths: List<BufferPath>
 }
 
 /**
@@ -39,8 +39,7 @@ internal interface WidgetStateMessage : WithBufferPaths {
 internal class WidgetOpenMessage(
     override val state: JsonObject,
     @SerialName("buffer_paths")
-    @Serializable(with = BufferPathsSerializer::class)
-    override val bufferPaths: List<List<Any>>,
+    override val bufferPaths: List<BufferPath>,
 ) : WidgetStateMessage
 
 @Serializable
@@ -48,8 +47,7 @@ internal class WidgetOpenMessage(
 internal class WidgetUpdateMessage(
     override val state: JsonObject,
     @SerialName("buffer_paths")
-    @Serializable(with = BufferPathsSerializer::class)
-    override val bufferPaths: List<List<Any>>,
+    override val bufferPaths: List<BufferPath>,
 ) : WidgetMessage,
     WidgetStateMessage
 
@@ -58,8 +56,7 @@ internal class WidgetUpdateMessage(
 internal class WidgetEchoUpdateMessage(
     override val state: JsonObject,
     @SerialName("buffer_paths")
-    @Serializable(with = BufferPathsSerializer::class)
-    override val bufferPaths: List<List<Any>>,
+    override val bufferPaths: List<BufferPath>,
 ) : WidgetMessage,
     WidgetStateMessage
 
@@ -82,7 +79,6 @@ internal class RequestStatesMessage : WidgetMessage
 internal class UpdateStatesMessage(
     val states: JsonObject,
     @SerialName("buffer_paths")
-    @Serializable(with = BufferPathsSerializer::class)
-    override val bufferPaths: List<List<Any>>,
+    override val bufferPaths: List<BufferPath>,
 ) : WidgetMessage,
     WithBufferPaths

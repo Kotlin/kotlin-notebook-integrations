@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.jupyter.widget.model.types
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 
 /**
  * Defines how a widget property of type [T] is serialized and deserialized
@@ -24,13 +25,13 @@ public interface WidgetModelPropertyType<T> {
     public fun serialize(
         propertyValue: T,
         widgetManager: WidgetManager,
-    ): Any?
+    ): RawPropertyValue
 
     /**
      * Converts a JSON-compatible representation back to a Kotlin property value.
      */
     public fun deserialize(
-        patchValue: Any?,
+        patchValue: RawPropertyValue,
         widgetManager: WidgetManager,
     ): T
 }

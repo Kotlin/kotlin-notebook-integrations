@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.jupyter.widget.model.types.enums
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 
 public class WidgetEnumType<E : WidgetEnum<E>>(
     private val widgetEnum: E,
@@ -10,17 +11,18 @@ public class WidgetEnumType<E : WidgetEnum<E>>(
     override fun serialize(
         propertyValue: WidgetEnumEntry<E>,
         widgetManager: WidgetManager,
-    ): String = propertyValue.name
+    ): RawPropertyValue = RawPropertyValue.StringValue(propertyValue.name)
 
     override fun deserialize(
-        patchValue: Any?,
+        patchValue: RawPropertyValue,
         widgetManager: WidgetManager,
     ): WidgetEnumEntry<E> {
-        require(patchValue is String) {
-            "Expected String for enum, got ${patchValue?.let { it::class.simpleName } ?: "null"}"
+        require(patchValue is RawPropertyValue.StringValue) {
+            "Expected WidgetValue.StringValue for enum, got ${patchValue::class.simpleName}"
         }
+        val name = patchValue.value
         return widgetEnum.entries.first {
-            it.name == patchValue
+            it.name == name
         }
     }
 }

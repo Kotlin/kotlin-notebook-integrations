@@ -13,32 +13,31 @@ import kotlinx.serialization.json.intOrNull
 import kotlin.collections.iterator
 
 /**
- * Converts a [Patch] (Map<String, Any?>) to its JSON representation.
- * Note: [ByteArray] values are serialized as [JsonNull] because they should be handled via binary buffers.
+ * Converts a [Patch] (Map<String, WidgetValue>) to its JSON representation.
+ * Note: [RawPropertyValue.ByteArrayValue] values are serialized as [JsonNull]
+ * because they should be handled via binary buffers.
  */
 internal fun serializeJsonMap(map: Patch): JsonElement = serialize(map)
 
-private fun serializeAny(obj: Any?): JsonElement =
+private fun serializeAny(obj: RawPropertyValue): JsonElement =
     when (obj) {
-        null -> JsonNull
-        is Map<*, *> -> serialize(obj)
-        is List<*> -> serialize(obj)
-        is String -> JsonPrimitive(obj)
-        is Boolean -> JsonPrimitive(obj)
-        is Number -> JsonPrimitive(obj)
-        is ByteArray -> JsonNull // Binary data is sent separately in the 'buffers' field
-        else -> error("Don't know how to serialize object [$obj] of class ${obj::class}")
+        is RawPropertyValue.Null -> JsonNull
+        is RawPropertyValue.MapValue -> serialize(obj.values)
+        is RawPropertyValue.ListValue -> serialize(obj.values)
+        is RawPropertyValue.StringValue -> JsonPrimitive(obj.value)
+        is RawPropertyValue.BooleanValue -> JsonPrimitive(obj.value)
+        is RawPropertyValue.NumberValue -> JsonPrimitive(obj.value)
+        is RawPropertyValue.ByteArrayValue -> JsonNull // Binary data is sent separately in the 'buffers' field
     }
 
-private fun serialize(map: Map<*, *>): JsonObject =
+private fun serialize(map: Map<String, RawPropertyValue>): JsonObject =
     buildJsonObject {
         for ((key, value) in map) {
-            if (key !is String) error("Map key [$key] is of type ${key?.let { it::class }}. Don't know how to serialize it.")
             put(key, serializeAny(value))
         }
     }
 
-private fun serialize(list: List<*>): JsonArray =
+private fun serialize(list: List<RawPropertyValue>): JsonArray =
     buildJsonArray {
         for (value in list) {
             add(serializeAny(value))
@@ -48,39 +47,39 @@ private fun serialize(list: List<*>): JsonArray =
 /**
  * Converts a JSON element back to a mutable map of property values.
  */
-internal fun deserializeJsonMap(json: JsonElement): MutableMap<String, Any?> {
+internal fun deserializeJsonMap(json: JsonElement): MutableMap<String, RawPropertyValue> {
     if (json !is JsonObject) error("Input json should be a key-value object, but it's $json")
     return deserializeMap(json)
 }
 
-private fun deserializeAny(json: JsonElement): Any? =
+private fun deserializeAny(json: JsonElement): RawPropertyValue =
     when (json) {
-        is JsonObject -> deserializeMap(json)
-        is JsonArray -> deserializeList(json)
+        is JsonObject -> RawPropertyValue.MapValue(deserializeMap(json))
+        is JsonArray -> RawPropertyValue.ListValue(deserializeList(json))
         is JsonPrimitive -> deserializePrimitive(json)
     }
 
-private fun deserializePrimitive(json: JsonPrimitive): Any? =
+private fun deserializePrimitive(json: JsonPrimitive): RawPropertyValue =
     when {
-        json is JsonNull -> null
-        json.isString -> json.content
+        json is JsonNull -> RawPropertyValue.Null
+        json.isString -> RawPropertyValue.StringValue(json.content)
         else -> {
-            json.booleanOrNull
-                ?: json.intOrNull
-                ?: json.doubleOrNull
+            json.booleanOrNull?.let { RawPropertyValue.BooleanValue(it) }
+                ?: json.intOrNull?.let { RawPropertyValue.NumberValue(it) }
+                ?: json.doubleOrNull?.let { RawPropertyValue.NumberValue(it) }
                 ?: error("Unknown JSON primitive type: [$json]")
         }
     }
 
-private fun deserializeMap(json: JsonObject): MutableMap<String, Any?> =
-    mutableMapOf<String, Any?>().apply {
+private fun deserializeMap(json: JsonObject): MutableMap<String, RawPropertyValue> =
+    mutableMapOf<String, RawPropertyValue>().apply {
         for ((key, value) in json) {
             put(key, deserializeAny(value))
         }
     }
 
-private fun deserializeList(jsonArray: JsonArray): MutableList<Any?> =
-    mutableListOf<Any?>().apply {
+private fun deserializeList(jsonArray: JsonArray): MutableList<RawPropertyValue> =
+    mutableListOf<RawPropertyValue>().apply {
         for (el in jsonArray) {
             add(deserializeAny(el))
         }

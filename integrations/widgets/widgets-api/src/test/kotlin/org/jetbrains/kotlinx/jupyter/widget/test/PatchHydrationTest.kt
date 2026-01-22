@@ -4,11 +4,14 @@ import io.kotest.matchers.shouldBe
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import org.jetbrains.kotlinx.jupyter.widget.protocol.BufferPath
+import org.jetbrains.kotlinx.jupyter.widget.protocol.BufferPathElement
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 import org.jetbrains.kotlinx.jupyter.widget.protocol.WireMessage
 import org.jetbrains.kotlinx.jupyter.widget.protocol.getPatch
 import org.jetbrains.kotlinx.jupyter.widget.protocol.getWireMessage
+import org.jetbrains.kotlinx.jupyter.widget.protocol.toPropertyValue
 import org.junit.jupiter.api.Test
-import kotlin.collections.get
 
 class PatchHydrationTest {
     @Test
@@ -21,12 +24,12 @@ class PatchHydrationTest {
         val wire =
             WireMessage(
                 state = state,
-                bufferPaths = listOf(listOf("v")),
+                bufferPaths = listOf(listOf(BufferPathElement.Key("v"))),
                 buffers = listOf(bytes),
             )
 
         val patch = getPatch(wire)
-        patch["v"] shouldBe bytes
+        patch["v"] shouldBe RawPropertyValue.ByteArrayValue(bytes)
     }
 
     @Test
@@ -44,13 +47,13 @@ class PatchHydrationTest {
         val wire =
             WireMessage(
                 state = state,
-                bufferPaths = listOf(listOf("outer", "inner")),
+                bufferPaths = listOf(listOf(BufferPathElement.Key("outer"), BufferPathElement.Key("inner"))),
                 buffers = listOf(bytes),
             )
 
         val patch = getPatch(wire)
-        val outer = patch["outer"] as Map<*, *>
-        outer["inner"] shouldBe bytes
+        val outer = patch["outer"] as RawPropertyValue.MapValue
+        outer.values["inner"] shouldBe RawPropertyValue.ByteArrayValue(bytes)
     }
 
     @Test
@@ -65,11 +68,16 @@ class PatchHydrationTest {
                         "c" to bytes2,
                         "d" to "string",
                     ),
-            )
+            ).toPropertyValue() as RawPropertyValue.MapValue
 
-        val wire = getWireMessage(patch)
+        val wire = getWireMessage(patch.values)
         wire.buffers shouldBe listOf(bytes1, bytes2)
-        wire.bufferPaths shouldBe listOf(listOf("a"), listOf("b", "c"))
+        val expectedBufferPaths: List<BufferPath> =
+            listOf(
+                listOf(BufferPathElement.Key("a")),
+                listOf(BufferPathElement.Key("b"), BufferPathElement.Key("c")),
+            )
+        wire.bufferPaths shouldBe expectedBufferPaths
 
         wire.state["a"] shouldBe JsonNull
     }
@@ -84,14 +92,14 @@ class PatchHydrationTest {
                         byteArrayOf(10, 20),
                         mapOf("x" to byteArrayOf(30)),
                     ),
-            )
+            ).toPropertyValue() as RawPropertyValue.MapValue
 
-        val wire = getWireMessage(patch)
+        val wire = getWireMessage(patch.values)
         val hydrated = getPatch(wire)
 
-        val list = hydrated["list"] as List<Any?>
-        list[0] shouldBe 1
-        list[1] shouldBe byteArrayOf(10, 20)
-        (list[2] as Map<*, *>)["x"] shouldBe byteArrayOf(30)
+        val list = (hydrated["list"] as RawPropertyValue.ListValue).values
+        list[0] shouldBe RawPropertyValue.NumberValue(1)
+        list[1] shouldBe RawPropertyValue.ByteArrayValue(byteArrayOf(10, 20))
+        ((list[2] as RawPropertyValue.MapValue).values["x"]) shouldBe RawPropertyValue.ByteArrayValue(byteArrayOf(30))
     }
 }

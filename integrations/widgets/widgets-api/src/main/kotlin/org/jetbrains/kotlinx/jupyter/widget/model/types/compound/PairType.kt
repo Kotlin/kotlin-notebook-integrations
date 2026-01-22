@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.jupyter.widget.model.types.compound
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.types.AbstractWidgetModelPropertyType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.WidgetModelPropertyType
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 
 /**
  * Property type representing a [Pair].
@@ -23,20 +24,22 @@ public class PairType<A, B>(
     override fun serialize(
         propertyValue: Pair<A, B>,
         widgetManager: WidgetManager,
-    ): List<Any?> =
-        listOf(
-            firstType.serialize(propertyValue.first, widgetManager),
-            secondType.serialize(propertyValue.second, widgetManager),
+    ): RawPropertyValue =
+        RawPropertyValue.ListValue(
+            listOf(
+                firstType.serialize(propertyValue.first, widgetManager),
+                secondType.serialize(propertyValue.second, widgetManager),
+            ),
         )
 
     override fun deserialize(
-        patchValue: Any?,
+        patchValue: RawPropertyValue,
         widgetManager: WidgetManager,
     ): Pair<A, B> {
-        require(patchValue is List<*> && patchValue.size == 2) {
-            "Expected List of size 2 for $name, got $patchValue"
+        require(patchValue is RawPropertyValue.ListValue && patchValue.values.size == 2) {
+            "Expected WidgetValue.ListValue of size 2 for $name, got $patchValue"
         }
-        return firstType.deserialize(patchValue[0], widgetManager) to
-            secondType.deserialize(patchValue[1], widgetManager)
+        return firstType.deserialize(patchValue.values[0], widgetManager) to
+            secondType.deserialize(patchValue.values[1], widgetManager)
     }
 }

@@ -2,15 +2,13 @@ package org.jetbrains.kotlinx.jupyter.widget.protocol
 
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
-import kotlin.collections.get
-import kotlin.collections.iterator
 
 /**
  * A "hydrated" patch containing widget state.
  * Unlike the raw JSON representation, this can contain [ByteArray] values
  * in place of binary data placeholders.
  */
-public typealias Patch = Map<String, Any?>
+public typealias Patch = Map<String, RawPropertyValue>
 
 /**
  * Represents the raw message structure for Jupyter comm messages.
@@ -24,7 +22,7 @@ internal data class WireMessage(
     /**
      * Paths within the [state] where binary buffers should be inserted.
      */
-    val bufferPaths: List<List<Any>>,
+    val bufferPaths: List<BufferPath>,
     /**
      * The actual binary data.
      */
@@ -38,9 +36,11 @@ internal fun getPatch(wireMessage: WireMessage): Patch {
     val dehydratedMap = deserializeJsonMap(wireMessage.state)
     // Insert buffers into the map at specified paths
     for ((path, buf) in wireMessage.bufferPaths.zip(wireMessage.buffers)) {
-        var obj: Any? = dehydratedMap
-        for (key in path.dropLast(1)) obj = getAt(obj, key)
-        setAt(obj, path.last(), buf)
+        var obj: RawPropertyValue = RawPropertyValue.MapValue(dehydratedMap)
+        for (key in path.dropLast(1)) {
+            obj = getAt(obj, key)
+        }
+        setAt(obj, path.last(), RawPropertyValue.ByteArrayValue(buf))
     }
     return dehydratedMap
 }
@@ -49,64 +49,73 @@ internal fun getPatch(wireMessage: WireMessage): Patch {
  * Extracts binary buffers from a [Patch] and creates a [WireMessage].
  */
 internal fun getWireMessage(patch: Patch): WireMessage {
-    val pathStack = mutableListOf<Any>()
-    val bufferPaths = mutableListOf<List<Any>>()
+    val pathStack = mutableListOf<BufferPathElement>()
+    val bufferPaths = mutableListOf<BufferPath>()
     val buffers = mutableListOf<ByteArray>()
 
     // Recursively find all ByteArray values and their paths
-    fun traverse(obj: Any?) {
+    fun traverse(obj: RawPropertyValue) {
         when (obj) {
-            is Map<*, *> -> {
-                for ((key, value) in obj) {
-                    pathStack.add(key as Any)
+            is RawPropertyValue.MapValue -> {
+                for ((key, value) in obj.values) {
+                    pathStack.add(BufferPathElement.Key(key))
                     traverse(value)
                     pathStack.removeLast()
                 }
             }
-            is List<*> -> {
-                for (i in obj.indices) {
-                    pathStack.add(i)
-                    traverse(obj[i])
+            is RawPropertyValue.ListValue -> {
+                for (i in obj.values.indices) {
+                    pathStack.add(BufferPathElement.Index(i))
+                    traverse(obj.values[i])
                     pathStack.removeLast()
                 }
             }
-            is ByteArray -> {
+            is RawPropertyValue.ByteArrayValue -> {
                 bufferPaths.add(pathStack.toList())
-                buffers.add(obj)
+                buffers.add(obj.value)
             }
+            else -> {}
         }
     }
 
-    traverse(patch)
+    traverse(RawPropertyValue.MapValue(patch))
     // Serialize to JSON, ByteArrays will be replaced with JsonNull during serialization
     val state = serializeJsonMap(patch).jsonObject
     return WireMessage(state, bufferPaths, buffers)
 }
 
 private fun getAt(
-    obj: Any?,
-    key: Any,
-): Any? =
+    obj: RawPropertyValue,
+    key: BufferPathElement,
+): RawPropertyValue =
     when (obj) {
-        is Map<*, *> -> obj[key as String]
-        is List<*> -> obj[key as Int]
+        is RawPropertyValue.MapValue -> {
+            require(key is BufferPathElement.Key) { "Expected Key for MapValue, got $key" }
+            obj.values[key.key] ?: error("Key ${key.key} not found in map")
+        }
+        is RawPropertyValue.ListValue -> {
+            require(key is BufferPathElement.Index) { "Expected Index for ListValue, got $key" }
+            obj.values[key.index]
+        }
         else -> error("Unexpected object type: $obj")
     }
 
 private fun setAt(
-    obj: Any?,
-    key: Any?,
-    value: Any?,
+    obj: RawPropertyValue,
+    key: BufferPathElement,
+    value: RawPropertyValue,
 ) {
     when (obj) {
-        is MutableMap<*, *> -> {
+        is RawPropertyValue.MapValue -> {
+            require(key is BufferPathElement.Key) { "Expected Key for MapValue, got $key" }
             @Suppress("UNCHECKED_CAST")
-            (obj as MutableMap<Any?, Any?>)[key] = value
+            (obj.values as MutableMap<String, RawPropertyValue>)[key.key] = value
         }
 
-        is MutableList<*> -> {
+        is RawPropertyValue.ListValue -> {
+            require(key is BufferPathElement.Index) { "Expected Index for ListValue, got $key" }
             @Suppress("UNCHECKED_CAST")
-            (obj as MutableList<Any?>)[key as Int] = value
+            (obj.values as MutableList<RawPropertyValue>)[key.index] = value
         }
         else -> error("Unexpected object type: $obj")
     }

@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 import org.jetbrains.kotlinx.jupyter.widget.protocol.Patch
+import org.jetbrains.kotlinx.jupyter.widget.protocol.RawPropertyValue
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -291,20 +292,20 @@ public interface WidgetModelProperty<T> {
     /**
      * Current value serialized for the Jupyter protocol.
      */
-    public val serializedValue: Any?
+    public val serializedValue: RawPropertyValue
 
     /**
      * Applies a new value received via the Jupyter protocol.
      */
     public fun applyPatch(
-        patch: Any?,
+        patch: RawPropertyValue,
         fromFrontend: Boolean = false,
     )
 
     /**
      * Adds a listener for changes to this property.
      */
-    public fun addChangeListener(listener: (Any?, fromFrontend: Boolean) -> Unit)
+    public fun addChangeListener(listener: (RawPropertyValue, fromFrontend: Boolean) -> Unit)
 }
 
 internal class WidgetModelPropertyImpl<T>(
@@ -315,22 +316,22 @@ internal class WidgetModelPropertyImpl<T>(
     override var echoUpdate: Boolean,
 ) : WidgetModelProperty<T> {
     private var _value: T = initialValue
-    private val listeners = mutableListOf<(newValue: Any?, fromFrontend: Boolean) -> Unit>()
+    private val listeners = mutableListOf<(newValue: RawPropertyValue, fromFrontend: Boolean) -> Unit>()
 
     override var value: T
         get() = _value
         set(newValue) = setNewValue(newValue)
 
-    override val serializedValue: Any? get() = type.serialize(value, widgetManager)
+    override val serializedValue: RawPropertyValue get() = type.serialize(value, widgetManager)
 
     override fun applyPatch(
-        patch: Any?,
+        patch: RawPropertyValue,
         fromFrontend: Boolean,
     ) {
         setNewValue(type.deserialize(patch, widgetManager), fromFrontend)
     }
 
-    override fun addChangeListener(listener: (Any?, Boolean) -> Unit) {
+    override fun addChangeListener(listener: (RawPropertyValue, Boolean) -> Unit) {
         listeners.add(listener)
     }
 
