@@ -2,11 +2,11 @@ package org.jetbrains.kotlinx.jupyter.widget.generator
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.createDirectories
+import kotlin.io.path.deleteRecursively
 import kotlin.io.path.div
-import kotlin.io.path.exists
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
 
@@ -73,8 +73,8 @@ private class WidgetGenerator(
         val schemaText = schemaPath.readText()
         val widgets = json.decodeFromString<List<WidgetSchema>>(schemaText)
 
-        recreateDirectory(apiOutput)
-        recreateDirectory(jupyterOutput)
+        apiOutput.recreateDirectory()
+        jupyterOutput.recreateDirectory()
 
         val widgetInfos = widgets.map { it.toInfo() }
         for (widgetInfo in widgetInfos) {
@@ -356,16 +356,12 @@ private class WidgetGenerator(
                 else -> representAsString(a).compareTo(representAsString(b))
             }
         }
+}
 
-    private fun recreateDirectory(path: Path) {
-        if (path.exists()) {
-            Files
-                .walk(path)
-                .sorted(Comparator.reverseOrder())
-                .forEach(Files::delete)
-        }
-        path.createDirectories()
-    }
+@OptIn(ExperimentalPathApi::class)
+private fun Path.recreateDirectory() {
+    deleteRecursively()
+    createDirectories()
 }
 
 private data class WidgetInfo(
