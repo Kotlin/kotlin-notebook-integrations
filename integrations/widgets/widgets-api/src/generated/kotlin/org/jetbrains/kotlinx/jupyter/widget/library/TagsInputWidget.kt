@@ -8,13 +8,9 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val tagsInputSpec = WidgetSpec(
     modelName = "TagsInputModel",
@@ -31,26 +27,9 @@ public fun WidgetManager.tagsInput(setup: TagsInputWidget.() -> Unit = {}): Tags
 public class TagsInputWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DomWidgetBase(tagsInputSpec, widgetManager, fromFrontend), WidgetWithDescription {
+) : InputWidgetBase(tagsInputSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<TagsInputWidget>(tagsInputSpec, ::TagsInputWidget)
-    public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
-    public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
-
-    /**
-     * Description of the control.
-     */
-    public override var description: String by stringProp("description", "")
-
-    /**
-     * Accept HTML in the description.
-     */
-    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    public var placeholder: String by stringProp("placeholder", "​")
-
-    /**
-     * Styling customizations
-     */
-    public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
+    public var allowedTags: List<String> by prop("allowed_tags", ArrayType(StringType), emptyList())
 
     /**
      * Use a predefined styling for the tags.
@@ -60,5 +39,5 @@ public class TagsInputWidget internal constructor(
     /**
      * List of string tags
      */
-    public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
+    public var value: List<String> by prop("value", ArrayType(StringType), emptyList())
 }

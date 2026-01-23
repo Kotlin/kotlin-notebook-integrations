@@ -50,6 +50,22 @@ internal val traits: List<TraitInfo> =
             skipGeneration = false,
         ),
         TraitInfo(
+            baseClassName = "InputWidgetBase",
+            traitProperties =
+                mapOf(
+                    "allow_duplicates" to "Boolean",
+                    "description" to "String",
+                    "description_allow_html" to "Boolean",
+                    "placeholder" to "String",
+                    "style" to "DescriptionStyleWidget?",
+                ),
+            allowedClasses = setOf("IntsInputWidget", "FloatsInputWidget", "TagsInputWidget", "ColorsInputWidget"),
+            isInterface = false,
+            shouldOverride = true,
+            skipGeneration = true,
+            extends = "DomWidgetBase",
+        ),
+        TraitInfo(
             baseClassName = "DomWidgetBase",
             traitProperties =
                 mapOf(

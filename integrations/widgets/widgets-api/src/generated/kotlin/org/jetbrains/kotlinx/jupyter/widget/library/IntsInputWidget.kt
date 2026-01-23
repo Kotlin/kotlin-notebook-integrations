@@ -11,11 +11,8 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val intsInputSpec = WidgetSpec(
     modelName = "IntsInputModel",
@@ -32,29 +29,12 @@ public fun WidgetManager.intsInput(setup: IntsInputWidget.() -> Unit = {}): Ints
 public class IntsInputWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DomWidgetBase(intsInputSpec, widgetManager, fromFrontend), WidgetWithDescription {
+) : InputWidgetBase(intsInputSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<IntsInputWidget>(intsInputSpec, ::IntsInputWidget)
-    public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
-    public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
-
-    /**
-     * Description of the control.
-     */
-    public override var description: String by stringProp("description", "")
-
-    /**
-     * Accept HTML in the description.
-     */
-    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    public var allowedTags: List<Int> by prop("allowed_tags", ArrayType(IntType), emptyList())
     public var format: String by stringProp("format", "d")
     public var max: Int? by nullableIntProp("max", null)
     public var min: Int? by nullableIntProp("min", null)
-    public var placeholder: String by stringProp("placeholder", "​")
-
-    /**
-     * Styling customizations
-     */
-    public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
 
     /**
      * Use a predefined styling for the tags.
@@ -64,5 +44,5 @@ public class IntsInputWidget internal constructor(
     /**
      * List of int tags
      */
-    public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
+    public var value: List<Int> by prop("value", ArrayType(IntType), emptyList())
 }

@@ -11,11 +11,8 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.FloatType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val floatsInputSpec = WidgetSpec(
     modelName = "FloatsInputModel",
@@ -32,29 +29,12 @@ public fun WidgetManager.floatsInput(setup: FloatsInputWidget.() -> Unit = {}): 
 public class FloatsInputWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DomWidgetBase(floatsInputSpec, widgetManager, fromFrontend), WidgetWithDescription {
+) : InputWidgetBase(floatsInputSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<FloatsInputWidget>(floatsInputSpec, ::FloatsInputWidget)
-    public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
-    public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
-
-    /**
-     * Description of the control.
-     */
-    public override var description: String by stringProp("description", "")
-
-    /**
-     * Accept HTML in the description.
-     */
-    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
+    public var allowedTags: List<Double> by prop("allowed_tags", ArrayType(FloatType), emptyList())
     public var format: String by stringProp("format", ".1f")
     public var max: Double? by nullableDoubleProp("max", null)
     public var min: Double? by nullableDoubleProp("min", null)
-    public var placeholder: String by stringProp("placeholder", "​")
-
-    /**
-     * Styling customizations
-     */
-    public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
 
     /**
      * Use a predefined styling for the tags.
@@ -64,5 +44,5 @@ public class FloatsInputWidget internal constructor(
     /**
      * List of float tags
      */
-    public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
+    public var value: List<Double> by prop("value", ArrayType(FloatType), emptyList())
 }

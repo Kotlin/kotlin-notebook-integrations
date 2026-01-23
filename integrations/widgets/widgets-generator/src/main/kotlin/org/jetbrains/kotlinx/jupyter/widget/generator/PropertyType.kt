@@ -20,10 +20,24 @@ private val typeArgumentsRegex = Regex("<.*>")
 
 private val assignedPropertyTypes =
     listOf(
-        AssignedPropertyType("IntRangeSliderWidget", "value", IntRangePropertyType),
-        AssignedPropertyType("FloatRangeSliderWidget", "value", FloatRangePropertyType),
-        AssignedPropertyType("SelectionRangeSliderWidget", "index", IntRangePropertyType),
-    ).map { it.copy(widgetName = it.widgetName.toPascalCase()) }
+        AssignedPropertyType("IntRangeSliderWidget", "value", NullablePropertyType(IntRangePropertyType)),
+        AssignedPropertyType("FloatRangeSliderWidget", "value", NullablePropertyType(FloatRangePropertyType)),
+        AssignedPropertyType("SelectionRangeSliderWidget", "index", NullablePropertyType(IntRangePropertyType)),
+    ) +
+        listOf(
+            "IntsInputWidget" to IntPropertyType,
+            "FloatsInputWidget" to DoublePropertyType,
+            "TagsInputWidget" to StringPropertyType,
+            "ColorsInputWidget" to StringPropertyType,
+        ).flatMap { (widgetName, type) ->
+            listOf("value", "allowed_tags").map { attributeName ->
+                AssignedPropertyType(
+                    widgetName,
+                    attributeName,
+                    ArrayPropertyType(type),
+                )
+            }
+        }
 
 internal data class EnumInfo(
     val className: String,
@@ -209,18 +223,8 @@ private class NullablePropertyType(
 }
 
 private class ArrayPropertyType(
-    attribute: AttributeSchema,
-    json: Json,
-    enums: MutableMap<String, EnumInfo>,
-    namePrefix: String,
+    private val elementType: PropertyType,
 ) : PropertyType {
-    private val elementType =
-        run {
-            val actualItems = attribute.items ?: AttributeItems(type = AttributeType.Single("any"))
-            val elementSchema = AttributeSchema(name = "item", type = actualItems.type, default = JsonNull, widget = actualItems.widget)
-            elementSchema.toPropertyType(json, enums, namePrefix)
-        }
-
     override val kotlinType: String get() = "List<${elementType.kotlinType}>"
     override val typeExpression: String get() = "ArrayType(${elementType.typeExpression})"
     override val isNullable: Boolean get() = false
@@ -491,8 +495,9 @@ internal fun AttributeSchema.toPropertyType(
     val isNullable = allowNone
 
     assignedPropertyTypes
-        .find { it.widgetName == namePrefix && it.attributeName == name }
-        ?.let { return it.propertyType.asNullable() }
+        .find { it.widgetNamePredicate(namePrefix) && it.attributeName == name }
+        ?.propertyType
+        ?.let { return it }
 
     val baseType =
         when (type) {
@@ -518,7 +523,13 @@ internal fun AttributeSchema.toPropertyType(
                         "Time" -> TimePropertyType
                         "reference" -> ReferencePropertyType(widget ?: error("Reference widget is not specified"))
                         "object" -> RawObjectPropertyType
-                        "array" -> ArrayPropertyType(this, json, enums, namePrefix)
+                        "array" -> {
+                            val actualItems = this.items ?: AttributeItems(type = AttributeType.Single("any"))
+                            val elementSchema =
+                                AttributeSchema(name = "item", type = actualItems.type, default = JsonNull, widget = actualItems.widget)
+                            val elementType = elementSchema.toPropertyType(json, enums, namePrefix)
+                            ArrayPropertyType(elementType)
+                        }
                         else -> error("Unsupported type ${type.name}")
                     }
                 }
@@ -610,7 +621,17 @@ private fun renderRangeLiteral(
 }
 
 private data class AssignedPropertyType(
-    val widgetName: String,
+    val widgetNamePredicate: (String) -> Boolean,
     val attributeName: String,
     val propertyType: PropertyType,
-)
+) {
+    constructor(
+        widgetName: String,
+        attributeName: String,
+        propertyType: PropertyType,
+    ) : this({ it == widgetName }, attributeName, propertyType)
+    constructor(
+        attributeName: String,
+        propertyType: PropertyType,
+    ) : this({ true }, attributeName, propertyType)
+}

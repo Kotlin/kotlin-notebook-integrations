@@ -7,11 +7,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.AnyType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val colorsInputSpec = WidgetSpec(
     modelName = "ColorsInputModel",
@@ -28,29 +24,12 @@ public fun WidgetManager.colorsInput(setup: ColorsInputWidget.() -> Unit = {}): 
 public class ColorsInputWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DomWidgetBase(colorsInputSpec, widgetManager, fromFrontend), WidgetWithDescription {
+) : InputWidgetBase(colorsInputSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<ColorsInputWidget>(colorsInputSpec, ::ColorsInputWidget)
-    public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
-    public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
-
-    /**
-     * Description of the control.
-     */
-    public override var description: String by stringProp("description", "")
-
-    /**
-     * Accept HTML in the description.
-     */
-    public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    public var placeholder: String by stringProp("placeholder", "​")
-
-    /**
-     * Styling customizations
-     */
-    public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
+    public var allowedTags: List<String> by prop("allowed_tags", ArrayType(StringType), emptyList())
 
     /**
      * List of string tags
      */
-    public var value: List<Any?> by prop("value", ArrayType(AnyType), emptyList())
+    public var value: List<String> by prop("value", ArrayType(StringType), emptyList())
 }
