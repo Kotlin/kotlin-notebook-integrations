@@ -28,7 +28,7 @@ public fun WidgetManager.image(setup: ImageWidget.() -> Unit = {}): ImageWidget 
 public class ImageWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(imageSpec, widgetManager) {
+) : DefaultWidgetModel(imageSpec, widgetManager), MediaWidget {
     internal object Factory : DefaultWidgetFactory<ImageWidget>(imageSpec, ::ImageWidget)
 
     /**
@@ -39,7 +39,7 @@ public class ImageWidget internal constructor(
     /**
      * The format of the image.
      */
-    public var format: String by stringProp("format", "png")
+    public override var format: String by stringProp("format", "png")
 
     /**
      * Height of the image in pixels. Use layout.height for styling the widget.
@@ -60,7 +60,7 @@ public class ImageWidget internal constructor(
     /**
      * The media data as a memory view of bytes.
      */
-    public var value: ByteArray by bytesProp("value", byteArrayOf())
+    public override var value: ByteArray by bytesProp("value", byteArrayOf())
 
     /**
      * Width of the image in pixels. Use layout.width for styling the widget.

@@ -20,6 +20,7 @@ This document summarizes the key architectural decisions, requirements, and tech
 - **Naming Conventions**:
     - Use `toPascalCase()` for class and file names.
     - Use `toCamelCase()` for property and factory method names.
+    - Use full nouns for variables and properties; avoid shorthands like `itfTrait` (use `interfaceTrait` instead).
     - Widgets should always end with the `Widget` suffix (e.g., `IntSliderWidget`). Use `String.toWidgetClassName()` from `StringUtil.kt`.
     - Handle abbreviations correctly (e.g., `HtmlWidget`, `VBoxWidget`).
     - **Splitting Logic**: `StringUtil.splitIntoParts()` handles underscores, hyphens, spaces, and CASE transitions. It specifically allows single-letter parts followed by lowercase (e.g., `V` + `Box` -> `VBox`).
@@ -34,6 +35,15 @@ This document summarizes the key architectural decisions, requirements, and tech
 - **Trait-based Inheritance**:
     - Use `traits` in `WidgetGenerator.kt` to match widgets by property names and types.
     - This allows common logic for selection widgets to be moved to specialized base classes like `SingleNullableSelectionWidgetBase`.
+    - **Multiple Traits**: The generator supports matching multiple traits per widget.
+        - Only **one** trait can be a base class trait (`isInterface = false`).
+        - Multiple traits can be interface traits (`isInterface = true`).
+    - **Explicit Decisions**: The generator explicitly decides whether to generate, override, or skip a property based on flags in `TraitInfo`:
+        - `isInterface`: If `true`, the widget class implements the specified `baseClassName` as an interface.
+        - `shouldOverride`: If `true`, properties belonging to the trait are generated with the `override` keyword.
+        - `skipGeneration`: If `true`, properties belonging to the trait are NOT generated in the widget class (usually because they are inherited from a base class).
+    - These flags are independent: for example, an interface trait might require overrides (`shouldOverride = true`) but still need property generation (`skipGeneration = false`), while a base class trait might skip generation entirely (`skipGeneration = true`).
+    - Do not rely on implicit signals like the presence of an import to determine inheritance.
 - **Generator Execution**:
     - **Path Handling**: It's better to pass absolute paths to generators via command-line arguments instead of relying on the working directory, especially in multi-module Gradle projects where the working directory might vary.
 

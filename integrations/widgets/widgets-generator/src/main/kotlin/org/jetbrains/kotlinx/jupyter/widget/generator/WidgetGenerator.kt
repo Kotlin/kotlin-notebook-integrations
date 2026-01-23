@@ -26,6 +26,10 @@ private data class TraitInfo(
     val baseClassName: String,
     val traitProperties: Map<String, String?>,
     val import: String? = null,
+    val allowedClasses: Set<String>? = null,
+    val isInterface: Boolean = false,
+    val shouldOverride: Boolean = false,
+    val skipGeneration: Boolean = false,
 )
 
 private data class OptionWidgetTraitInfo(
@@ -42,27 +46,44 @@ private fun OptionWidgetTraitInfo.toTraitInfo(): TraitInfo =
                 "index" to indexType,
             ),
         import = "$WIDGETS_PACKAGE.library.options.$baseClassName",
+        isInterface = false,
+        shouldOverride = false,
+        skipGeneration = true,
     )
 
 private val traits: List<TraitInfo> =
     listOf(
-        OptionWidgetTraitInfo(
-            baseClassName = "SingleNullableSelectionWidgetBase",
-            indexType = "Int?",
+        TraitInfo(
+            baseClassName = "MediaWidget",
+            traitProperties =
+                mapOf(
+                    "value" to "ByteArray",
+                    "format" to "String",
+                ),
+            allowedClasses = setOf("AudioWidget", "ImageWidget", "VideoWidget"),
+            isInterface = true,
+            shouldOverride = true,
+            skipGeneration = false,
         ),
-        OptionWidgetTraitInfo(
-            baseClassName = "SingleSelectionWidgetBase",
-            indexType = "Int",
-        ),
-        OptionWidgetTraitInfo(
-            baseClassName = "MultipleSelectionWidgetBase",
-            indexType = "List<Int>",
-        ),
-        OptionWidgetTraitInfo(
-            baseClassName = "SelectionRangeWidgetBase",
-            indexType = "IntRange?",
-        ),
-    ).map { it.toTraitInfo() }
+    ) +
+        listOf(
+            OptionWidgetTraitInfo(
+                baseClassName = "SingleNullableSelectionWidgetBase",
+                indexType = "Int?",
+            ),
+            OptionWidgetTraitInfo(
+                baseClassName = "SingleSelectionWidgetBase",
+                indexType = "Int",
+            ),
+            OptionWidgetTraitInfo(
+                baseClassName = "MultipleSelectionWidgetBase",
+                indexType = "List<Int>",
+            ),
+            OptionWidgetTraitInfo(
+                baseClassName = "SelectionRangeWidgetBase",
+                indexType = "IntRange?",
+            ),
+        ).map { it.toTraitInfo() }
 
 private val baseWidgets = setOf("OutputWidget")
 
@@ -153,13 +174,25 @@ private class WidgetGenerator(
             info.schema.attributes.associate {
                 it.name to it.toPropertyType(json, enums, info.className)
             }
-        val trait =
-            traits.find { trait ->
-                trait.traitProperties.all { (name, type) ->
-                    val attrType = attributeProperties[name] ?: return@all false
-                    type == null || attrType.kotlinType == type
-                }
+        val matchedTraits =
+            traits.filter { trait ->
+                val classMatches = trait.allowedClasses == null || info.className in trait.allowedClasses
+                classMatches &&
+                    trait.traitProperties.all { (name, type) ->
+                        val attrType = attributeProperties[name] ?: return@all false
+                        type == null || attrType.kotlinType == type
+                    }
             }
+
+        val baseClassTrait = matchedTraits.find { !it.isInterface }
+        val interfaceTraits = matchedTraits.filter { it.isInterface }
+
+        if (matchedTraits.count { !it.isInterface } > 1) {
+            error(
+                "Widget ${info.className} matches multiple base class traits: " +
+                    matchedTraits.filter { !it.isInterface }.map { it.baseClassName },
+            )
+        }
 
         val imports =
             sortedSetOf<String>().apply {
@@ -178,9 +211,13 @@ private class WidgetGenerator(
         val properties =
             info.schema.attributes.mapNotNull { attribute ->
                 if (attribute.name in hiddenAttributeNames) return@mapNotNull null
-                if (trait != null && attribute.name in trait.traitProperties) return@mapNotNull null
+                val trait = matchedTraits.find { attribute.name in it.traitProperties }
                 val propertyType = attributeProperties[attribute.name]!!
-                createProperty(attribute, propertyType, helperDeclarations, imports)
+
+                if (trait != null && trait.skipGeneration) return@mapNotNull null
+
+                val shouldOverride = trait != null && trait.shouldOverride
+                createProperty(attribute, propertyType, helperDeclarations, imports, isOverride = shouldOverride)
             }
 
         val specName = "${info.functionName}Spec"
@@ -217,15 +254,24 @@ private class WidgetGenerator(
         val body =
             buildString {
                 val abstractModifier = if (info.isBaseWidget) "abstract " else ""
-                val superClassName = trait?.baseClassName ?: "DefaultWidgetModel"
-                if (trait?.import != null) {
-                    imports.add(trait.import)
+                val superClassName = baseClassTrait?.baseClassName ?: "DefaultWidgetModel"
+
+                for (trait in matchedTraits) {
+                    trait.import?.let { imports.add(it) }
                 }
+
+                val traitSuffix =
+                    buildString {
+                        append(" : $superClassName($specName, widgetManager)")
+                        for (interfaceTrait in interfaceTraits) {
+                            append(", ${interfaceTrait.baseClassName}")
+                        }
+                    }
 
                 appendLine("public ${abstractModifier}class ${info.className} internal constructor(")
                 appendLine("    widgetManager: WidgetManager,")
                 appendLine("    fromFrontend: Boolean,")
-                appendLine(") : $superClassName($specName, widgetManager) {")
+                appendLine(")$traitSuffix {")
                 if (!info.isBaseWidget) {
                     appendLine("    internal object Factory : DefaultWidgetFactory<${info.className}>($specName, ::${info.className})")
                 }
@@ -264,6 +310,7 @@ private class WidgetGenerator(
         propertyType: PropertyType,
         helperDeclarations: MutableList<String>,
         imports: MutableSet<String>,
+        isOverride: Boolean = false,
     ): String {
         imports.addAll(propertyType.imports)
         helperDeclarations.addAll(propertyType.helperDeclarations)
@@ -284,7 +331,8 @@ private class WidgetGenerator(
                 appendLine("     * $help")
                 appendLine("     */")
             }
-            append("    public var $propertyName: $kotlinType by $delegateCall")
+            val modifier = if (isOverride) "override " else ""
+            append("    public ${modifier}var $propertyName: $kotlinType by $delegateCall")
         }
     }
 

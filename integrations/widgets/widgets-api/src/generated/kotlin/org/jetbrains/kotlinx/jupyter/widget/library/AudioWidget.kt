@@ -28,7 +28,7 @@ public fun WidgetManager.audio(setup: AudioWidget.() -> Unit = {}): AudioWidget 
 public class AudioWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(audioSpec, widgetManager) {
+) : DefaultWidgetModel(audioSpec, widgetManager), MediaWidget {
     internal object Factory : DefaultWidgetFactory<AudioWidget>(audioSpec, ::AudioWidget)
 
     /**
@@ -49,7 +49,7 @@ public class AudioWidget internal constructor(
     /**
      * The format of the audio.
      */
-    public var format: String by stringProp("format", "mp3")
+    public override var format: String by stringProp("format", "mp3")
     public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
 
     /**
@@ -70,5 +70,5 @@ public class AudioWidget internal constructor(
     /**
      * The media data as a memory view of bytes.
      */
-    public var value: ByteArray by bytesProp("value", byteArrayOf())
+    public override var value: ByteArray by bytesProp("value", byteArrayOf())
 }

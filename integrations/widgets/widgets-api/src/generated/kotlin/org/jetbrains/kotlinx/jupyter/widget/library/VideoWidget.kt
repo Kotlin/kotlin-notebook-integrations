@@ -28,7 +28,7 @@ public fun WidgetManager.video(setup: VideoWidget.() -> Unit = {}): VideoWidget 
 public class VideoWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(videoSpec, widgetManager) {
+) : DefaultWidgetModel(videoSpec, widgetManager), MediaWidget {
     internal object Factory : DefaultWidgetFactory<VideoWidget>(videoSpec, ::VideoWidget)
 
     /**
@@ -49,7 +49,7 @@ public class VideoWidget internal constructor(
     /**
      * The format of the video.
      */
-    public var format: String by stringProp("format", "mp4")
+    public override var format: String by stringProp("format", "mp4")
 
     /**
      * Height of the video in pixels.
@@ -75,7 +75,7 @@ public class VideoWidget internal constructor(
     /**
      * The media data as a memory view of bytes.
      */
-    public var value: ByteArray by bytesProp("value", byteArrayOf())
+    public override var value: ByteArray by bytesProp("value", byteArrayOf())
 
     /**
      * Width of the video in pixels.

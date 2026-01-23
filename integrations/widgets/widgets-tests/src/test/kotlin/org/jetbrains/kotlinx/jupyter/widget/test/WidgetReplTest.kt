@@ -70,7 +70,6 @@ class WidgetReplTest : AbstractWidgetReplTest() {
 
     @Test
     fun `date picker with local date`() {
-        execRaw("import java.time.LocalDate")
         execRaw("val dp = datePickerWidget()")
         execRaw("dp.value = LocalDate.of(2023, 1, 1)")
 
@@ -119,7 +118,6 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         // Frontend already has all the widgets, so no events should be sent
         facility.sentEvents.shouldBeEmpty()
 
-        execRaw("import org.jetbrains.kotlinx.jupyter.widget.library.IntSliderWidget")
         execRaw("val createdSlider = widgetManager.getWidget(\"new_slider_id\") as IntSliderWidget")
         execRaw("createdSlider.value") shouldBe 55
     }
@@ -165,7 +163,6 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         resetEvents()
 
         // 2. Disable echo for 'value' property
-        execRaw("import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel")
         execRaw("(s as WidgetModel).getProperty(\"value\")?.echoUpdate = false")
 
         sendUpdate(sliderId, "value" to 43)
