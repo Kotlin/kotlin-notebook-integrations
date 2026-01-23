@@ -23,18 +23,6 @@ private val assignedPropertyTypes =
         AssignedPropertyType("IntRangeSliderWidget", "value", IntRangePropertyType),
         AssignedPropertyType("FloatRangeSliderWidget", "value", FloatRangePropertyType),
         AssignedPropertyType("SelectionRangeSliderWidget", "index", IntRangePropertyType),
-        AssignedPropertyType("LinkWidget", "source", PairPropertyType(ReferencePropertyType("Widget"), StringPropertyType, "null to \"\"")),
-        AssignedPropertyType("LinkWidget", "target", PairPropertyType(ReferencePropertyType("Widget"), StringPropertyType, "null to \"\"")),
-        AssignedPropertyType(
-            "DirectionalLinkWidget",
-            "source",
-            PairPropertyType(ReferencePropertyType("Widget"), StringPropertyType, "null to \"\""),
-        ),
-        AssignedPropertyType(
-            "DirectionalLinkWidget",
-            "target",
-            PairPropertyType(ReferencePropertyType("Widget"), StringPropertyType, "null to \"\""),
-        ),
     ).map { it.copy(widgetName = it.widgetName.toPascalCase()) }
 
 internal data class EnumInfo(
@@ -153,22 +141,6 @@ private object FloatRangePropertyType : BasicPropertyType(
     typeExpression = "FloatRangeType",
     imports = setOf("$WIDGET_TYPES_PACKAGE.ranges.FloatRangeType"),
 )
-
-private class PairPropertyType(
-    val first: PropertyType,
-    val second: PropertyType,
-    val defaultValue: String? = null,
-) : PropertyType {
-    override val kotlinType: String get() = "Pair<${first.kotlinType}, ${second.kotlinType}>"
-    override val typeExpression: String get() = "PairType(${first.typeExpression}, ${second.typeExpression})"
-    override val isNullable: Boolean get() = false
-    override val imports: Set<String> get() = first.imports + second.imports + "$WIDGET_TYPES_PACKAGE.compound.PairType"
-    override val helperDeclarations: List<String> get() = first.helperDeclarations + second.helperDeclarations
-    override val optionName: String get() = "Pair"
-
-    override fun getDefaultValueExpression(defaultValue: JsonElement): String =
-        this.defaultValue ?: "Pair(${first.getDefaultValueExpression(defaultValue)}, ${second.getDefaultValueExpression(defaultValue)})"
-}
 
 private open class DatetimeBasePropertyType(
     kotlinType: String,

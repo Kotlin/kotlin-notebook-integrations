@@ -86,9 +86,10 @@ internal val traits: List<TraitInfo> =
             baseClassName = "LinkWidgetBase",
             traitProperties =
                 mapOf(
-                    "source" to "Pair<WidgetModel?, String>?",
-                    "target" to "Pair<WidgetModel?, String>?",
+                    "source" to null,
+                    "target" to null,
                 ),
+            allowedClasses = setOf("LinkWidget", "DirectionalLinkWidget"),
             import = "$WIDGET_LIBRARY_PACKAGE.links.LinkWidgetBase",
             isInterface = false,
             shouldOverride = true,
