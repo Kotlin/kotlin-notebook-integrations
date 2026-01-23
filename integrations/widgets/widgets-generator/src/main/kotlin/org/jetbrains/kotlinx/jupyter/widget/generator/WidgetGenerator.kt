@@ -83,18 +83,12 @@ private data class WidgetTypeSchema(
 /**
  * Main entry point for the widget generator.
  */
-public fun main() {
-    val projectRoot =
-        Path
-            .of(".")
-            .toAbsolutePath()
-            .normalize()
-            .parent
-            ?.parent
-            ?.parent
-            ?: error("Unable to resolve project root")
+public fun main(args: Array<String>) {
+    val schemaPath = Path.of(args[0])
+    val apiOutput = Path.of(args[1])
+    val jupyterOutput = Path.of(args[2])
 
-    val generator = WidgetGenerator(projectRoot)
+    val generator = WidgetGenerator(schemaPath, apiOutput, jupyterOutput)
     generator.generate()
 }
 
@@ -107,13 +101,11 @@ public fun main() {
  * 4. Global helper functions for widget creation in Jupyter notebooks.
  */
 private class WidgetGenerator(
-    projectRoot: Path,
+    private val schemaPath: Path,
+    private val apiOutput: Path,
+    private val jupyterOutput: Path,
 ) {
     private val json = Json { ignoreUnknownKeys = true }
-
-    private val schemaPath = projectRoot / "integrations/widgets/widgets-generator/schema.json"
-    private val apiOutput = projectRoot / "integrations/widgets/widgets-api/src/generated/kotlin"
-    private val jupyterOutput = projectRoot / "integrations/widgets/widgets-jupyter/src/generated/kotlin"
     private val enums = mutableMapOf<String, EnumInfo>()
 
     /**

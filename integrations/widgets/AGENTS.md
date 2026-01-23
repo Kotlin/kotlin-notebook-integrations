@@ -3,10 +3,10 @@
 This document summarizes the key architectural decisions, requirements, and technical details discovered and implemented during the widget development session. This information is intended for other agents working on this project.
 
 #### 1. Core Architecture
-- **Modules**:
-    - `widgets-api`: Core logic, protocol implementation, and base classes.
-    - `widgets-generator`: Automates code generation from `schema.json`.
-    - `widgets-jupyter`: Integration with Kotlin Jupyter Notebook.
+- **Modules & Project Structure**:
+    - `widgets-api`: Core logic, protocol implementation, and base classes. Contains the base classes and generated widget models used by both the kernel and potential clients.
+    - `widgets-generator`: Automates code generation from `schema.json`. Contains the generator logic and `schema.json`.
+    - `widgets-jupyter`: Integration with Kotlin Jupyter Notebook. Contains the Jupyter-specific integration code and helpers.
     - `widgets-tests`: Integration and REPL tests.
 - **Comm Targets**:
     - `jupyter.widget`: Main target for widget instance synchronization.
@@ -16,12 +16,17 @@ This document summarizes the key architectural decisions, requirements, and tech
 - **Binary Data**: Handled via binary buffers, not JSON-encoded. `ByteArray` properties are serialized as `null` in JSON and transferred via binary buffers, with paths specified in `buffer_paths`.
 
 #### 2. Code Generation Guidelines
+- **Schema-Driven**: The widget generator uses `schema.json` to define properties and widgets.
 - **Naming Conventions**:
     - Use `toPascalCase()` for class and file names.
     - Use `toCamelCase()` for property and factory method names.
     - Widgets should always end with the `Widget` suffix (e.g., `IntSliderWidget`). Use `String.toWidgetClassName()` from `StringUtil.kt`.
     - Handle abbreviations correctly (e.g., `HtmlWidget`, `VBoxWidget`).
     - **Splitting Logic**: `StringUtil.splitIntoParts()` handles underscores, hyphens, spaces, and CASE transitions. It specifically allows single-letter parts followed by lowercase (e.g., `V` + `Box` -> `VBox`).
+- **Implementation Details**:
+    - Generates Kotlin classes for widgets with property delegation for state synchronization.
+    - Handles enums and factory registries.
+    - Produces Jupyter integration helpers for easy widget creation in notebooks.
 - **Base Widgets**:
     - Some widgets (e.g., `OutputWidget`) are generated as `abstract Base` classes (e.g., `OutputWidgetBase`) to allow manual extensions.
     - Base widgets have `internal` visibility for their `WidgetSpec`.
@@ -29,6 +34,8 @@ This document summarizes the key architectural decisions, requirements, and tech
 - **Trait-based Inheritance**:
     - Use `traits` in `WidgetGenerator.kt` to match widgets by property names and types.
     - This allows common logic for selection widgets to be moved to specialized base classes like `SingleNullableSelectionWidgetBase`.
+- **Generator Execution**:
+    - **Path Handling**: It's better to pass absolute paths to generators via command-line arguments instead of relying on the working directory, especially in multi-module Gradle projects where the working directory might vary.
 
 #### 3. Selection Widget System
 - **Specialized Bases**:
@@ -69,11 +76,19 @@ This document summarizes the key architectural decisions, requirements, and tech
 - **Naming**: Test method names MUST NOT be in camelCase. Use descriptive names in backticks (e.g., ``fun `should have 42`()`` or ``fun `check that 42 is returned`()``).
 - **REPL Tests**: Inherit from `AbstractWidgetReplTest`. Use `shouldHaveNextOpenEvent`, `shouldHaveNextUpdateEvent`, etc., to verify the sequence of Comm events.
 - **Type Tests**: `TypesTest.kt` covers all property serialization/deserialization. Use `TestWidgetManager.INSTANCE` for tests that don't need real manager logic.
-- **Gradle Tasks**:
-    - `:generateWidgets`: Regenerates all widgets from `schema.json`.
-    - `:compileKotlin`: Verifies that manual and generated code are compatible.
 
-#### 7. Documentation & Style
+#### 7. Build, Verification & Style
+- **Gradle Tasks**:
+    - `:generateWidgets`: Regenerates all widgets from `schema.json`. To make a task incremental, define `inputs` and `outputs`. This prevents unnecessary execution when no source files or schemas have changed.
+    - `:compileKotlin`: Verifies that manual and generated code are compatible.
+    - `:ktlintFormat`: Automatically formats the code according to the project's style guide.
+    - `:check`: Runs all verification tasks, including tests, ktlint checks, and `:checkWidgetsRegenerated`.
+    - `:checkWidgetsRegenerated`: (Part of `:check`) Ensures that the generated widgets are up-to-date with the schema and generator.
+- **Build Configuration**:
+    - **Centralized Dependencies**: In `integrations/widgets/build.gradle.kts`, a `subprojects` block ensures that all `KotlinCompile` and `ktlint` tasks in `widgets-api` and `widgets-jupyter` depend on the `:generateWidgets` task from `widgets-generator`. This prevents code duplication in individual module build scripts.
+    - **Type-Safe Project Accessors**: Use `projects.path.to.module` instead of `project(":path:to:module")` when `TYPESAFE_PROJECT_ACCESSORS` is enabled in `settings.gradle.kts`. This provides better IDE support and compile-time safety for module references.
+    - **Verification Logic**: When verifying generated code, it's more robust to generate into a temporary directory and compare content rather than relying on `git status`. This makes the build independent of the VCS state.
+    - **Custom Executions**: Use `javaexec` (via `project.javaexec` or `ExecOperations.javaexec`) for running internal tools like generators. This is more portable than manual `java` path resolution and `providers.exec`.
 - **KDocs**: Always use multiline format:
     ```kotlin
     /**

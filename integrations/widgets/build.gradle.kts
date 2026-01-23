@@ -8,7 +8,7 @@ plugins {
 kotlinPublications {
     pom {
         githubRepo("Kotlin", "kotlin-notebook-integrations")
-        inceptionYear = "2025"
+        inceptionYear.set("2025")
         licenses {
             apache2()
         }
@@ -18,6 +18,19 @@ kotlinPublications {
                 name.set("Kotlin Jupyter Team")
                 organization.set("JetBrains")
                 organizationUrl.set("https://www.jetbrains.com")
+            }
+        }
+    }
+}
+
+subprojects {
+    if (name == "widgets-api" || name == "widgets-jupyter") {
+        tasks.configureEach {
+            if (name.contains("KotlinCompile") ||
+                name.contains("compileKotlin") ||
+                name.contains("ktlint", ignoreCase = true)
+            ) {
+                dependsOn(":integrations:widgets:widgets-generator:generateWidgets")
             }
         }
     }
