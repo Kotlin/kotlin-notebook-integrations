@@ -2,16 +2,13 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.media.MediaWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BytesType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val imageSpec = WidgetSpec(
     modelName = "ImageModel",
@@ -28,13 +25,8 @@ public fun WidgetManager.image(setup: ImageWidget.() -> Unit = {}): ImageWidget 
 public class ImageWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(imageSpec, widgetManager), MediaWidget {
+) : DomWidgetBase(imageSpec, widgetManager, fromFrontend), MediaWidget {
     internal object Factory : DefaultWidgetFactory<ImageWidget>(imageSpec, ::ImageWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * The format of the image.
@@ -45,17 +37,6 @@ public class ImageWidget internal constructor(
      * Height of the image in pixels. Use layout.height for styling the widget.
      */
     public var height: String by stringProp("height", "")
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * The media data as a memory view of bytes.

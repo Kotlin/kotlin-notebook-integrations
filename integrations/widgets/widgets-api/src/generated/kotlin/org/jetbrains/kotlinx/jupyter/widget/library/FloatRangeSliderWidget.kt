@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
@@ -33,13 +32,8 @@ public fun WidgetManager.floatRangeSlider(setup: FloatRangeSliderWidget.() -> Un
 public class FloatRangeSliderWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(floatRangeSliderSpec, widgetManager) {
+) : DomWidgetBase(floatRangeSliderSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<FloatRangeSliderWidget>(floatRangeSliderSpec, ::FloatRangeSliderWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * Slider dragging behavior.
@@ -54,7 +48,7 @@ public class FloatRangeSliderWidget internal constructor(
     /**
      * Description of the control.
      */
-    public var description: String by stringProp("description", "")
+    public override var description: String by stringProp("description", "")
 
     /**
      * Accept HTML in the description.
@@ -65,7 +59,6 @@ public class FloatRangeSliderWidget internal constructor(
      * Enable or disable user changes
      */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
 
     /**
      * Max value
@@ -97,16 +90,6 @@ public class FloatRangeSliderWidget internal constructor(
      */
     public var step: Double? by nullableDoubleProp("step", 0.1)
     public var style: SliderStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.sliderStyle())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * Tuple of (lower, upper) bounds

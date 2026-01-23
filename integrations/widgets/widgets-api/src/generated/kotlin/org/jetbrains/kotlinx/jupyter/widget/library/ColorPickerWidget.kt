@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
@@ -27,13 +26,8 @@ public fun WidgetManager.colorPicker(setup: ColorPickerWidget.() -> Unit = {}): 
 public class ColorPickerWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(colorPickerSpec, widgetManager) {
+) : DomWidgetBase(colorPickerSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<ColorPickerWidget>(colorPickerSpec, ::ColorPickerWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * Display short version with just a color selector.
@@ -43,7 +37,7 @@ public class ColorPickerWidget internal constructor(
     /**
      * Description of the control.
      */
-    public var description: String by stringProp("description", "")
+    public override var description: String by stringProp("description", "")
 
     /**
      * Accept HTML in the description.
@@ -54,22 +48,11 @@ public class ColorPickerWidget internal constructor(
      * Enable or disable user changes.
      */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
 
     /**
      * Styling customizations
      */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * The color value.

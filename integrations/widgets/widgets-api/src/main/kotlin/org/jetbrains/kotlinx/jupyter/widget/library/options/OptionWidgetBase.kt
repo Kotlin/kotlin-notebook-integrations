@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.jupyter.widget.library.options
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
-import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
+import org.jetbrains.kotlinx.jupyter.widget.library.DomWidgetBase
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
@@ -16,7 +16,8 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 public abstract class OptionWidgetBase<ValueT, ValueSelectionT, IndexSelectionT>(
     spec: WidgetSpec,
     widgetManager: WidgetManager,
-) : DefaultWidgetModel(spec, widgetManager) {
+    fromFrontend: Boolean,
+) : DomWidgetBase(spec, widgetManager, fromFrontend) {
     /**
      * The labels for the options displayed in the UI.
      * Maps to `_options_labels` on the frontend.

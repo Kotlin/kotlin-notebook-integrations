@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
@@ -27,40 +26,24 @@ public fun WidgetManager.label(setup: LabelWidget.() -> Unit = {}): LabelWidget 
 public class LabelWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(labelSpec, widgetManager) {
+) : DomWidgetBase(labelSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<LabelWidget>(labelSpec, ::LabelWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * Description of the control.
      */
-    public var description: String by stringProp("description", "")
+    public override var description: String by stringProp("description", "")
 
     /**
      * Accept HTML in the description.
      */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
 
     /**
      * Placeholder text to display when nothing has been typed
      */
     public var placeholder: String by stringProp("placeholder", "​")
     public var style: LabelStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.labelStyle())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * String value

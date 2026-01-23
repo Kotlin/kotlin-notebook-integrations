@@ -31,26 +31,20 @@ public fun WidgetManager.tagsInput(setup: TagsInputWidget.() -> Unit = {}): Tags
 public class TagsInputWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(tagsInputSpec, widgetManager) {
+) : DomWidgetBase(tagsInputSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<TagsInputWidget>(tagsInputSpec, ::TagsInputWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
     public var allowDuplicates: Boolean by boolProp("allow_duplicates", true)
     public var allowedTags: List<Any?> by prop("allowed_tags", ArrayType(AnyType), emptyList())
 
     /**
      * Description of the control.
      */
-    public var description: String by stringProp("description", "")
+    public override var description: String by stringProp("description", "")
 
     /**
      * Accept HTML in the description.
      */
     public var descriptionAllowHtml: Boolean by boolProp("description_allow_html", false)
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var placeholder: String by stringProp("placeholder", "​")
 
     /**
@@ -59,19 +53,9 @@ public class TagsInputWidget internal constructor(
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
 
     /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
      * Use a predefined styling for the tags.
      */
     public var tagStyle: WidgetEnumEntry<TagStyle> by prop("tag_style", WidgetEnumType(TagStyle, TagStyle.Default), TagStyle.Default)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * List of string tags

@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.UnionType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.datetime.TimeType
@@ -60,18 +59,13 @@ public fun WidgetManager.time(setup: TimeWidget.() -> Unit = {}): TimeWidget =
 public class TimeWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(timeSpec, widgetManager) {
+) : DomWidgetBase(timeSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<TimeWidget>(timeSpec, ::TimeWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * Description of the control.
      */
-    public var description: String by stringProp("description", "")
+    public override var description: String by stringProp("description", "")
 
     /**
      * Accept HTML in the description.
@@ -82,7 +76,6 @@ public class TimeWidget internal constructor(
      * Enable or disable user changes.
      */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var max: java.time.LocalTime? by nullableTimeProp("max", null)
     public var min: java.time.LocalTime? by nullableTimeProp("min", null)
 
@@ -95,15 +88,5 @@ public class TimeWidget internal constructor(
      * Styling customizations
      */
     public var style: DescriptionStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.descriptionStyle())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
     public var value: java.time.LocalTime? by nullableTimeProp("value", null)
 }

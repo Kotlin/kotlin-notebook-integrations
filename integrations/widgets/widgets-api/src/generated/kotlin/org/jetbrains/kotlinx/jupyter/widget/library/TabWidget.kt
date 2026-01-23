@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
@@ -32,13 +31,8 @@ public fun WidgetManager.tab(setup: TabWidget.() -> Unit = {}): TabWidget =
 public class TabWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(tabSpec, widgetManager) {
+) : DomWidgetBase(tabSpec, widgetManager, fromFrontend), ContainerWidget {
     internal object Factory : DefaultWidgetFactory<TabWidget>(tabSpec, ::TabWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * Use a predefined styling for the box.
@@ -48,8 +42,7 @@ public class TabWidget internal constructor(
     /**
      * List of widget children
      */
-    public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+    public override var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
 
     /**
      * The index of the selected page. This is either an integer selecting a particular sub-widget, or None to have no widgets selected.
@@ -57,17 +50,7 @@ public class TabWidget internal constructor(
     public var selectedIndex: Int? by nullableIntProp("selected_index", null)
 
     /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
      * Titles of the pages
      */
     public var titles: List<String> by prop("titles", ArrayType(StringType), emptyList())
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 }

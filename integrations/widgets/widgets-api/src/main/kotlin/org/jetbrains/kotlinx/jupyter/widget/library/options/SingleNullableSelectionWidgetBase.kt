@@ -9,7 +9,8 @@ import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 public abstract class SingleNullableSelectionWidgetBase(
     spec: WidgetSpec,
     widgetManager: WidgetManager,
-) : OptionWidgetBase<Any?, Any?, Int?>(spec, widgetManager) {
+    fromFrontend: Boolean,
+) : OptionWidgetBase<Any?, Any?, Int?>(spec, widgetManager, fromFrontend) {
     /**
      * Selected index.
      * Maps to `index` on the frontend.

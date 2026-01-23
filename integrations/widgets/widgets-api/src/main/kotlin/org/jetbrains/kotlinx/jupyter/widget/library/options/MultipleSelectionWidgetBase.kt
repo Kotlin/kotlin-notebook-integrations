@@ -11,7 +11,8 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
 public abstract class MultipleSelectionWidgetBase(
     spec: WidgetSpec,
     widgetManager: WidgetManager,
-) : OptionWidgetBase<Any?, List<Any?>, List<Int>>(spec, widgetManager) {
+    fromFrontend: Boolean,
+) : OptionWidgetBase<Any?, List<Any?>, List<Int>>(spec, widgetManager, fromFrontend) {
     /**
      * Selected indices.
      * Maps to `index` on the frontend.

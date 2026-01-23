@@ -5,8 +5,9 @@ import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManagerImpl
 import org.jetbrains.kotlinx.jupyter.widget.library.DatePickerWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.MediaWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.enums.BoxStyle
+import org.jetbrains.kotlinx.jupyter.widget.library.links.LinkWidgetBase
+import org.jetbrains.kotlinx.jupyter.widget.library.media.MediaWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
 import java.time.LocalDate
 
@@ -18,6 +19,7 @@ public class WidgetJupyterIntegration : JupyterIntegration() {
         importPackage<WidgetJupyterIntegration>()
         importPackage<DatePickerWidget>()
         importPackage<MediaWidget>()
+        importPackage<LinkWidgetBase>()
         importPackage<WidgetModel>()
         importPackage<LocalDate>()
         importPackage<BoxStyle>()

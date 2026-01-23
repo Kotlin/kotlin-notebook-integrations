@@ -6,12 +6,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BytesType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val domWidgetSpec = WidgetSpec(
     modelName = "DOMWidgetModel",
@@ -28,24 +23,8 @@ public fun WidgetManager.domWidget(setup: DomWidget.() -> Unit = {}): DomWidget 
 public class DomWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(domWidgetSpec, widgetManager) {
+) : DomWidgetBase(domWidgetSpec, widgetManager, fromFrontend) {
     internal object Factory : DefaultWidgetFactory<DomWidget>(domWidgetSpec, ::DomWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * The media data as a memory view of bytes.

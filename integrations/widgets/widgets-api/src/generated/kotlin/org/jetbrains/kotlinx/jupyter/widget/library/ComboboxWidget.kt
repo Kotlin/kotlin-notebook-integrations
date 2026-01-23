@@ -27,13 +27,8 @@ public fun WidgetManager.combobox(setup: ComboboxWidget.() -> Unit = {}): Combob
 public class ComboboxWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(comboboxSpec, widgetManager) {
+) : DomWidgetBase(comboboxSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<ComboboxWidget>(comboboxSpec, ::ComboboxWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * Update the value as the user types. If False, update on submission, e.g., pressing Enter or navigating away.
@@ -43,7 +38,7 @@ public class ComboboxWidget internal constructor(
     /**
      * Description of the control.
      */
-    public var description: String by stringProp("description", "")
+    public override var description: String by stringProp("description", "")
 
     /**
      * Accept HTML in the description.
@@ -59,7 +54,6 @@ public class ComboboxWidget internal constructor(
      * If set, ensure value is in options. Implies continuous_update=False.
      */
     public var ensureOption: Boolean by boolProp("ensure_option", false)
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
 
     /**
      * Dropdown options for the combobox
@@ -71,16 +65,6 @@ public class ComboboxWidget internal constructor(
      */
     public var placeholder: String by stringProp("placeholder", "​")
     public var style: TextStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.textStyle())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * String value

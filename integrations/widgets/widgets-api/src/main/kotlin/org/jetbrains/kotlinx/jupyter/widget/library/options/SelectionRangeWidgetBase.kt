@@ -11,7 +11,8 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.ranges.IntRangeType
 public abstract class SelectionRangeWidgetBase(
     spec: WidgetSpec,
     widgetManager: WidgetManager,
-) : OptionWidgetBase<Any?, Pair<Any?, Any?>?, IntRange?>(spec, widgetManager) {
+    fromFrontend: Boolean,
+) : OptionWidgetBase<Any?, Pair<Any?, Any?>?, IntRange?>(spec, widgetManager, fromFrontend) {
     /**
      * Selected range of indices.
      * Maps to `index` on the frontend.
@@ -35,11 +36,12 @@ public abstract class SelectionRangeWidgetBase(
             }
             val start = optionsLabels.indexOf(v.first)
             val end = optionsLabels.indexOf(v.second)
-            if (start != -1 && end != -1) {
-                index = start..end
-            } else {
-                index = null
-            }
+            index =
+                if (start != -1 && end != -1) {
+                    start..end
+                } else {
+                    null
+                }
         }
 
     public override var value: Pair<Any?, Any?>?

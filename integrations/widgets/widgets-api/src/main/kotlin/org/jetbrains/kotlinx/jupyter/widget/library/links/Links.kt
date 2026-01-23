@@ -1,13 +1,17 @@
-package org.jetbrains.kotlinx.jupyter.widget.library
+package org.jetbrains.kotlinx.jupyter.widget.library.links
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.DirectionalLinkWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.LinkWidget
+import org.jetbrains.kotlinx.jupyter.widget.library.directionalLink
+import org.jetbrains.kotlinx.jupyter.widget.library.link
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.getProperty
 import kotlin.reflect.KProperty0
 import kotlin.reflect.KProperty1
 
 /**
- * Creates a [LinkWidget] to link specified properties of two widgets.
+ * Creates a [org.jetbrains.kotlinx.jupyter.widget.library.LinkWidget] to link specified properties of two widgets.
  * Created link is bidirectional.
  */
 public fun <SourceT : WidgetModel, TargetT : WidgetModel> WidgetManager.linkProperties(

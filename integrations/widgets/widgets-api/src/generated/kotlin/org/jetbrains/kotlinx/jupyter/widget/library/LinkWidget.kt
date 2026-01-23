@@ -2,15 +2,11 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.links.LinkWidgetBase
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
-import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.PairType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val linkSpec = WidgetSpec(
     modelName = "LinkModel",
@@ -27,16 +23,6 @@ public fun WidgetManager.link(setup: LinkWidget.() -> Unit = {}): LinkWidget =
 public class LinkWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(linkSpec, widgetManager) {
+) : LinkWidgetBase(linkSpec, widgetManager, fromFrontend) {
     internal object Factory : DefaultWidgetFactory<LinkWidget>(linkSpec, ::LinkWidget)
-
-    /**
-     * The source (widget, 'trait_name') pair
-     */
-    public var source: Pair<WidgetModel?, String>? by prop("source", NullableType(PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType)), null to "")
-
-    /**
-     * The target (widget, 'trait_name') pair
-     */
-    public var target: Pair<WidgetModel?, String>? by prop("target", NullableType(PairType(NullableType(WidgetReferenceType<WidgetModel>()), StringType)), null to "")
 }

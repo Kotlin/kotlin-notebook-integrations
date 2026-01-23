@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.IntType
@@ -28,13 +27,8 @@ public fun WidgetManager.textarea(setup: TextareaWidget.() -> Unit = {}): Textar
 public class TextareaWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(textareaSpec, widgetManager) {
+) : DomWidgetBase(textareaSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<TextareaWidget>(textareaSpec, ::TextareaWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * Update the value as the user types. If False, update on submission, e.g., pressing Enter or navigating away.
@@ -44,7 +38,7 @@ public class TextareaWidget internal constructor(
     /**
      * Description of the control.
      */
-    public var description: String by stringProp("description", "")
+    public override var description: String by stringProp("description", "")
 
     /**
      * Accept HTML in the description.
@@ -55,7 +49,6 @@ public class TextareaWidget internal constructor(
      * Enable or disable user changes
      */
     public var disabled: Boolean by boolProp("disabled", false)
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
 
     /**
      * Placeholder text to display when nothing has been typed
@@ -67,16 +60,6 @@ public class TextareaWidget internal constructor(
      */
     public var rows: Int? by nullableIntProp("rows", null)
     public var style: TextStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.textStyle())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * String value

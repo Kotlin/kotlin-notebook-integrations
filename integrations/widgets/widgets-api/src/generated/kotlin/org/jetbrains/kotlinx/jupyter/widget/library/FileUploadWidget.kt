@@ -31,13 +31,8 @@ public fun WidgetManager.fileUpload(setup: FileUploadWidget.() -> Unit = {}): Fi
 public class FileUploadWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(fileUploadSpec, widgetManager) {
+) : DomWidgetBase(fileUploadSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<FileUploadWidget>(fileUploadSpec, ::FileUploadWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * File types to accept, empty string for all
@@ -52,7 +47,7 @@ public class FileUploadWidget internal constructor(
     /**
      * Description of the control.
      */
-    public var description: String by stringProp("description", "")
+    public override var description: String by stringProp("description", "")
 
     /**
      * Accept HTML in the description.
@@ -73,23 +68,12 @@ public class FileUploadWidget internal constructor(
      * Font-awesome icon name, without the 'fa-' prefix.
      */
     public var icon: String by stringProp("icon", "upload")
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
 
     /**
      * If True, allow for multiple files upload
      */
     public var multiple: Boolean by boolProp("multiple", false)
     public var style: ButtonStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.buttonStyle())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * The file upload value

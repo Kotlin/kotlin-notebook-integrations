@@ -7,11 +7,8 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.RawObjectType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 internal val outputSpec = WidgetSpec(
     modelName = "OutputModel",
@@ -25,13 +22,7 @@ internal val outputSpec = WidgetSpec(
 public abstract class OutputWidgetBase internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(outputSpec, widgetManager) {
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
+) : DomWidgetBase(outputSpec, widgetManager, fromFrontend) {
 
     /**
      * Parent message id of messages to capture
@@ -42,14 +33,4 @@ public abstract class OutputWidgetBase internal constructor(
      * The output messages synced from the frontend.
      */
     public var outputs: List<Map<String, Any?>> by prop("outputs", ArrayType(RawObjectType), emptyList())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 }

@@ -3,9 +3,9 @@ package org.jetbrains.kotlinx.jupyter.widget.integration
 import org.jetbrains.kotlinx.jupyter.widget.library.AudioWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ImageWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.VideoWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.audio
-import org.jetbrains.kotlinx.jupyter.widget.library.image
-import org.jetbrains.kotlinx.jupyter.widget.library.video
+import org.jetbrains.kotlinx.jupyter.widget.library.media.audio
+import org.jetbrains.kotlinx.jupyter.widget.library.media.image
+import org.jetbrains.kotlinx.jupyter.widget.library.media.video
 
 /**
  * Creates an [AudioWidget] from a URL and registers it with the global widget manager.

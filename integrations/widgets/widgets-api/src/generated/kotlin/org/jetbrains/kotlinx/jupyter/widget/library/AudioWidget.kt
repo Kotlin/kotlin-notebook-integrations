@@ -2,16 +2,14 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.media.MediaWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BytesType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val audioSpec = WidgetSpec(
     modelName = "AudioModel",
@@ -28,13 +26,8 @@ public fun WidgetManager.audio(setup: AudioWidget.() -> Unit = {}): AudioWidget 
 public class AudioWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(audioSpec, widgetManager), MediaWidget {
+) : DomWidgetBase(audioSpec, widgetManager, fromFrontend), MediaWidget {
     internal object Factory : DefaultWidgetFactory<AudioWidget>(audioSpec, ::AudioWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * When true, the audio starts when it's displayed
@@ -50,22 +43,11 @@ public class AudioWidget internal constructor(
      * The format of the audio.
      */
     public override var format: String by stringProp("format", "mp3")
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
 
     /**
      * When true, the audio will start from the beginning after finishing
      */
     public var loop: Boolean by boolProp("loop", true)
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * The media data as a memory view of bytes.

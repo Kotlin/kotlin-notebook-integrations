@@ -29,13 +29,8 @@ public fun WidgetManager.controller(setup: ControllerWidget.() -> Unit = {}): Co
 public class ControllerWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(controllerSpec, widgetManager) {
+) : DomWidgetBase(controllerSpec, widgetManager, fromFrontend) {
     internal object Factory : DefaultWidgetFactory<ControllerWidget>(controllerSpec, ::ControllerWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * The axes on the gamepad.
@@ -56,7 +51,6 @@ public class ControllerWidget internal constructor(
      * The id number of the controller.
      */
     public var index: Int by intProp("index", 0)
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
 
     /**
      * The name of the control mapping.
@@ -69,17 +63,7 @@ public class ControllerWidget internal constructor(
     public var name: String by stringProp("name", "")
 
     /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
      * The last time the data from this gamepad was updated.
      */
     public var timestamp: Double by doubleProp("timestamp", 0.0)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 }

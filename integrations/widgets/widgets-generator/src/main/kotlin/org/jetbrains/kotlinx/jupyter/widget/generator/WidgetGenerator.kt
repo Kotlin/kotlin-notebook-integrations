@@ -22,69 +22,6 @@ private val hiddenAttributeNames =
         "_view_module_version",
     )
 
-private data class TraitInfo(
-    val baseClassName: String,
-    val traitProperties: Map<String, String?>,
-    val import: String? = null,
-    val allowedClasses: Set<String>? = null,
-    val isInterface: Boolean = false,
-    val shouldOverride: Boolean = false,
-    val skipGeneration: Boolean = false,
-)
-
-private data class OptionWidgetTraitInfo(
-    val baseClassName: String,
-    val indexType: String,
-)
-
-private fun OptionWidgetTraitInfo.toTraitInfo(): TraitInfo =
-    TraitInfo(
-        baseClassName = baseClassName,
-        traitProperties =
-            mapOf(
-                "_options_labels" to "List<String>",
-                "index" to indexType,
-            ),
-        import = "$WIDGETS_PACKAGE.library.options.$baseClassName",
-        isInterface = false,
-        shouldOverride = false,
-        skipGeneration = true,
-    )
-
-private val traits: List<TraitInfo> =
-    listOf(
-        TraitInfo(
-            baseClassName = "MediaWidget",
-            traitProperties =
-                mapOf(
-                    "value" to "ByteArray",
-                    "format" to "String",
-                ),
-            allowedClasses = setOf("AudioWidget", "ImageWidget", "VideoWidget"),
-            isInterface = true,
-            shouldOverride = true,
-            skipGeneration = false,
-        ),
-    ) +
-        listOf(
-            OptionWidgetTraitInfo(
-                baseClassName = "SingleNullableSelectionWidgetBase",
-                indexType = "Int?",
-            ),
-            OptionWidgetTraitInfo(
-                baseClassName = "SingleSelectionWidgetBase",
-                indexType = "Int",
-            ),
-            OptionWidgetTraitInfo(
-                baseClassName = "MultipleSelectionWidgetBase",
-                indexType = "List<Int>",
-            ),
-            OptionWidgetTraitInfo(
-                baseClassName = "SelectionRangeWidgetBase",
-                indexType = "IntRange?",
-            ),
-        ).map { it.toTraitInfo() }
-
 private val baseWidgets = setOf("OutputWidget")
 
 @Serializable
@@ -174,25 +111,9 @@ private class WidgetGenerator(
             info.schema.attributes.associate {
                 it.name to it.toPropertyType(json, enums, info.className)
             }
-        val matchedTraits =
-            traits.filter { trait ->
-                val classMatches = trait.allowedClasses == null || info.className in trait.allowedClasses
-                classMatches &&
-                    trait.traitProperties.all { (name, type) ->
-                        val attrType = attributeProperties[name] ?: return@all false
-                        type == null || attrType.kotlinType == type
-                    }
-            }
-
-        val baseClassTrait = matchedTraits.find { !it.isInterface }
+        val matchedTraits = findMatchedTraits(info.className, attributeProperties)
+        val baseClassTrait = findBaseClassTrait(matchedTraits, info.className)
         val interfaceTraits = matchedTraits.filter { it.isInterface }
-
-        if (matchedTraits.count { !it.isInterface } > 1) {
-            error(
-                "Widget ${info.className} matches multiple base class traits: " +
-                    matchedTraits.filter { !it.isInterface }.map { it.baseClassName },
-            )
-        }
 
         val imports =
             sortedSetOf<String>().apply {
@@ -255,6 +176,7 @@ private class WidgetGenerator(
             buildString {
                 val abstractModifier = if (info.isBaseWidget) "abstract " else ""
                 val superClassName = baseClassTrait?.baseClassName ?: "DefaultWidgetModel"
+                val extraConstructorParams = if (superClassName != "DefaultWidgetModel") ", fromFrontend" else ""
 
                 for (trait in matchedTraits) {
                     trait.import?.let { imports.add(it) }
@@ -262,7 +184,7 @@ private class WidgetGenerator(
 
                 val traitSuffix =
                     buildString {
-                        append(" : $superClassName($specName, widgetManager)")
+                        append(" : $superClassName($specName, widgetManager$extraConstructorParams)")
                         for (interfaceTrait in interfaceTraits) {
                             append(", ${interfaceTrait.baseClassName}")
                         }

@@ -12,8 +12,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val gridBoxSpec = WidgetSpec(
@@ -31,13 +29,8 @@ public fun WidgetManager.gridBox(setup: GridBoxWidget.() -> Unit = {}): GridBoxW
 public class GridBoxWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(gridBoxSpec, widgetManager) {
+) : DomWidgetBase(gridBoxSpec, widgetManager, fromFrontend), ContainerWidget {
     internal object Factory : DefaultWidgetFactory<GridBoxWidget>(gridBoxSpec, ::GridBoxWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * Use a predefined styling for the box.
@@ -47,16 +40,5 @@ public class GridBoxWidget internal constructor(
     /**
      * List of widget children
      */
-    public var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
+    public override var children: List<WidgetModel?> by prop("children", ArrayType(NullableType(WidgetReferenceType<WidgetModel>())), emptyList())
 }

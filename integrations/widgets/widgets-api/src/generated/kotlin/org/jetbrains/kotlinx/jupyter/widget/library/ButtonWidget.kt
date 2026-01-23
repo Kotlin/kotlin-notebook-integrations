@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
@@ -30,13 +29,8 @@ public fun WidgetManager.button(setup: ButtonWidget.() -> Unit = {}): ButtonWidg
 public class ButtonWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(buttonSpec, widgetManager) {
+) : DomWidgetBase(buttonSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<ButtonWidget>(buttonSpec, ::ButtonWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * Use a predefined styling for the button.
@@ -46,7 +40,7 @@ public class ButtonWidget internal constructor(
     /**
      * Button label.
      */
-    public var description: String by stringProp("description", "")
+    public override var description: String by stringProp("description", "")
 
     /**
      * Enable or disable user changes.
@@ -57,16 +51,5 @@ public class ButtonWidget internal constructor(
      * Font-awesome icon names, without the 'fa-' prefix.
      */
     public var icon: String by stringProp("icon", "")
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
     public var style: ButtonStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.buttonStyle())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 }

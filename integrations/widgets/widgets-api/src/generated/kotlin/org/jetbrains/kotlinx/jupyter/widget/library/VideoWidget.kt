@@ -2,16 +2,14 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
+import org.jetbrains.kotlinx.jupyter.widget.library.media.MediaWidget
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BytesType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
-import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
 private val videoSpec = WidgetSpec(
     modelName = "VideoModel",
@@ -28,13 +26,8 @@ public fun WidgetManager.video(setup: VideoWidget.() -> Unit = {}): VideoWidget 
 public class VideoWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(videoSpec, widgetManager), MediaWidget {
+) : DomWidgetBase(videoSpec, widgetManager, fromFrontend), MediaWidget {
     internal object Factory : DefaultWidgetFactory<VideoWidget>(videoSpec, ::VideoWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * When true, the video starts when it's displayed
@@ -55,22 +48,11 @@ public class VideoWidget internal constructor(
      * Height of the video in pixels.
      */
     public var height: String by stringProp("height", "")
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
 
     /**
      * When true, the video will start from the beginning after finishing
      */
     public var loop: Boolean by boolProp("loop", true)
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * The media data as a memory view of bytes.

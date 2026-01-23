@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.jupyter.widget.library
+package org.jetbrains.kotlinx.jupyter.widget.library.media
 
 /**
  * Interface for widgets that represent media content (audio, image, video).

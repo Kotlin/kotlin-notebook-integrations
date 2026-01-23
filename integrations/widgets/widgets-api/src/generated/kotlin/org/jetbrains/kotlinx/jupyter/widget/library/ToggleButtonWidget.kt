@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetModel
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetSpec
 import org.jetbrains.kotlinx.jupyter.widget.model.createAndRegisterWidget
-import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.ArrayType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.compound.NullableType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumEntry
 import org.jetbrains.kotlinx.jupyter.widget.model.types.enums.WidgetEnumType
@@ -30,13 +29,8 @@ public fun WidgetManager.toggleButton(setup: ToggleButtonWidget.() -> Unit = {})
 public class ToggleButtonWidget internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
-) : DefaultWidgetModel(toggleButtonSpec, widgetManager) {
+) : DomWidgetBase(toggleButtonSpec, widgetManager, fromFrontend), WidgetWithDescription {
     internal object Factory : DefaultWidgetFactory<ToggleButtonWidget>(toggleButtonSpec, ::ToggleButtonWidget)
-
-    /**
-     * CSS classes applied to widget DOM element
-     */
-    public var domClasses: List<String> by prop("_dom_classes", ArrayType(StringType), emptyList())
 
     /**
      * Use a predefined styling for the button.
@@ -46,7 +40,7 @@ public class ToggleButtonWidget internal constructor(
     /**
      * Description of the control.
      */
-    public var description: String by stringProp("description", "")
+    public override var description: String by stringProp("description", "")
 
     /**
      * Accept HTML in the description.
@@ -62,22 +56,11 @@ public class ToggleButtonWidget internal constructor(
      * Font-awesome icon.
      */
     public var icon: String by stringProp("icon", "")
-    public var layout: LayoutWidget? by nullableWidgetProp("layout", if (fromFrontend) null else widgetManager.layout())
 
     /**
      * Styling customizations
      */
     public var style: ToggleButtonStyleWidget? by nullableWidgetProp("style", if (fromFrontend) null else widgetManager.toggleButtonStyle())
-
-    /**
-     * Is widget tabbable?
-     */
-    public var tabbable: Boolean? by nullableBoolProp("tabbable", null)
-
-    /**
-     * A tooltip caption.
-     */
-    public var tooltip: String? by nullableStringProp("tooltip", null)
 
     /**
      * Bool value
