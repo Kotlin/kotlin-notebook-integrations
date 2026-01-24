@@ -22,17 +22,3 @@ kotlinPublications {
         }
     }
 }
-
-subprojects {
-    if (name == "widgets-api" || name == "widgets-jupyter") {
-        tasks.configureEach {
-            if (name.contains("KotlinCompile") ||
-                name.contains("compileKotlin") ||
-                name.contains("sourcesJar") ||
-                name.contains("ktlint", ignoreCase = true)
-            ) {
-                dependsOn(":integrations:widgets:widgets-generator:generateWidgets")
-            }
-        }
-    }
-}
