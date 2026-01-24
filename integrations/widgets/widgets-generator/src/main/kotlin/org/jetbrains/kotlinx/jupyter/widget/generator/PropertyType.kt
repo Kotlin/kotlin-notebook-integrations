@@ -137,13 +137,6 @@ private object BytesPropertyType : PrimitiveType(
     override val optionName: String get() = "Bytes"
 }
 
-private object AnyPropertyType : PrimitiveType(
-    kotlinType = "Any?",
-    typeName = "AnyType",
-) {
-    override val isNullable: Boolean get() = true
-}
-
 private object IntRangePropertyType : BasicPropertyType(
     kotlinType = "IntRange",
     typeExpression = "IntRangeType",
@@ -517,14 +510,13 @@ internal fun AttributeSchema.toPropertyType(
                         "int" -> IntPropertyType
                         "float" -> DoublePropertyType
                         "bytes" -> BytesPropertyType
-                        "any" -> AnyPropertyType
                         "Datetime" -> DatetimePropertyType
                         "Date" -> DatePropertyType
                         "Time" -> TimePropertyType
                         "reference" -> ReferencePropertyType(widget ?: error("Reference widget is not specified"))
                         "object" -> RawObjectPropertyType
                         "array" -> {
-                            val actualItems = this.items ?: AttributeItems(type = AttributeType.Single("any"))
+                            val actualItems = this.items ?: AttributeItems(type = AttributeType.Single("object"))
                             val elementSchema =
                                 AttributeSchema(name = "item", type = actualItems.type, default = JsonNull, widget = actualItems.widget)
                             val elementType = elementSchema.toPropertyType(json, enums, namePrefix)

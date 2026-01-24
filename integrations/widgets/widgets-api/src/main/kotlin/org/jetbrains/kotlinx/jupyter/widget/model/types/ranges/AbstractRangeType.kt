@@ -9,10 +9,10 @@ import org.jetbrains.kotlinx.jupyter.widget.protocol.toPropertyValue
  * Base class for property types representing a range (e.g., [IntRange]).
  * In the Jupyter Widgets protocol, ranges are represented as a 2-element list [start, end].
  */
-public abstract class AbstractRangeType<T : Comparable<T>, R : ClosedRange<T>>(
+public abstract class AbstractRangeType<T, R : ClosedRange<T>>(
     name: String,
     override val default: R,
-) : AbstractWidgetModelPropertyType<R>(name) {
+) : AbstractWidgetModelPropertyType<R>(name) where T : Comparable<T>, T : Number {
     /**
      * Converts a generic [Number] to the specific numeric type [T].
      */

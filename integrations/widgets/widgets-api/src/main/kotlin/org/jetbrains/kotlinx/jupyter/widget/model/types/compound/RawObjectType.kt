@@ -22,8 +22,10 @@ public object RawObjectType : AbstractWidgetModelPropertyType<Map<String, Any?>>
         patchValue: RawPropertyValue,
         widgetManager: WidgetManager,
     ): Map<String, Any?> {
-        val raw = patchValue.toRawValue() ?: return emptyMap()
-        require(raw is Map<*, *>) { "Expected Map for object, got ${raw::class.simpleName}" }
-        return raw as Map<String, Any?>
+        if (patchValue is RawPropertyValue.Null) return emptyMap()
+        require(patchValue is RawPropertyValue.MapValue) {
+            "Expected WidgetValue.MapValue for object, got ${patchValue::class.simpleName}"
+        }
+        return patchValue.toRawValue()
     }
 }

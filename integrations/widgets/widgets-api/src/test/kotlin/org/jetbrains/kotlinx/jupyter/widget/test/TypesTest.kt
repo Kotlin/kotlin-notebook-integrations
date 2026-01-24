@@ -159,7 +159,7 @@ class TypesTest {
     fun `RawObjectType should deserialize map or return emptyMap for null`() {
         val obj = mapOf("a" to 1, "b" to "c")
         RawObjectType.deserialize(obj.toPropertyValue(), widgetManager) shouldBe obj
-        RawObjectType.deserialize(RawPropertyValue.Null, widgetManager) shouldBe emptyMap<String, Any?>()
+        RawObjectType.deserialize(RawPropertyValue.Null, widgetManager) shouldBe emptyMap()
     }
 
     @Test
