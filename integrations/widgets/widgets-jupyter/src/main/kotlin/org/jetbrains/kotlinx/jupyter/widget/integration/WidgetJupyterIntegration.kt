@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.jupyter.widget.integration
 import org.jetbrains.kotlinx.jupyter.api.declare
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
-import org.jetbrains.kotlinx.jupyter.widget.WidgetManagerImpl
+import org.jetbrains.kotlinx.jupyter.widget.createWidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.library.DatePickerWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.enums.BoxStyle
 import org.jetbrains.kotlinx.jupyter.widget.library.links.LinkWidgetBase
@@ -25,7 +25,7 @@ public class WidgetJupyterIntegration : JupyterIntegration() {
         importPackage<BoxStyle>()
 
         var myLastClassLoader = WidgetJupyterIntegration::class.java.classLoader
-        val widgetManager = WidgetManagerImpl(notebook.commManager) { myLastClassLoader }
+        val widgetManager = createWidgetManager(notebook) { myLastClassLoader }
         myWidgetManager = widgetManager
 
         onLoaded {

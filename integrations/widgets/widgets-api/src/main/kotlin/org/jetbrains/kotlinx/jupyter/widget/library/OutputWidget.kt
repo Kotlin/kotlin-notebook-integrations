@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.jupyter.widget.library
 
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.buildJsonObject
 import org.jetbrains.kotlinx.jupyter.protocol.api.id
 import org.jetbrains.kotlinx.jupyter.widget.WidgetManager
 import org.jetbrains.kotlinx.jupyter.widget.model.DefaultWidgetFactory
@@ -30,12 +28,9 @@ public class OutputWidget internal constructor(
      * @param wait If true, wait to clear the output until new output is available.
      */
     public fun clearOutput(wait: Boolean = false) {
-        sendCustomMessage(
-            buildJsonObject {
-                put("method", JsonPrimitive("clear_output"))
-                put("wait", JsonPrimitive(wait))
-            },
-        )
+        withScope {
+            widgetManager.displayController.clearOutput(wait)
+        }
     }
 
     /**
@@ -48,7 +43,7 @@ public class OutputWidget internal constructor(
     public fun withScope(action: () -> Unit) {
         scopeCounter++
         // Use the ID of the message that triggered the current execution
-        val parentId = widgetManager.contextMessage?.id
+        val parentId = widgetManager.displayController.contextMessage?.id
         if (parentId != null) msgId = parentId
         try {
             action()

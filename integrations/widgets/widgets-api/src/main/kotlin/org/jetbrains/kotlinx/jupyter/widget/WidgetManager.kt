@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.jupyter.widget
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import org.jetbrains.kotlinx.jupyter.api.DisplayResult
-import org.jetbrains.kotlinx.jupyter.protocol.api.RawMessage
+import org.jetbrains.kotlinx.jupyter.widget.display.WidgetDisplayController
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetFactoryRegistry
 import org.jetbrains.kotlinx.jupyter.widget.model.WidgetModel
 
@@ -18,6 +18,11 @@ public interface WidgetManager {
     public val factoryRegistry: WidgetFactoryRegistry
 
     /**
+     * Controller for managing Jupyter display logic.
+     */
+    public val displayController: WidgetDisplayController
+
+    /**
      * If true, property updates received from the frontend are echoed back to the frontend.
      * This is sometimes necessary to ensure the frontend state remains in sync with the backend,
      * especially when the backend might override the requested change.
@@ -26,12 +31,6 @@ public interface WidgetManager {
      * In Kotlin Notebook, this is disabled by default to save bandwidth as it's not the primary use case.
      */
     public var echoUpdateEnabled: Boolean
-
-    /**
-     * The original Jupyter message that triggered the current execution.
-     * Used as a parent for outgoing widget messages.
-     */
-    public val contextMessage: RawMessage?
 
     /**
      * Retrieves a [WidgetModel] by its unique identifier.

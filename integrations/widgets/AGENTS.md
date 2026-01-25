@@ -77,12 +77,12 @@ This document summarizes the key architectural decisions, requirements, and tech
 - **Custom Messages**:
     - Use `WidgetModel.sendCustomMessage(content, metadata, buffers)` for actions not covered by property sync.
     - Register listeners via `WidgetModel.addCustomMessageListener { content, metadata, buffers -> ... }`.
-    - Example: `OutputWidget.clearOutput()` uses a custom message with `method = "clear_output"`.
 - **Closing Widgets**:
     - `WidgetManager.closeWidget(widget)` sends a `comm_close` message and removes the widget from the manager's internal maps.
 
 #### 6. Testing Requirements
 - **Assertions**: EXCLUSIVELY use Kotest `should*` notation (e.g., `result shouldBe 42`). Do not use `assert*`.
+- **JSON creation**: EXCLUSIVELY use `buildJsonObject` and `buildJsonArray` for creating JSON objects and arrays. Do not use `JsonObject(mapOf(...))` or `JsonArray(listOf(...))` directly.
 - **Naming**: Test method names MUST NOT be in camelCase. Use descriptive names in backticks (e.g., ``fun `should have 42`()`` or ``fun `check that 42 is returned`()``).
 - **REPL Tests**: Inherit from `AbstractWidgetReplTest`. Use `shouldHaveNextOpenEvent`, `shouldHaveNextUpdateEvent`, etc., to verify the sequence of Comm events.
 - **Type Tests**: `TypesTest.kt` covers all property serialization/deserialization. Use `TestWidgetManager.INSTANCE` for tests that don't need real manager logic.
