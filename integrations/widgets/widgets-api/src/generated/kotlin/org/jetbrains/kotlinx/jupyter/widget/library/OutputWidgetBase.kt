@@ -27,10 +27,10 @@ public abstract class OutputWidgetBase internal constructor(
     /**
      * Parent message id of messages to capture
      */
-    public var msgId: String by stringProp("msg_id", "")
+    internal var msgId: String by stringProp("msg_id", "")
 
     /**
      * The output messages synced from the frontend.
      */
-    public var outputs: List<Map<String, Any?>> by prop("outputs", ArrayType(RawObjectType), emptyList())
+    internal var _outputs: List<Map<String, Any?>> by prop("outputs", ArrayType(RawObjectType), emptyList())
 }

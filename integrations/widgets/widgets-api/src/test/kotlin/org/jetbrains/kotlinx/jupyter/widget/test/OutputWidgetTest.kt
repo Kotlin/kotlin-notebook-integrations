@@ -1,9 +1,15 @@
 package org.jetbrains.kotlinx.jupyter.widget.test
 
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import org.jetbrains.kotlinx.jupyter.api.DisplayResult
+import org.jetbrains.kotlinx.jupyter.api.textResult
 import org.jetbrains.kotlinx.jupyter.messaging.makeRawMessage
 import org.jetbrains.kotlinx.jupyter.protocol.api.EMPTY
 import org.jetbrains.kotlinx.jupyter.protocol.api.RawMessage
@@ -20,6 +26,8 @@ class OutputWidgetTest {
         override fun clearOutput(wait: Boolean) {
             onClearOutput?.invoke(wait)
         }
+
+        override fun render(displayObject: Any?): DisplayResult = textResult(displayObject.toString())
     }
 
     private class MockWidgetManager(
@@ -47,7 +55,7 @@ class OutputWidgetTest {
         )
 
     @Test
-    fun `clearOutput should call displayController and use scope`() {
+    fun `clear should call displayController and use scope`() {
         val widget = OutputWidget(widgetManager, false)
         val testId = "msg-123"
         displayController.contextMessage = createRawMessage(testId)
@@ -58,7 +66,7 @@ class OutputWidgetTest {
             msgIdDuringClear = widget.msgId
         }
 
-        widget.clearOutput(wait = true)
+        widget.clear(wait = true)
         msgIdDuringClear shouldBe testId
         widget.msgId shouldBe "" // reset after withScope
     }
@@ -76,6 +84,43 @@ class OutputWidgetTest {
         }
 
         widget.msgId shouldBe ""
+    }
+
+    @Test
+    fun `appendStdOut should update outputs`() {
+        val widget = OutputWidget(widgetManager, false)
+        widget.appendStdOut("hello")
+        widget.outputs shouldHaveSize 1
+        widget.outputs[0] shouldBe
+            mapOf(
+                "output_type" to "stream",
+                "name" to "stdout",
+                "text" to "hello",
+            )
+    }
+
+    @Test
+    fun `appendStdErr should update outputs`() {
+        val widget = OutputWidget(widgetManager, false)
+        widget.appendStdErr("error")
+        widget.outputs shouldHaveSize 1
+        widget.outputs[0] shouldBe
+            mapOf(
+                "output_type" to "stream",
+                "name" to "stderr",
+                "text" to "error",
+            )
+    }
+
+    @Test
+    fun `appendDisplayData should update outputs`() {
+        val widget = OutputWidget(widgetManager, false)
+        widget.appendDisplayData("some data")
+        widget.outputs shouldHaveSize 1
+        val output = widget.outputs[0]
+        output["output_type"] shouldBe "display_data"
+        val data = output["data"].shouldBeInstanceOf<JsonObject>()
+        data["text/plain"] shouldBe JsonPrimitive("some data")
     }
 
     @Test

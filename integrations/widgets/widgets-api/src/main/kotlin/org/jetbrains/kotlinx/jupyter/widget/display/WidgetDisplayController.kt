@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.jupyter.widget.display
 
+import org.jetbrains.kotlinx.jupyter.api.DisplayResult
 import org.jetbrains.kotlinx.jupyter.protocol.api.RawMessage
 
 /**
@@ -20,4 +21,11 @@ public interface WidgetDisplayController {
      * @param wait If true, wait to clear the output until a new output is available.
      */
     public fun clearOutput(wait: Boolean = false)
+
+    /**
+     * Renders a display object and returns the result.
+     *
+     * @return The display result or null if [displayObject] is [Unit].
+     */
+    public fun render(displayObject: Any?): DisplayResult?
 }

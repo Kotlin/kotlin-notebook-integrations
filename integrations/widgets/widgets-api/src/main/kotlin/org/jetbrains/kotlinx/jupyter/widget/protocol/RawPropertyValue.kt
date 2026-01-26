@@ -1,5 +1,14 @@
 package org.jetbrains.kotlinx.jupyter.widget.protocol
 
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.longOrNull
+
 /**
  * A tree-like type similar to JSON, but also supporting [ByteArray] as a leaf type.
  * Used for widget state synchronization.
@@ -62,10 +71,34 @@ private fun List<*>.toPropertyValue(): RawPropertyValue =
         map { it.toPropertyValue() },
     )
 
+private fun JsonElement.toPropertyValue(): RawPropertyValue =
+    when (this) {
+        is JsonNull -> RawPropertyValue.Null
+        is JsonPrimitive -> {
+            if (isString) {
+                RawPropertyValue.StringValue(content)
+            } else {
+                booleanOrNull?.let { RawPropertyValue.BooleanValue(it) }
+                    ?: longOrNull?.let { RawPropertyValue.NumberValue(it) }
+                    ?: doubleOrNull?.let { RawPropertyValue.NumberValue(it) }
+                    ?: RawPropertyValue.StringValue(content)
+            }
+        }
+        is JsonObject ->
+            RawPropertyValue.MapValue(
+                mapValues { it.value.toPropertyValue() },
+            )
+        is JsonArray ->
+            RawPropertyValue.ListValue(
+                map { it.toPropertyValue() },
+            )
+    }
+
 private fun Any?.toPropertyValue(): RawPropertyValue =
     when (this) {
         null -> RawPropertyValue.Null
         is RawPropertyValue -> this
+        is JsonElement -> toPropertyValue()
         is String -> toPropertyValue()
         is Number -> toPropertyValue()
         is Boolean -> toPropertyValue()

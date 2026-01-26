@@ -130,7 +130,8 @@ private class WidgetGenerator(
 
         val helperDeclarations = mutableListOf<String>()
         val properties =
-            info.schema.attributes.mapNotNull { attribute ->
+            info.schema.attributes.mapNotNull { rawAttribute ->
+                val attribute = applyPropertyOverrides(info.className, rawAttribute)
                 if (attribute.name in hiddenAttributeNames) return@mapNotNull null
                 val trait = matchedTraits.find { attribute.name in it.traitProperties }
                 val propertyType = attributeProperties[attribute.name]!!
@@ -237,7 +238,6 @@ private class WidgetGenerator(
         imports.addAll(propertyType.imports)
         helperDeclarations.addAll(propertyType.helperDeclarations)
 
-        val propertyName = attribute.name.toCamelCase()
         val kotlinType = propertyType.kotlinType
         val defaultValueExpression = propertyType.getDefaultValueExpression(attribute.default)
 
@@ -254,7 +254,8 @@ private class WidgetGenerator(
                 appendLine("     */")
             }
             val modifier = if (isOverride) "override " else ""
-            append("    public ${modifier}var $propertyName: $kotlinType by $delegateCall")
+            val visibility = attribute.visibility.toString()
+            append("    $visibility ${modifier}var ${attribute.kotlinName}: $kotlinType by $delegateCall")
         }
     }
 

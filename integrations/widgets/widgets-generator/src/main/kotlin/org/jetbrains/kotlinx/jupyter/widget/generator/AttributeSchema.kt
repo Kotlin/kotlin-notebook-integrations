@@ -13,6 +13,19 @@ import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 
 /**
+ * Visibility modifier for a widget attribute.
+ */
+internal enum class Visibility {
+    PUBLIC,
+    INTERNAL,
+    PRIVATE,
+    PROTECTED,
+    ;
+
+    override fun toString(): String = name.lowercase()
+}
+
+/**
  * Represents the schema for a single widget attribute in `schema.json`.
  */
 @Serializable
@@ -26,6 +39,8 @@ internal data class AttributeSchema(
     val items: AttributeItems? = null,
     val widget: String? = null,
     @SerialName("union_attributes") val unionAttributes: List<JsonObject> = emptyList(),
+    val visibility: Visibility = Visibility.PUBLIC,
+    val kotlinName: String = name.toCamelCase(),
 )
 
 @Serializable

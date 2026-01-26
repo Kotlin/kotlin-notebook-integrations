@@ -107,3 +107,4 @@ This document summarizes the key architectural decisions, requirements, and tech
     ```
 - **Thread Safety**: Property updates are generally safe as long as the underlying messaging protocol is thread-safe, but explicit concurrency guarantees are not provided.
 - **Generated Code**: NEVER manually edit files in `src/generated`. Update the `WidgetGenerator` instead.
+- **Schema Modification**: Please NEVER modify `schema.json`. Instead, add "override" mechanics such as we added for traits, or use `propertyOverrides` in `PropertyOverrides.kt` for property customizations, within the generator itself.
