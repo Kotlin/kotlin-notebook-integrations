@@ -17,8 +17,22 @@ import org.jetbrains.kotlinx.dataframe.io.readJsonStr
  */
 public fun NotebookHttpResponse.toDataFrame(): DataFrame<*> =
     runBlocking {
-        if (ktorResponse.contentType() != ContentType.Application.Json) {
-            throw IllegalStateException("HTTP request did not return JSON, but ${ktorResponse.contentType()}")
+        val contentType = ktorResponse.contentType()
+        if (contentType == null || !contentType.match(ContentType.Application.Json)) {
+            throw IllegalStateException(
+                buildString {
+                    append("HTTP request did not return JSON, but ")
+                    append(contentType)
+                    if (contentType != null) {
+                        append(" (")
+                        append("type = ")
+                        append(contentType.contentType)
+                        append(", subtype = ")
+                        append(contentType.contentSubtype)
+                        append(")")
+                    }
+                },
+            )
         }
         val json = ktorResponse.bodyAsText()
         DataFrame.readJsonStr(json)

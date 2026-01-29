@@ -1,5 +1,10 @@
 package org.jetbrains.kotlinx.jupyter.ktor.client.test
 
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.JsonElement
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -7,8 +12,6 @@ import org.jetbrains.kotlinx.jupyter.repl.result.EvalResultEx
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.jetbrains.kotlinx.jupyter.testkit.ReplProvider
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
 
 class KtorClientCoreIntegrationTest :
     JupyterReplTestCase(
@@ -17,9 +20,9 @@ class KtorClientCoreIntegrationTest :
     @Test
     fun `default client engine`() {
         val engineName = execRaw("http.ktorClient.engine")?.javaClass?.simpleName
-        assertEquals("CIOEngine", engineName)
+        engineName shouldBe "CIOEngine"
         val engineName2 = execRaw("io.ktor.client.HttpClient().engine")?.javaClass?.simpleName
-        assertEquals("CIOEngine", engineName2)
+        engineName2 shouldBe "CIOEngine"
     }
 
     @Test
@@ -43,7 +46,7 @@ class KtorClientCoreIntegrationTest :
                 """.trimIndent(),
             )
         // checking only compilation, so that the test doesn't involve actual network calls
-        assertIs<Lazy<*>>(exec)
+        exec.shouldBeInstanceOf<Lazy<*>>()
     }
 
     @Test
@@ -52,47 +55,29 @@ class KtorClientCoreIntegrationTest :
         val json = """{"b":"b","a":{"b":"b","a":null}}"""
         execRaw(
             """
-            import io.ktor.client.engine.mock.*
-            import io.ktor.client.plugins.contentnegotiation.*
-            import io.ktor.http.*
-            import io.ktor.serialization.kotlinx.json.*
-            
+            $MOCK_CLIENT_IMPORTS
             @Serializable
             data class A(val b: String, val a: A?)
-            
-            val client = NotebookHttpClient(MockEngine) {
-                install(ContentNegotiation) {
-                    json()
-                }
-                engine {
-                    addHandler {
-                        respond(
-                            content = ""${'"'}$json""${'"'},
-                            status = HttpStatusCode.OK,
-                            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                        )
-                    }
-                }
-            }
+            ${createMockClient(json)}
             """.trimIndent(),
         )
 
         val response1 = execRaw("""client.get("https://example.org").bodyAsText()""")
-        assertEquals(json, response1)
+        response1 shouldBe json
 
         val response2 = execRaw("""client.get("https://example.org").body<String>()""")
-        assertEquals(json, response2)
+        response2 shouldBe json
 
         val response3 = execRaw("""client.get("https://example.org").body<JsonElement>()""")
-        assertIs<JsonElement>(response3)
-        assertEquals(json, response3.toString())
+        response3.shouldBeInstanceOf<JsonElement>()
+        response3.toString() shouldBe json
 
         val response4 = execRaw("""client.get("https://example.org").body<A>()""")
-        assertEquals("A(b=b, a=A(b=b, a=null))", response4.toString())
+        response4.toString() shouldBe "A(b=b, a=A(b=b, a=null))"
 
         val response5 = execRaw("""client.get("https://example.org").readBytes()""")
-        assertIs<ByteArray>(response5)
-        assertEquals(json, response5.toString(Charsets.UTF_8))
+        response5.shouldBeInstanceOf<ByteArray>()
+        response5.toString(Charsets.UTF_8) shouldBe json
     }
 
     @Test
@@ -100,60 +85,43 @@ class KtorClientCoreIntegrationTest :
         val json = """[{"a": 1}, {"a": 2}, {"a": 3}]"""
         execRaw(
             """
-            import io.ktor.client.engine.mock.*
-            import io.ktor.client.plugins.contentnegotiation.*
-            import io.ktor.http.*
-            import io.ktor.serialization.kotlinx.json.*
-            
+            $MOCK_CLIENT_IMPORTS
             @Serializable
             data class A(val b: String, val a: A?)
-            
-            val client = NotebookHttpClient(MockEngine) {
-                install(ContentNegotiation) {
-                    json()
-                }
-                engine {
-                    addHandler {
-                        respond(
-                            content = ""${'"'}$json""${'"'},
-                            status = HttpStatusCode.OK,
-                            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                        )
-                    }
-                }
-            }
+            ${createMockClient(json)}
             """.trimIndent(),
         )
         val response = execRaw("""client.get("https://example.org").toDataFrame()""")
-        assertIs<DataFrame<*>>(response)
+        response.shouldBeInstanceOf<DataFrame<*>>()
     }
 
     @Test
     fun `cannot create dataframe from response that doesn't return json`() {
         execRaw(
             """
-            import io.ktor.client.engine.mock.*
-            import io.ktor.client.plugins.contentnegotiation.*
-            import io.ktor.http.*
-            import io.ktor.serialization.kotlinx.json.*
-            
-            val client = NotebookHttpClient(MockEngine) {
-                install(ContentNegotiation) {
-                    json()
-                }
-                engine {
-                    addHandler {
-                        respond(
-                            content = ""${'"'}error""${'"'},
-                            status = HttpStatusCode.InternalServerError,
-                        )
-                    }
-                }
-            }
+            $MOCK_CLIENT_IMPORTS
+            ${createMockClient("error", HttpStatusCode.InternalServerError)}
             """.trimIndent(),
         )
         val res = execEx("""client.get("https://example.org").toDataFrame()""")
-        assertIs<EvalResultEx.Error>(res)
-        assertIs<IllegalStateException>(res.error.cause)
+        res.shouldBeInstanceOf<EvalResultEx.Error>()
+        res.error.cause.shouldBeInstanceOf<IllegalStateException>()
+    }
+
+    @Test
+    fun `wrong content type exception should provide additional info`() {
+        val json = """[{"a": 1}, {"a": 2}, {"a": 3}]"""
+
+        execRaw(
+            """
+            $MOCK_CLIENT_IMPORTS
+            ${createMockClient(json, contentType = "text/plain")}
+            """.trimIndent(),
+        )
+        val res = execEx("""client.get("https://example.org").toDataFrame()""")
+        res.shouldBeInstanceOf<EvalResultEx.Error>()
+        val cause = res.error.cause.shouldNotBeNull()
+        cause.shouldBeInstanceOf<IllegalStateException>()
+        cause.message shouldContain "(type = text, subtype = plain)"
     }
 }

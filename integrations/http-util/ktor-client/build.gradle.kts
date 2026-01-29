@@ -16,6 +16,7 @@ dependencies {
     api(projects.integrations.httpUtil.serialization)
 
     testImplementation(libs.kotlin.test)
+    testImplementation(libs.test.kotlintest.assertions)
     testImplementation(libs.kotlinx.serialization.json)
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.dataframe) {
