@@ -39,7 +39,7 @@ fun ScriptTemplateWithDisplayHelpers.createDataSourceFromSpring(path: Path): Dat
  *
  * For more complex use cases, use [createDataSource] with a builder instead.
  *
- * Embedded databases like H2 and SQLite are also supported through the JDBC url.
+ * Embedded databases like H2, SQLite, and DuckDB are also supported through the JDBC url.
  * The url looks slightly different depending on the exact use case:
  *
  * H2:
@@ -49,6 +49,10 @@ fun ScriptTemplateWithDisplayHelpers.createDataSourceFromSpring(path: Path): Dat
  * SQLite:
  * - File: "jdbc:sqlite:/path/to/my_database.db" // Absolute or relative path to the file.
  * - In-memory: "jdbc:sqlite::memory:"
+ *
+ * DuckDB:
+ * - File: "jdbc:duckdb:/path/to/my_database.duckdb" // Absolute or relative path to the file (*.db is also possible)
+ * - In-memory: "jdbc:duckdb:"
  */
 fun ScriptTemplateWithDisplayHelpers.createDataSource(
     jdbcUrl: String,

@@ -1,0 +1,57 @@
+package org.jetbrains.kotlinx.jupyter.database.test.integration
+
+import io.kotest.matchers.should
+import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.DatabaseIntegrationTest
+import kotlin.test.Test
+
+/**
+ * Test loading JDBC driver for DuckDB (in-memory and file) databases.
+ */
+class DuckDbTests : DatabaseIntegrationTest() {
+    @Test
+    fun createConnectionToMemoryDatabase() {
+        execSuccess(
+            """
+            val src = createDataSource(
+                jdbcUrl = "jdbc:duckdb:",
+            )
+            src
+            """.trimIndent(),
+        ).renderedValue should { it.toString().startsWith("HikariDataSource") }
+
+        execSuccess(
+            """
+            src.connection.use { conn ->
+                val stmt = conn.createStatement()
+                stmt.execute("CREATE TABLE IF NOT EXISTS test(id INT PRIMARY KEY, name VARCHAR(255))")
+            }
+            """.trimIndent(),
+        )
+    }
+
+    @Test
+    fun createConnectionToFileDatabase() {
+        val path =
+            this::class.java
+                .getResource("/duckdb-example.duckdb")
+                ?.toURI()
+                ?.path ?: error("Database file not found")
+        execSuccess(
+            """
+            val src = createDataSource(
+                jdbcUrl = "jdbc:duckdb:$path"
+            )
+            src
+            """.trimIndent(),
+        ).renderedValue should { it.toString().startsWith("HikariDataSource") }
+
+        execSuccess(
+            """
+            src.connection.use { conn ->
+                val stmt = conn.createStatement()
+                stmt.execute("SELECT * FROM albums")
+            }
+            """.trimIndent(),
+        )
+    }
+}

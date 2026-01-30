@@ -47,7 +47,7 @@ This is a single, common contributing guide for all integrations in this reposit
    (instead of a `%use <integration>` alias):
 
    ```
-   %use /absolute/path/to/Local.json
+   %use mylib@</absolute/path/to/Local.json>
    ```
 
 6. Reload the Kotlin Notebook Kernel if needed.

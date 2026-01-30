@@ -54,6 +54,12 @@ public object DataSourceDriverConfig {
                     "org.xerial:sqlite-jdbc:3.50.3.0",
                 ),
             ),
+            ExternalDependencyDriverLoader(
+                listOf("duckdb"),
+                listOf(
+                    "org.duckdb:duckdb_jdbc:1.4.4.0",
+                ),
+            ),
         )
     private val userDrivers: MutableList<DriverLoader> = mutableListOf()
 
