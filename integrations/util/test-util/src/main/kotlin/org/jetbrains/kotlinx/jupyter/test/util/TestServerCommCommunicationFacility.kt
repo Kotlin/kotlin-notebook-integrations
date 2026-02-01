@@ -1,10 +1,13 @@
-package org.jetbrains.kotlinx.jupyter.widget.test.util
+package org.jetbrains.kotlinx.jupyter.test.util
 
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import org.jetbrains.kotlinx.jupyter.protocol.api.RawMessage
 import org.jetbrains.kotlinx.jupyter.protocol.comms.CommCommunicationFacility
 
+/**
+ * Test implementation of CommCommunicationFacility that records all sent events.
+ */
 class TestServerCommCommunicationFacility : CommCommunicationFacility {
     private val events = mutableListOf<CommEvent>()
 

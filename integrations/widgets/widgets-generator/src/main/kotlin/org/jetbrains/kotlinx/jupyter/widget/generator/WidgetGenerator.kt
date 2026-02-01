@@ -22,7 +22,11 @@ private val hiddenAttributeNames =
         "_view_module_version",
     )
 
-private val baseWidgets = setOf("OutputWidget")
+private val baseWidgets =
+    setOf(
+        "OutputWidget",
+        "ButtonWidget",
+    )
 
 @Serializable
 private data class WidgetSchema(
@@ -36,6 +40,13 @@ private data class WidgetTypeSchema(
     val module: String,
     val name: String?,
     val version: String,
+)
+
+private data class WidgetInfo(
+    val className: String,
+    val functionName: String,
+    val isBaseWidget: Boolean,
+    val schema: WidgetSchema,
 )
 
 /**
@@ -364,10 +375,3 @@ private fun Path.recreateDirectory() {
     deleteRecursively()
     createDirectories()
 }
-
-private data class WidgetInfo(
-    val className: String,
-    val functionName: String,
-    val isBaseWidget: Boolean,
-    val schema: WidgetSchema,
-)

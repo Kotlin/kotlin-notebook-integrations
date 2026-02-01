@@ -5,7 +5,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import org.jetbrains.kotlinx.jupyter.widget.test.util.CommEvent
+import org.jetbrains.kotlinx.jupyter.test.util.CommEvent
 import org.junit.jupiter.api.Test
 
 class CustomMessageTest : AbstractWidgetReplTest() {

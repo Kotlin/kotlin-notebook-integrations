@@ -33,11 +33,13 @@ kotlinx-serialization = "1.9.0"
 jvm-toolchain = "11"
 kotlinpoet = "2.1.0"
 dataframe = "0.15.0"
+jupyter-notebooks-parser = "0.2.0-dev-10"
 
 [libraries]
 intellij-structure-ide = { group = "org.jetbrains.intellij.plugins", name = "structure-ide", version.ref = "intellijStructure" }
 intellij-pluginRepositoryRestClient = { group = "org.jetbrains.intellij", name = "plugin-repository-rest-client", version.ref = "intellijPluginRepositoryRestClient" }
 kotlin-jupyter-lib = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-lib", version.ref = "kotlin-jupyter"}
+kotlin-jupyter-testkit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-test-kit", version.ref = "kotlin-jupyter"}
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
@@ -47,6 +49,7 @@ kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
 dataframe = { module = "org.jetbrains.kotlinx:dataframe", version.ref = "dataframe" }
 dataframe-core = { group = "org.jetbrains.kotlinx", name = "dataframe-core", version.ref = "dataframe-core"}
 hikari = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
+jupyter-notebooks-parser = { group = "org.jetbrains.kotlinx", name = "jupyter-notebooks-parser", version.ref = "jupyter-notebooks-parser" }
 
 ktor-client-contentNegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }

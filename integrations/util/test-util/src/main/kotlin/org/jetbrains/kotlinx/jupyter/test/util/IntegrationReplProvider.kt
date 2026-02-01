@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.jupyter.widget.test.util
+package org.jetbrains.kotlinx.jupyter.test.util
 
 import org.jetbrains.kotlinx.jupyter.api.EmbeddedKernelRunMode
 import org.jetbrains.kotlinx.jupyter.api.libraries.CommManager
@@ -14,8 +14,15 @@ import org.jetbrains.kotlinx.jupyter.testkit.ReplProvider
 import org.jetbrains.kotlinx.jupyter.testkit.ToEmptyLibraryResolver
 import java.io.File
 
-class WidgetReplProvider(
+/**
+ * Creates a ReplProvider for integration tests.
+ *
+ * @param commManager The CommManager to use for the REPL
+ * @param libraryName The name of the library to exclude from resolution (loaded from classpath instead)
+ */
+class IntegrationReplProvider(
     private val commManager: CommManager,
+    private val libraryName: String,
 ) : ReplProvider {
     private val httpUtil = createLibraryHttpUtil(DefaultKernelLoggerFactory)
 
@@ -23,7 +30,7 @@ class WidgetReplProvider(
         val resolver =
             run {
                 var res: LibraryResolver = ClasspathLibraryResolver(httpUtil.libraryDescriptorsManager, null) { true }
-                res = ToEmptyLibraryResolver(res) { it == "widgets" }
+                res = ToEmptyLibraryResolver(res) { it == libraryName }
                 res
             }
 

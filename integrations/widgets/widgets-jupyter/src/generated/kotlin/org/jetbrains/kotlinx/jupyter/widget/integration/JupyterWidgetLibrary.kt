@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.jupyter.widget.library.BoundedFloatTextWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.BoundedIntTextWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.BoxWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ButtonStyleWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.ButtonWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.CheckboxStyleWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.CheckboxWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ColorPickerWidget
@@ -74,7 +73,6 @@ import org.jetbrains.kotlinx.jupyter.widget.library.audio
 import org.jetbrains.kotlinx.jupyter.widget.library.boundedFloatText
 import org.jetbrains.kotlinx.jupyter.widget.library.boundedIntText
 import org.jetbrains.kotlinx.jupyter.widget.library.box
-import org.jetbrains.kotlinx.jupyter.widget.library.button
 import org.jetbrains.kotlinx.jupyter.widget.library.buttonStyle
 import org.jetbrains.kotlinx.jupyter.widget.library.checkbox
 import org.jetbrains.kotlinx.jupyter.widget.library.checkboxStyle
@@ -147,8 +145,6 @@ public fun boundedFloatTextWidget(setup: BoundedFloatTextWidget.() -> Unit = {})
 public fun boundedIntTextWidget(setup: BoundedIntTextWidget.() -> Unit = {}): BoundedIntTextWidget = globalWidgetManager.boundedIntText(setup)
 
 public fun boxWidget(setup: BoxWidget.() -> Unit = {}): BoxWidget = globalWidgetManager.box(setup)
-
-public fun buttonWidget(setup: ButtonWidget.() -> Unit = {}): ButtonWidget = globalWidgetManager.button(setup)
 
 public fun buttonStyleWidget(setup: ButtonStyleWidget.() -> Unit = {}): ButtonStyleWidget = globalWidgetManager.buttonStyle(setup)
 

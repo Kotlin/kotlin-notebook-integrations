@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.jupyter.widget.library.BoundedFloatTextWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.BoundedIntTextWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.BoxWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ButtonStyleWidget
-import org.jetbrains.kotlinx.jupyter.widget.library.ButtonWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.CheckboxStyleWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.CheckboxWidget
 import org.jetbrains.kotlinx.jupyter.widget.library.ColorPickerWidget
@@ -78,7 +77,6 @@ internal val defaultWidgetFactories = listOf<WidgetFactory<*>>(
     BoundedIntTextWidget.Factory,
     BoxWidget.Factory,
     ButtonStyleWidget.Factory,
-    ButtonWidget.Factory,
     CheckboxStyleWidget.Factory,
     CheckboxWidget.Factory,
     ColorPickerWidget.Factory,

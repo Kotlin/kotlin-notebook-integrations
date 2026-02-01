@@ -4,9 +4,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonArray
@@ -14,29 +12,22 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import org.jetbrains.kotlinx.jupyter.protocol.comms.CommManagerImpl
-import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
-import org.jetbrains.kotlinx.jupyter.widget.test.util.CommEvent
-import org.jetbrains.kotlinx.jupyter.widget.test.util.TestServerCommCommunicationFacility
-import org.jetbrains.kotlinx.jupyter.widget.test.util.WidgetReplProvider
+import org.jetbrains.kotlinx.jupyter.test.util.AbstractCommReplTest
+import org.jetbrains.kotlinx.jupyter.test.util.CommEvent
+import org.jetbrains.kotlinx.jupyter.test.util.IntegrationReplProvider
+import org.jetbrains.kotlinx.jupyter.test.util.TestServerCommCommunicationFacility
 
 abstract class AbstractWidgetReplTest(
-    protected val facility: TestServerCommCommunicationFacility = TestServerCommCommunicationFacility(),
-    protected val commManager: CommManagerImpl = CommManagerImpl(facility),
-    provider: WidgetReplProvider = WidgetReplProvider(commManager),
-) : JupyterReplTestCase(provider) {
-    protected var nextEventIndex: Int = 0
-
-    protected fun resetEvents() {
-        facility.sentEvents.clear()
-        nextEventIndex = 0
-    }
-
+    facility: TestServerCommCommunicationFacility = TestServerCommCommunicationFacility(),
+    commManager: CommManagerImpl = CommManagerImpl(facility),
+    provider: IntegrationReplProvider = IntegrationReplProvider(commManager, "widgets"),
+) : AbstractCommReplTest(facility, commManager, provider) {
     protected fun shouldHaveOpenEvents(vararg expectedModelNames: String): List<CommEvent.Open> =
-        expectedModelNames.map { shouldHaveNextOpenEvent(it) }
+        expectedModelNames.map { shouldHaveNextWidgetOpenEvent(it) }
 
-    protected fun shouldHaveNextOpenEvent(expectedModelName: String) = shouldHaveOpenEvent(nextEventIndex++, expectedModelName)
+    protected fun shouldHaveNextWidgetOpenEvent(expectedModelName: String) = shouldHaveWidgetOpenEvent(nextEventIndex++, expectedModelName)
 
-    protected fun shouldHaveOpenEvent(
+    protected fun shouldHaveWidgetOpenEvent(
         index: Int,
         expectedModelName: String,
     ): CommEvent.Open {
@@ -142,21 +133,6 @@ abstract class AbstractWidgetReplTest(
                     },
                 )
             }
-        commManager.processCommMessage(commId, updateData, null, buffers)
-    }
-
-    protected fun buildState(vararg state: Pair<String, Any?>) = buildJsonObject { putState(*state) }
-
-    protected fun JsonObjectBuilder.putState(vararg state: Pair<String, Any?>) {
-        for ((key, value) in state) {
-            when (value) {
-                is String -> put(key, value)
-                is Number -> put(key, value)
-                is Boolean -> put(key, value)
-                is JsonElement -> put(key, value)
-                null -> put(key, null as String?)
-                else -> throw IllegalArgumentException("Unsupported type: ${value::class}")
-            }
-        }
+        sendCommMessage(commId, updateData, buffers)
     }
 }

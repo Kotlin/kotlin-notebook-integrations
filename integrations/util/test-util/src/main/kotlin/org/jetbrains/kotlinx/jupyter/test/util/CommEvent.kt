@@ -1,8 +1,11 @@
-package org.jetbrains.kotlinx.jupyter.widget.test.util
+package org.jetbrains.kotlinx.jupyter.test.util
 
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
+/**
+ * Represents events sent via Jupyter Comms during tests.
+ */
 sealed interface CommEvent {
     data class Open(
         val commId: String,

@@ -26,6 +26,9 @@ projectStructure {
             project("widgets-generator")
             project("widgets-tests")
         }
+        folder("util") {
+            project("test-util")
+        }
     }
 }
 

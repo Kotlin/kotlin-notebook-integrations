@@ -5,14 +5,11 @@ plugins {
 }
 
 dependencies {
-    testImplementation(projects.integrations.widgets.widgetsJupyter)
-    testImplementation(projects.integrations.util.testUtil)
-    testImplementation(libs.kotlin.test)
-    testImplementation(libs.test.kotlintest.assertions)
-}
-
-tasks.test {
-    useJUnitPlatform()
+    api(libs.kotlinx.serialization.json)
+    api(libs.test.kotlintest.assertions)
+    api(libs.kotlin.test)
+    api(libs.kotlin.jupyter.testkit)
+    api(libs.jupyter.notebooks.parser)
 }
 
 kotlin {

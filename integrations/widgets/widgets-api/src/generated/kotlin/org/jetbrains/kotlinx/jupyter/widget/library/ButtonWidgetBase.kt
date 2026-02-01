@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.BooleanType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.primitive.StringType
 import org.jetbrains.kotlinx.jupyter.widget.model.types.widget.WidgetReferenceType
 
-private val buttonSpec = WidgetSpec(
+internal val buttonSpec = WidgetSpec(
     modelName = "ButtonModel",
     modelModule = "@jupyter-widgets/controls",
     modelModuleVersion = "2.0.0",
@@ -23,14 +23,10 @@ private val buttonSpec = WidgetSpec(
     viewModuleVersion = "2.0.0",
 )
 
-public fun WidgetManager.button(setup: ButtonWidget.() -> Unit = {}): ButtonWidget =
-    createAndRegisterWidget(ButtonWidget.Factory).apply(setup)
-
-public class ButtonWidget internal constructor(
+public abstract class ButtonWidgetBase internal constructor(
     widgetManager: WidgetManager,
     fromFrontend: Boolean,
 ) : DomWidgetBase(buttonSpec, widgetManager, fromFrontend), WidgetWithDescription {
-    internal object Factory : DefaultWidgetFactory<ButtonWidget>(buttonSpec, ::ButtonWidget)
 
     /**
      * Use a predefined styling for the button.
