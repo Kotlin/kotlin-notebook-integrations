@@ -40,7 +40,7 @@ manipulateNotebook { getCellRange(0, 5) }
 
 // Insert a new cell at a specific position
 val newCodeCell = CodeCell(
-    id = "",
+    id = null,
     source = "println(\"Hello from inserted cell!\")",
     metadata = CodeCellMetadata(),
     executionCount = null,
@@ -59,7 +59,7 @@ manipulateNotebook { deleteCell(3) }
 
 // Replace a cell
 val markdownCell = MarkdownCell(
-    id = "",
+    id = null,
     source = "# Updated Section",
     metadata = MarkdownCellMetadata()
 )
@@ -127,7 +127,7 @@ Each cell type has a corresponding metadata class:
 - `MarkdownCellMetadata(tags)` - Metadata for markdown cells
 - `RawCellMetadata(tags)` - Metadata for raw cells
 
-When creating new cells, use `id = ""` (the frontend will assign a proper ID).
+When creating new cells, use `id = null` (the frontend will assign a proper ID).
 
 ## Protocol
 

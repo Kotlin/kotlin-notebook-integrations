@@ -58,7 +58,7 @@ Each cell type has a corresponding metadata class:
 - `MarkdownCellMetadata(tags)`: Metadata for markdown cells.
 - `RawCellMetadata(tags)`: Metadata for raw cells.
 
-When creating new cells, use `id = ""` (the frontend will assign a proper ID).
+When creating new cells, use `id = null` (the frontend will assign a proper ID).
 
 #### 5. Testing Requirements
 
@@ -105,7 +105,7 @@ manipulateNotebook { getNotebook() }
 
 // Modification operations
 val newCell = CodeCell(
-    id = "",
+    id = null,
     source = "println(\"Hello\")",
     metadata = CodeCellMetadata(),
     executionCount = null,
