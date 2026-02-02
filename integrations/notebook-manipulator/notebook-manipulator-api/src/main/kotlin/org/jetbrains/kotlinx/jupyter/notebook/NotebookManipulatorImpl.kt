@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.jupyter.notebook
 
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -102,7 +103,7 @@ internal class NotebookManipulatorImpl(
 
         // Convert the metadata map to the Metadata object
         // For now, we create a minimal Metadata. Frontend may provide more fields.
-        val metadataJson = Json.parseToJsonElement(Json.encodeToString(metadataMap))
+        val metadataJson = mapToJson(metadataMap)
         val metadata = json.decodeFromJsonElement<Metadata>(metadataJson)
 
         return JupyterNotebook(
@@ -187,10 +188,10 @@ internal class NotebookManipulatorImpl(
                     withTimeout(requestTimeout) {
                         deferred.await()
                     }
-                } catch (e: Exception) {
+                } catch (e: TimeoutCancellationException) {
                     pendingRequests.remove(requestId)
                     throw NotebookManipulatorException(
-                        "Request timed out or failed: ${e.message}",
+                        "Request timed out: ${e.message}",
                         "TIMEOUT",
                         e,
                     )
