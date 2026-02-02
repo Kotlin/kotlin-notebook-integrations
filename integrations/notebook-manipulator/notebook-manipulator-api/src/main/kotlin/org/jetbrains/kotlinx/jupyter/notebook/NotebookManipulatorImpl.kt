@@ -43,10 +43,11 @@ internal class NotebookManipulatorImpl(
     private val commManager: CommManager,
     private val requestTimeout: Duration = 30.seconds,
 ) : NotebookManipulator {
-    private val json = Json {
-        ignoreUnknownKeys = true
-        encodeDefaults = true
-    }
+    private val json =
+        Json {
+            ignoreUnknownKeys = true
+            encodeDefaults = true
+        }
 
     private val logger = Logger.getLogger(NotebookManipulatorImpl::class.java.name)
     private val targetName = "jupyter.notebook.manipulator.v1"
@@ -56,58 +57,28 @@ internal class NotebookManipulatorImpl(
     private var comm: Comm? = null
     private val commLock = Any()
 
-    override suspend fun getCellCount(): Int {
-        val requestId = generateRequestId()
-        val request = GetCellCountRequest(requestId)
-
-        return sendRequest(request, requestId) { result ->
-            result.jsonObject["count"]?.jsonPrimitive?.int
-                ?: throw NotebookManipulatorException("Invalid response: missing 'count' field")
+    override suspend fun getCellCount(): Int =
+        request(::GetCellCountRequest) { result ->
+            result.jsonObject.requireField<Int>("count")
         }
-    }
 
-    override suspend fun getNotebookMetadata(): Map<String, Any?> {
-        val requestId = generateRequestId()
-        val request = GetNotebookMetadataRequest(requestId)
-
-        return sendRequest(request, requestId) { result ->
-            val metadata =
-                result.jsonObject["metadata"]?.jsonObject
-                    ?: throw NotebookManipulatorException("Invalid response: missing 'metadata' field")
-            jsonToMap(metadata)
+    override suspend fun getNotebookMetadata(): Map<String, Any?> =
+        request(::GetNotebookMetadataRequest) { result ->
+            jsonToMap(result.jsonObject.requireJsonObject("metadata"))
         }
-    }
 
     override suspend fun getCellRange(
         start: Int,
         end: Int,
-    ): List<Cell> {
-        val requestId = generateRequestId()
-        val request =
-            GetCellRangeRequest(
-                requestId,
-                CellRangeParams(start, end),
-            )
-
-        return sendRequest(request, requestId) { result ->
-            val cells =
-                result.jsonObject["cells"]?.jsonArray
-                    ?: throw NotebookManipulatorException("Invalid response: missing 'cells' field")
-
-            cells.map { cellJson ->
-                json.decodeFromJsonElement<Cell>(cellJson)
-            }
+    ): List<Cell> =
+        request({ GetCellRangeRequest(it, CellRangeParams(start, end)) }) { result ->
+            result.jsonObject.requireJsonArray("cells").map { json.decodeFromJsonElement<Cell>(it) }
         }
-    }
 
     override suspend fun getNotebook(): JupyterNotebook {
         val metadataMap = getNotebookMetadata()
         val cells = getAllCells()
-
-        // Convert the metadata map to the Metadata object
-        // For now, we create a minimal Metadata. Frontend may provide more fields.
-        val metadataJson = mapToJson(metadataMap)
-        val metadata = json.decodeFromJsonElement<Metadata>(metadataJson)
+        val metadata = json.decodeFromJsonElement<Metadata>(mapToJson(metadataMap))
 
         return JupyterNotebook(
             metadata = metadata,
@@ -122,82 +93,42 @@ internal class NotebookManipulatorImpl(
         deleteCount: Int,
         cells: List<Cell>,
     ) {
-        val requestId = generateRequestId()
-        val cellsJson = cells.map { cell -> serializeCell(cell) }
-
-        val request =
-            SpliceCellRangeRequest(
-                requestId,
-                SpliceCellRangeParams(start, deleteCount, cellsJson),
-            )
-
-        sendRequest(request, requestId) { result ->
-            // We don't need the result, just check that it succeeded
-            result
-        }
+        val cellsJson = cells.map { json.encodeToJsonElement(it) }
+        request { SpliceCellRangeRequest(it, SpliceCellRangeParams(start, deleteCount, cellsJson)) }
     }
 
     override suspend fun setNotebookMetadata(
         metadata: Map<String, Any?>,
         merge: Boolean,
     ) {
-        val requestId = generateRequestId()
-        val metadataJson = mapToJson(metadata)
-
-        val request =
-            SetNotebookMetadataRequest(
-                requestId,
-                SetNotebookMetadataParams(metadataJson, merge),
-            )
-
-        sendRequest(request, requestId) { result ->
-            // We don't need the result, just check that it succeeded
-            result
-        }
+        request { SetNotebookMetadataRequest(it, SetNotebookMetadataParams(mapToJson(metadata), merge)) }
     }
 
     override suspend fun executeCellRange(
         start: Int,
         end: Int,
     ) {
-        val requestId = generateRequestId()
-        val request =
-            ExecuteCellRangeRequest(
-                requestId,
-                CellRangeParams(start, end),
-            )
-
-        sendRequest(request, requestId) { result ->
-            // We don't need the result, just check that it succeeded
-            result
-        }
+        request { ExecuteCellRangeRequest(it, CellRangeParams(start, end)) }
     }
 
-    private suspend fun <T> sendRequest(
-        request: NotebookManipulatorMessage,
-        requestId: String,
+    private suspend fun <T> request(
+        factory: (String) -> NotebookManipulatorMessage,
         transform: (JsonElement) -> T,
     ): T {
+        val requestId = generateRequestId()
+        val request = factory(requestId)
         val deferred = CompletableDeferred<JsonElement>()
         pendingRequests[requestId] = deferred
 
         try {
-            val comm = ensureCommOpened()
-            val message = json.encodeToJsonElement(request).jsonObject
-            comm.send(message)
+            ensureCommOpened().send(json.encodeToJsonElement(request).jsonObject)
 
             val result =
                 try {
-                    withTimeout(requestTimeout) {
-                        deferred.await()
-                    }
+                    withTimeout(requestTimeout) { deferred.await() }
                 } catch (e: TimeoutCancellationException) {
                     pendingRequests.remove(requestId)
-                    throw NotebookManipulatorException(
-                        "Request timed out: ${e.message}",
-                        "TIMEOUT",
-                        e,
-                    )
+                    throw NotebookManipulatorException("Request timed out: ${e.message}", "TIMEOUT", e)
                 }
 
             return transform(result)
@@ -207,6 +138,10 @@ internal class NotebookManipulatorImpl(
             pendingRequests.remove(requestId)
             throw NotebookManipulatorException("Failed to send request: ${e.message}", cause = e)
         }
+    }
+
+    private suspend fun request(factory: (String) -> NotebookManipulatorMessage) {
+        request(factory) { }
     }
 
     private fun ensureCommOpened(): Comm =
@@ -230,48 +165,31 @@ internal class NotebookManipulatorImpl(
         }
 
     private fun handleResponse(data: JsonObject) {
-        try {
+        runCatching {
             val requestId =
-                data["request_id"]?.jsonPrimitive?.content
-                    ?: run {
-                        logger.log(Level.WARNING, "Response missing request_id field. Data: $data")
-                        return
-                    }
-
-            val future = pendingRequests.remove(requestId) ?: return
-
-            when (val statusString = data["status"]?.jsonPrimitive?.content) {
-                "ok" -> {
-                    val result =
-                        data["result"]
-                            ?: run {
-                                future.completeExceptionally(
-                                    NotebookManipulatorException("Response missing result field"),
-                                )
-                                return
-                            }
-                    future.complete(result)
+                data["request_id"]?.jsonPrimitive?.content ?: run {
+                    logger.log(Level.WARNING, "Response missing request_id field. Data: $data")
+                    return
                 }
+
+            val deferred = pendingRequests.remove(requestId) ?: return
+
+            when (data["status"]?.jsonPrimitive?.content) {
+                "ok" ->
+                    data["result"]?.let(deferred::complete)
+                        ?: deferred.completeExceptionally(NotebookManipulatorException("Response missing result field"))
                 "error" -> {
-                    val errorJson = data["error"]?.jsonObject
-                    if (errorJson != null) {
-                        val errorInfo = json.decodeFromJsonElement<ErrorInfo>(errorJson)
-                        future.completeExceptionally(
-                            NotebookManipulatorException(errorInfo.message, errorInfo.code),
-                        )
-                    } else {
-                        future.completeExceptionally(
-                            NotebookManipulatorException("Response has error status but missing error field"),
-                        )
-                    }
+                    val error =
+                        data["error"]?.jsonObject?.let { json.decodeFromJsonElement<ErrorInfo>(it) }
+                            ?: ErrorInfo("Response has error status but missing error field", "UNKNOWN")
+                    deferred.completeExceptionally(NotebookManipulatorException(error.message, error.code))
                 }
-                else -> {
-                    future.completeExceptionally(
-                        NotebookManipulatorException("Unknown response status: $statusString"),
+                else ->
+                    deferred.completeExceptionally(
+                        NotebookManipulatorException("Unknown response status: ${data["status"]}"),
                     )
-                }
             }
-        } catch (e: Exception) {
+        }.onFailure { e ->
             logger.log(
                 Level.WARNING,
                 "Failed to parse or handle comm response. Data: $data. Individual requests will timeout if affected.",
@@ -282,5 +200,18 @@ internal class NotebookManipulatorImpl(
 
     private fun generateRequestId(): String = "req-${requestIdCounter.incrementAndGet()}"
 
-    private fun serializeCell(cell: Cell): JsonElement = json.encodeToJsonElement(cell)
+    private inline fun <reified T> JsonObject.requireField(field: String): T =
+        this[field]?.jsonPrimitive?.let {
+            when (T::class) {
+                Int::class -> it.int as T
+                String::class -> it.content as T
+                else -> throw NotebookManipulatorException("Unsupported field type: ${T::class}")
+            }
+        } ?: throw NotebookManipulatorException("Invalid response: missing '$field' field")
+
+    private fun JsonObject.requireJsonObject(field: String): JsonObject =
+        this[field]?.jsonObject ?: throw NotebookManipulatorException("Invalid response: missing '$field' field")
+
+    private fun JsonObject.requireJsonArray(field: String): List<JsonElement> =
+        this[field]?.jsonArray ?: throw NotebookManipulatorException("Invalid response: missing '$field' field")
 }
