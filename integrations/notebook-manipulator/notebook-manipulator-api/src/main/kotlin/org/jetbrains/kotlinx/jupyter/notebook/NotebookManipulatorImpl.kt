@@ -43,7 +43,10 @@ internal class NotebookManipulatorImpl(
     private val commManager: CommManager,
     private val requestTimeout: Duration = 30.seconds,
 ) : NotebookManipulator {
-    private val json = Json { ignoreUnknownKeys = true }
+    private val json = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+    }
 
     private val logger = Logger.getLogger(NotebookManipulatorImpl::class.java.name)
     private val targetName = "jupyter.notebook.manipulator.v1"
