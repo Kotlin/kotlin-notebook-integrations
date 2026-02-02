@@ -26,6 +26,11 @@ projectStructure {
             project("widgets-generator")
             project("widgets-tests")
         }
+        folder("notebook-manipulator") {
+            project("notebook-manipulator-api")
+            project("notebook-manipulator-jupyter")
+            project("notebook-manipulator-tests")
+        }
         folder("util") {
             project("test-util")
             project("notebook-parser")
