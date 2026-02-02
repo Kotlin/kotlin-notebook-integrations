@@ -30,8 +30,12 @@ class LinkWidgetTest : AbstractWidgetReplTest() {
             val link = execRaw(code)
             link.shouldBeInstanceOf<LinkWidget>()
 
+            facility.getNextEvent().shouldBeWidgetOpen("LinkModel")
+
             val source =
-                shouldHaveUpdateEvent("source")
+                facility
+                    .getNextEvent()
+                    .shouldBeMessage("update")
                     .data["state"]!!
                     .shouldBeInstanceOf<JsonObject>()["source"]
                     .shouldBeInstanceOf<JsonArray>()
@@ -39,7 +43,9 @@ class LinkWidgetTest : AbstractWidgetReplTest() {
             source[1].jsonPrimitive.content shouldBe "value"
 
             val target =
-                shouldHaveUpdateEvent("target")
+                facility
+                    .getNextEvent()
+                    .shouldBeMessage("update")
                     .data["state"]!!
                     .shouldBeInstanceOf<JsonObject>()["target"]
                     .shouldBeInstanceOf<JsonArray>()
@@ -52,6 +58,7 @@ class LinkWidgetTest : AbstractWidgetReplTest() {
     fun `linkPropertiesOneWay should create a DirectionalLinkWidget with correct source and target`() {
         execRaw("val play = playWidget()")
         execRaw("val slider = intSliderWidget()")
+        resetEvents()
 
         val playId = execRaw("widgetManager.getWidgetId(play)") as String
         val sliderId = execRaw("widgetManager.getWidgetId(slider)") as String
@@ -64,8 +71,12 @@ class LinkWidgetTest : AbstractWidgetReplTest() {
             )
         link.shouldBeInstanceOf<DirectionalLinkWidget>()
 
+        facility.getNextEvent().shouldBeWidgetOpen("DirectionalLinkModel")
+
         val source =
-            shouldHaveUpdateEvent("source")
+            facility
+                .getNextEvent()
+                .shouldBeMessage("update")
                 .data["state"]!!
                 .shouldBeInstanceOf<JsonObject>()["source"]
                 .shouldBeInstanceOf<JsonArray>()
@@ -73,7 +84,9 @@ class LinkWidgetTest : AbstractWidgetReplTest() {
         source[1].jsonPrimitive.content shouldBe "value"
 
         val target =
-            shouldHaveUpdateEvent("target")
+            facility
+                .getNextEvent()
+                .shouldBeMessage("update")
                 .data["state"]!!
                 .shouldBeInstanceOf<JsonObject>()["target"]
                 .shouldBeInstanceOf<JsonArray>()

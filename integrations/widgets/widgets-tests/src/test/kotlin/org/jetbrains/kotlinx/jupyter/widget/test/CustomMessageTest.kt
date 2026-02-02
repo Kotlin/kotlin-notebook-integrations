@@ -5,7 +5,6 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import org.jetbrains.kotlinx.jupyter.test.util.CommEvent
 import org.junit.jupiter.api.Test
 
 class CustomMessageTest : AbstractWidgetReplTest() {
@@ -14,13 +13,13 @@ class CustomMessageTest : AbstractWidgetReplTest() {
         execRaw("val s = intSliderWidget()")
         // LayoutModel, SliderStyleModel, IntSliderModel
         val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
-        nextEventIndex = 3
+        shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel")
 
         execRaw("import kotlinx.serialization.json.buildJsonObject")
         execRaw("import kotlinx.serialization.json.put")
         execRaw("s.sendCustomMessage(buildJsonObject { put(\"foo\", \"bar\") })")
 
-        val msgEvent = facility.sentEvents[nextEventIndex++].shouldBeInstanceOf<CommEvent.Message>()
+        val msgEvent = shouldHaveNextMessageEvent()
         msgEvent.commId shouldBe sliderId
         msgEvent.data["method"]?.shouldBeInstanceOf<JsonPrimitive>()?.content shouldBe "custom"
         val content = msgEvent.data["content"]?.shouldBeInstanceOf<kotlinx.serialization.json.JsonObject>()!!
@@ -31,7 +30,7 @@ class CustomMessageTest : AbstractWidgetReplTest() {
     fun `send custom message with bytes from kernel`() {
         execRaw("val s = intSliderWidget()")
         execRaw("widgetManager.getWidgetId(s)") as String
-        nextEventIndex = 3
+        shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel")
 
         execRaw("import kotlinx.serialization.json.buildJsonObject")
         execRaw("import kotlinx.serialization.json.put")
@@ -124,14 +123,14 @@ class CustomMessageTest : AbstractWidgetReplTest() {
     fun `send custom message with primitive metadata from kernel`() {
         execRaw("val s = intSliderWidget()")
         val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
-        nextEventIndex = 3
+        shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel")
 
         execRaw("import kotlinx.serialization.json.buildJsonObject")
         execRaw("import kotlinx.serialization.json.put")
         execRaw("import kotlinx.serialization.json.JsonPrimitive")
         execRaw("s.sendCustomMessage(buildJsonObject { put(\"foo\", \"bar\") }, metadata = JsonPrimitive(123))")
 
-        val msgEvent = facility.sentEvents[nextEventIndex++].shouldBeInstanceOf<CommEvent.Message>()
+        val msgEvent = shouldHaveNextMessageEvent()
         msgEvent.commId shouldBe sliderId
         msgEvent.data["method"]?.shouldBeInstanceOf<JsonPrimitive>()?.content shouldBe "custom"
         msgEvent.metadata?.shouldBeInstanceOf<JsonPrimitive>()?.content shouldBe "123"
@@ -141,12 +140,12 @@ class CustomMessageTest : AbstractWidgetReplTest() {
     fun `send raw custom message with bytes from kernel`() {
         execRaw("val s = intSliderWidget()")
         val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
-        nextEventIndex = 3
+        shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel")
 
         execRaw("import kotlinx.serialization.json.buildJsonObject")
         execRaw("s.sendCustomMessage(buildJsonObject {}, buffers = listOf(byteArrayOf(7, 8, 9)))")
 
-        val msgEvent = facility.sentEvents[nextEventIndex++].shouldBeInstanceOf<CommEvent.Message>()
+        val msgEvent = shouldHaveNextMessageEvent()
         msgEvent.commId shouldBe sliderId
         msgEvent.buffers shouldBe listOf(byteArrayOf(7, 8, 9))
     }

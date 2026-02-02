@@ -4,16 +4,31 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import org.jetbrains.kotlinx.jupyter.protocol.api.RawMessage
 import org.jetbrains.kotlinx.jupyter.protocol.comms.CommCommunicationFacility
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.TimeUnit
 
 /**
  * Test implementation of CommCommunicationFacility that records all sent events.
  */
 class TestServerCommCommunicationFacility : CommCommunicationFacility {
-    private val events = mutableListOf<CommEvent>()
+    private val eventsQueue = LinkedBlockingQueue<CommEvent>()
 
-    val sentEvents: MutableList<CommEvent> get() = events
+    fun getNextEvent(timeoutMs: Long = 5000): CommEvent =
+        eventsQueue.poll(timeoutMs, TimeUnit.MILLISECONDS)
+            ?: throw AssertionError("No comm event received within ${timeoutMs}ms")
+
+    fun checkNoNextEvent(timeoutMs: Long = 100) {
+        val event = eventsQueue.poll(timeoutMs, TimeUnit.MILLISECONDS)
+        if (event != null) {
+            throw AssertionError("Expected no comm event, but received: $event")
+        }
+    }
 
     override val contextMessage: RawMessage? get() = null
+
+    private fun addEvent(event: CommEvent) {
+        eventsQueue.add(event)
+    }
 
     override fun sendCommOpen(
         commId: String,
@@ -22,7 +37,7 @@ class TestServerCommCommunicationFacility : CommCommunicationFacility {
         metadata: JsonElement?,
         buffers: List<ByteArray>,
     ) {
-        events.add(CommEvent.Open(commId, targetName, data, metadata, buffers))
+        addEvent(CommEvent.Open(commId, targetName, data, metadata, buffers))
     }
 
     override fun sendCommMessage(
@@ -31,7 +46,7 @@ class TestServerCommCommunicationFacility : CommCommunicationFacility {
         metadata: JsonElement?,
         buffers: List<ByteArray>,
     ) {
-        events.add(CommEvent.Message(commId, data, metadata, buffers))
+        addEvent(CommEvent.Message(commId, data, metadata, buffers))
     }
 
     override fun sendCommClose(
@@ -40,10 +55,14 @@ class TestServerCommCommunicationFacility : CommCommunicationFacility {
         metadata: JsonElement?,
         buffers: List<ByteArray>,
     ) {
-        events.add(CommEvent.Close(commId, data, metadata, buffers))
+        addEvent(CommEvent.Close(commId, data, metadata, buffers))
     }
 
     override fun processCallbacks(action: () -> Unit) {
         action()
+    }
+
+    fun reset() {
+        eventsQueue.clear()
     }
 }

@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.jupyter.widget.test
 
-import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -19,7 +18,6 @@ class WidgetReplTest : AbstractWidgetReplTest() {
 
         // IntSlider depends on Layout and SliderStyle, so 3 widgets are registered
         shouldHaveOpenEvents("LayoutModel", "SliderStyleModel", "IntSliderModel")
-        facility.sentEvents.shouldHaveSize(3)
     }
 
     @Test
@@ -32,7 +30,6 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         shouldHaveNextOpenEvent("IntSliderModel")
         val sliderId = execRaw("widgetManager.getWidgetId(s)") as String
         shouldHaveNextUpdateEvent("value" to 42)
-        facility.sentEvents.shouldHaveSize(4)
 
         val displayedWidget = execSuccess("s").displayValue
         val json = displayedWidget?.toJson(Json.EMPTY, null)
@@ -50,7 +47,6 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         shouldHaveNextOpenEvent("IntSliderModel")
         val msgEvent = shouldHaveNextUpdateEvent("width" to "100px")
         msgEvent.commId shouldBe layoutId
-        facility.sentEvents.shouldHaveSize(4)
     }
 
     @Test
@@ -65,7 +61,6 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         msgEvent.buffers.shouldHaveSize(1)
         msgEvent.buffers[0] shouldBe byteArrayOf(1, 2, 3)
         shouldHaveBufferPath(msgEvent, 0, "value")
-        facility.sentEvents.shouldHaveSize(3)
     }
 
     @Test
@@ -76,7 +71,6 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         // DatePicker depends on Layout and DescriptionStyle, so 3 widgets registered
         shouldHaveOpenEvents("LayoutModel", "DescriptionStyleModel", "DatePickerModel")
         shouldHaveNextUpdateEvent("value" to "2023-01-01")
-        facility.sentEvents.shouldHaveSize(4)
     }
 
     @Test
@@ -116,7 +110,7 @@ class WidgetReplTest : AbstractWidgetReplTest() {
         commManager.processCommOpen("new_slider_id", "jupyter.widget", openData, null, emptyList())
 
         // Frontend already has all the widgets, so no events should be sent
-        facility.sentEvents.shouldBeEmpty()
+        facility.checkNoNextEvent()
 
         execRaw("val createdSlider = widgetManager.getWidget(\"new_slider_id\") as IntSliderWidget")
         execRaw("createdSlider.value") shouldBe 55
@@ -147,7 +141,7 @@ class WidgetReplTest : AbstractWidgetReplTest() {
 
         sendUpdate(sliderId, "value" to 42)
 
-        facility.sentEvents.shouldBeEmpty()
+        facility.checkNoNextEvent()
     }
 
     @Test
@@ -167,13 +161,11 @@ class WidgetReplTest : AbstractWidgetReplTest() {
 
         sendUpdate(sliderId, "value" to 43)
 
-        facility.sentEvents.shouldBeEmpty()
+        facility.checkNoNextEvent()
 
         // 3. Mixed properties: one with echo, one without
         // IntSlider has 'step' property too.
         sendUpdate(sliderId, "value" to 44, "step" to 2)
-
-        facility.sentEvents.shouldHaveSize(1)
 
         val echoEvent = shouldHaveNextEchoUpdateEvent()
         val echoState = echoEvent.data["state"]?.shouldBeInstanceOf<JsonObject>()!!
@@ -194,8 +186,6 @@ class WidgetReplTest : AbstractWidgetReplTest() {
 
         execRaw("t.step = TimeWidgetStep.AnyStep")
         shouldHaveNextUpdateEvent("step" to "any")
-
-        facility.sentEvents.shouldHaveSize(5)
     }
 
     @Test

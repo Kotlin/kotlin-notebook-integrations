@@ -20,32 +20,23 @@ abstract class AbstractCommReplTest(
     protected val commManager: CommManagerImpl,
     provider: ReplProvider,
 ) : JupyterReplTestCase(provider) {
-    protected var nextEventIndex: Int = 0
-
     /**
      * Clears all recorded events and resets the event index.
      */
     protected open fun resetEvents() {
-        facility.sentEvents.clear()
-        nextEventIndex = 0
+        facility.reset()
     }
 
     /**
      * Verifies that the next event is a CommOpen event.
      */
     protected open fun shouldHaveNextOpenEvent(expectedTargetName: String): CommEvent.Open =
-        shouldHaveOpenEvent(nextEventIndex++, expectedTargetName)
+        facility.getNextEvent().shouldBeInstanceOf<CommEvent.Open>()
 
     /**
-     * Verifies that the event at the specified index is a CommOpen event.
+     * Verifies that the next event is a CommMessage event and returns it.
      */
-    protected open fun shouldHaveOpenEvent(
-        index: Int,
-        expectedTargetName: String,
-    ): CommEvent.Open {
-        val openEvent = facility.sentEvents[index].shouldBeInstanceOf<CommEvent.Open>()
-        return openEvent
-    }
+    protected open fun shouldHaveNextMessageEvent(): CommEvent.Message = facility.getNextEvent().shouldBeInstanceOf<CommEvent.Message>()
 
     /**
      * Sends a comm message to the specified comm.
