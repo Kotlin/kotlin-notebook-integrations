@@ -6,9 +6,9 @@ plugins {
 }
 
 dependencies {
+    api(projects.integrations.util.notebookParser)
     api(libs.kotlinx.serialization.json)
     api(libs.kotlinx.coroutines.core)
-    api(libs.jupyter.notebooks.parser)
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.test.kotlintest.assertions)
