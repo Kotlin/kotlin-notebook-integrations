@@ -28,6 +28,7 @@ projectStructure {
         }
         folder("util") {
             project("test-util")
+            project("notebook-parser")
         }
     }
 }

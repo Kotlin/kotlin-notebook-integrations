@@ -10,7 +10,6 @@ import java.util.stream.Stream
 import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
 
-@Suppress("TestFunctionName")
 class ParseSaveTests {
     @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)
     @MethodSource("notebookNames")
@@ -30,10 +29,10 @@ class ParseSaveTests {
         private val myData = testDataDir<ParserTests>()
 
         @JvmStatic
-        fun notebookNames(): Stream<String> {
-            return Files.walk(myData.toPath(), 1)
+        fun notebookNames(): Stream<String> =
+            Files
+                .walk(myData.toPath(), 1)
                 .filter { it.extension == "ipynb" }
                 .map { it.nameWithoutExtension }
-        }
     }
 }

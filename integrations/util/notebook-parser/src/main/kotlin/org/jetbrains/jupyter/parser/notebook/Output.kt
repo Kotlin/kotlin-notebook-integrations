@@ -22,12 +22,12 @@ public class ExecuteResult(
     /** A result's prompt number. */
     public val executionCount: Long?,
 ) : DisplayData(data, metadata) {
-
     override val type: Type get() = Type.EXECUTE_RESULT
 
     init {
-        if (executionCount != null)
+        if (executionCount != null) {
             require(executionCount >= 0L) { "Execution count shouldn't be nagative, but it was $executionCount" }
+        }
     }
 }
 
@@ -44,7 +44,7 @@ public class Stream(
     /** The name of the stream (stdout, stderr). */
     public val name: String,
     /** The stream's text output, represented as an array of strings. */
-    public val text: String
+    public val text: String,
 ) : Output() {
     override val type: Type get() = Type.STREAM
 }
@@ -55,7 +55,7 @@ public class Error(
     /** The value, or message, of the error. */
     public val errorValue: String,
     /** The error's traceback, represented as an array of strings. */
-    public val traceback: List<String>
+    public val traceback: List<String>,
 ) : Output() {
     override val type: Type get() = Type.ERROR
 }

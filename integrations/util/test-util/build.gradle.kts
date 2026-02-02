@@ -5,11 +5,12 @@ plugins {
 }
 
 dependencies {
+    api(projects.integrations.util.notebookParser)
+
     api(libs.kotlinx.serialization.json)
     api(libs.test.kotlintest.assertions)
     api(libs.kotlin.test)
     api(libs.kotlin.jupyter.testkit)
-    api(libs.jupyter.notebooks.parser)
 }
 
 kotlin {

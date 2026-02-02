@@ -11,8 +11,8 @@ import kotlinx.serialization.json.encodeToJsonElement
 
 internal inline fun <reified T> JsonElement.decode(format: Json) = format.decodeFromJsonElement<T>(this)
 
-internal fun JsonElement?.decodeMultilineText(format: Json): String {
-    return when (this) {
+internal fun JsonElement?.decodeMultilineText(format: Json): String =
+    when (this) {
         is JsonArray -> {
             val lines = decode<List<String>>(format)
             lines.joinToString("")
@@ -22,11 +22,8 @@ internal fun JsonElement?.decodeMultilineText(format: Json): String {
         }
         else -> ""
     }
-}
 
-internal fun Json.encodeMultilineText(text: String): JsonElement {
-    return encodeToJsonElement(text.splitNoTrim('\n'))
-}
+internal fun Json.encodeMultilineText(text: String): JsonElement = encodeToJsonElement(text.splitNoTrim('\n'))
 
 private fun String.splitNoTrim(delimiter: Char): List<String> {
     var currentOffset = 0
@@ -61,11 +58,10 @@ internal fun JsonElement?.decodeDisplayMap(format: Json): Map<String, String> {
     }
 }
 
-internal fun Json.encodeDisplayMap(map: Map<String, String>): JsonObject {
-    return buildJsonObject {
+internal fun Json.encodeDisplayMap(map: Map<String, String>): JsonObject =
+    buildJsonObject {
         for ((key, textValue) in map) {
             val value = encodeMultilineText(textValue)
             put(key, value)
         }
     }
-}

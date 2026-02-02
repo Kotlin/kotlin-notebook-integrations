@@ -1,9 +1,8 @@
 # Jupyter Notebooks Parser
 
-[![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.6.0-blue.svg?logo=Kotlin)](http://kotlinlang.org)
+[![JetBrains official project](https://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
+[![Kotlin experimental stability](https://img.shields.io/badge/project-experimental-kotlin.svg?colorA=555555&colorB=AC29EC&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
 [![Maven Central version](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/jupyter-notebooks-parser?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/org.jetbrains.kotlinx/jupyter-notebooks-parser)
-[![GitHub License](https://img.shields.io/github/license/ileasile/jupyter-notebooks-parser?color=blue&label=License)](http://www.apache.org/licenses/LICENSE-2.0)
 
 This library simply parses Jupyter Notebook files into POJOs using `kotlinx.serialization`.
 

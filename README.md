@@ -14,6 +14,11 @@ Each integration lives in the `integrations/` directory and has its own README.
 - [Database](integrations/database/README.md) — helpers for configuring JDBC DataSources and working with Databases.
 - [Widgets](integrations/widgets/README.md) — ipywidgets API for Kotlin notebooks.
 
+## Utilities
+
+- [Jupyter Notebooks Parser](integrations/util/notebook-parser/README.md) — parser for Jupyter notebook files (.ipynb).
+- [Test Utilities](integrations/util/test-util) — testing helpers for Kotlin notebook integrations.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to this project.

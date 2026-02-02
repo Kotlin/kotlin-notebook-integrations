@@ -36,15 +36,12 @@ public data class Execution(
     /** header.date (in ISO 8601 format) of iopub channel's execute_input message. It indicates the time at which the kernel broadcasts an execute_input message to connected frontends */
     @SerialName("iopub.execute_input")
     val iopubExecuteInput: String? = null,
-
     /** header.date (in ISO 8601 format) of iopub channel's kernel status message when the status is 'busy' */
     @SerialName("iopub.status.busy")
     val iopubStatusBusy: String? = null,
-
     /** header.date (in ISO 8601 format) of iopub channel's kernel status message when the status is 'idle'. It indicates the time at which kernel finished processing the associated request */
     @SerialName("iopub.status.idle")
     val iopubStatusIdle: String? = null,
-
     /** header.date (in ISO 8601 format) of the shell channel's execute_reply message. It indicates the time at which the execute_reply message was created */
     @SerialName("shell.execute_reply")
     val shellExecuteReply: String? = null,

@@ -25,7 +25,6 @@ public data class LanguageInfo(
     /** The pygments lexer to use for code in this language. */
     @SerialName("pygments_lexer")
     val pygmentsLexer: String? = null,
-
     // unofficial fields
     @SerialName("nbconvert_exporter")
     val nbConvertExporter: String? = null,

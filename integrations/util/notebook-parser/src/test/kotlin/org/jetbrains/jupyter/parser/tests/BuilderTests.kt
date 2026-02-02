@@ -15,10 +15,11 @@ import org.junit.jupiter.api.Test
 class BuilderTests {
     @Test
     fun `simple notebook`() {
-        val actualNotebook = buildNotebook("kotlin", "Kotlin") {
-            markdownCell("**Hello, world!**")
-            codeCell("val x = 3")
-        }
+        val actualNotebook =
+            buildNotebook("kotlin", "Kotlin") {
+                markdownCell("**Hello, world!**")
+                codeCell("val x = 3")
+            }
 
         actualNotebook.cells.forEach {
             val id = it.id
@@ -27,10 +28,11 @@ class BuilderTests {
             id.shouldMatch("^[a-zA-Z0-9-_]+$".toRegex())
         }
 
-        val actual = JupyterParser.saveToJson(
-            // cleaning up the random-generated ids
-            actualNotebook.copy(cells = actualNotebook.cells.mapIndexed { i, cell -> cell.copy(id = "$i") })
-        )
+        val actual =
+            JupyterParser.saveToJson(
+                // cleaning up the random-generated ids
+                actualNotebook.copy(cells = actualNotebook.cells.mapIndexed { i, cell -> cell.copy(id = "$i") }),
+            )
 
         val expected = testDataDir<BuilderTests>().resolve("simple.ipynb").readText()
 
@@ -38,24 +40,28 @@ class BuilderTests {
     }
 }
 
-private fun Cell.copy(id: String?): Cell = when (this) {
-    is MarkdownCell -> MarkdownCell(
-        id = id,
-        metadata = this.metadata,
-        source = this.source,
-        attachments = this.attachments,
-    )
-    is RawCell -> RawCell(
-        id = id,
-        metadata = this.metadata,
-        source = this.source,
-        attachments = this.attachments,
-    )
-    is CodeCell -> CodeCell(
-        id = id,
-        metadata = this.metadata,
-        source = this.source,
-        outputs = this.outputs,
-        executionCount = this.executionCount,
-    )
-}
+private fun Cell.copy(id: String?): Cell =
+    when (this) {
+        is MarkdownCell ->
+            MarkdownCell(
+                id = id,
+                metadata = this.metadata,
+                source = this.source,
+                attachments = this.attachments,
+            )
+        is RawCell ->
+            RawCell(
+                id = id,
+                metadata = this.metadata,
+                source = this.source,
+                attachments = this.attachments,
+            )
+        is CodeCell ->
+            CodeCell(
+                id = id,
+                metadata = this.metadata,
+                source = this.source,
+                outputs = this.outputs,
+                executionCount = this.executionCount,
+            )
+    }

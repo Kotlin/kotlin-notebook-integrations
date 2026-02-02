@@ -13,9 +13,8 @@ public data class JupyterNotebook(
     /** Notebook format (major number). Incremented between backwards incompatible changes to the notebook format. */
     val nbformat: Int,
     /** Array of cells of the current notebook. */
-    val cells: List<Cell>
+    val cells: List<Cell>,
 ) {
-
     init {
         require(nbformatMinor >= 0L) { "nbformatMinor < minimum 0 - $nbformatMinor" }
         require(nbformat in 4..4) { "nbformat not in range 4..4 - $nbformat" }

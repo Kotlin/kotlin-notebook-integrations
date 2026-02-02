@@ -31,13 +31,17 @@ public object ScrolledSerializer : KSerializer<Scrolled> {
         }
     }
 
-    override fun serialize(encoder: Encoder, value: Scrolled) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Scrolled,
+    ) {
         require(encoder is JsonEncoder)
-        val json = when (value) {
-            Scrolled.SCROLLED -> JsonPrimitive(true)
-            Scrolled.UNSCROLLED -> JsonPrimitive(false)
-            Scrolled.AUTOSCROLLED -> JsonPrimitive("auto")
-        }
+        val json =
+            when (value) {
+                Scrolled.SCROLLED -> JsonPrimitive(true)
+                Scrolled.UNSCROLLED -> JsonPrimitive(false)
+                Scrolled.AUTOSCROLLED -> JsonPrimitive("auto")
+            }
         encoder.encodeJsonElement(json)
     }
 }

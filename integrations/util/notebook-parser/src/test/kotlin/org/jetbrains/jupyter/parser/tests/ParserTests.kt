@@ -9,9 +9,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInfo
 
-@Suppress("TestFunctionName")
+@Suppress("TestFunctionName", "ktlint:standard:function-naming")
 class ParserTests {
     private var testName: String? = null
+
     @BeforeEach
     fun setup(testInfo: TestInfo) {
         testName = testInfo.testMethod.get().name
@@ -60,11 +61,12 @@ class ParserTests {
     fun movies() = doTest()
 
     @Test
-    fun netflix() = doTest { notebook ->
-        notebook.metadata.languageInfo?.name shouldBe "kotlin"
-        notebook.cells shouldHaveSize 109
-        notebook.cells.filter { it.type == Cell.Type.CODE } shouldHaveSize 57
-    }
+    fun netflix() =
+        doTest { notebook ->
+            notebook.metadata.languageInfo?.name shouldBe "kotlin"
+            notebook.cells shouldHaveSize 109
+            notebook.cells.filter { it.type == Cell.Type.CODE } shouldHaveSize 57
+        }
 
     @Test
     fun WineNetWithKotlinDL() = doTest()

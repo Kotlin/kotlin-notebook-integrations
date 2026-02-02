@@ -17,8 +17,11 @@ public abstract class CellMetadata {
         }
 
         tags?.let {
-            for (tag in it)
-                require(CELL_METADATA_TAGS_REGEX.containsMatchIn(tag)) { "tags item does not match pattern $CELL_METADATA_TAGS_REGEX - $tag" }
+            for (tag in it) {
+                require(
+                    CELL_METADATA_TAGS_REGEX.containsMatchIn(tag),
+                ) { "tags item does not match pattern $CELL_METADATA_TAGS_REGEX - $tag" }
+            }
         }
     }
 

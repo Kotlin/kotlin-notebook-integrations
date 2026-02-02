@@ -56,31 +56,35 @@ public object OutputSerializer : KSerializer<Output> {
         }
     }
 
-    override fun serialize(encoder: Encoder, value: Output) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Output,
+    ) {
         require(encoder is JsonEncoder)
         val format = encoder.json
 
-        val json = buildJsonObject {
-            put(OUTPUT_TYPE, JsonPrimitive(value.type.name.lowercase()))
-            when (value) {
-                is DisplayData -> {
-                    put(DATA, format.encodeDisplayMap(value.data))
-                    put(METADATA, format.encodeToJsonElement(value.metadata))
-                    if (value is ExecuteResult) {
-                        put(EXECUTION_COUNT, format.encodeToJsonElement(value.executionCount))
+        val json =
+            buildJsonObject {
+                put(OUTPUT_TYPE, JsonPrimitive(value.type.name.lowercase()))
+                when (value) {
+                    is DisplayData -> {
+                        put(DATA, format.encodeDisplayMap(value.data))
+                        put(METADATA, format.encodeToJsonElement(value.metadata))
+                        if (value is ExecuteResult) {
+                            put(EXECUTION_COUNT, format.encodeToJsonElement(value.executionCount))
+                        }
+                    }
+                    is Stream -> {
+                        put(NAME, format.encodeToJsonElement(value.name))
+                        put(TEXT, format.encodeMultilineText(value.text))
+                    }
+                    is Error -> {
+                        put(ENAME, format.encodeToJsonElement(value.errorName))
+                        put(EVALUE, format.encodeToJsonElement(value.errorValue))
+                        put(TRACEBACK, format.encodeToJsonElement(value.traceback))
                     }
                 }
-                is Stream -> {
-                    put(NAME, format.encodeToJsonElement(value.name))
-                    put(TEXT, format.encodeMultilineText(value.text))
-                }
-                is Error -> {
-                    put(ENAME, format.encodeToJsonElement(value.errorName))
-                    put(EVALUE, format.encodeToJsonElement(value.errorValue))
-                    put(TRACEBACK, format.encodeToJsonElement(value.traceback))
-                }
             }
-        }
 
         encoder.encodeJsonElement(json)
     }

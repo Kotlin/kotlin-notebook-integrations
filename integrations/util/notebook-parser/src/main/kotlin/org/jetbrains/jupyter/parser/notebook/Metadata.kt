@@ -20,11 +20,11 @@ public data class Metadata(
     /** The title of the notebook document */
     val title: String? = null,
     /** The author(s) of the notebook document */
-    val authors: List<Author>? = null
+    val authors: List<Author>? = null,
 ) {
-
     init {
-        if (originalNbFormat != null)
+        if (originalNbFormat != null) {
             require(originalNbFormat >= 1L) { "orig_nbformat < minimum 1 - $originalNbFormat" }
+        }
     }
 }

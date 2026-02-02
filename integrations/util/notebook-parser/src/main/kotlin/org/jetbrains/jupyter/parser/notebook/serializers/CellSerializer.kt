@@ -62,31 +62,36 @@ public object CellSerializer : KSerializer<Cell> {
         }
     }
 
-    override fun serialize(encoder: Encoder, value: Cell) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Cell,
+    ) {
         require(encoder is JsonEncoder)
         val format = encoder.json
 
-        val json = buildJsonObject {
-            if (value.id != null) put(ID, JsonPrimitive(value.id))
-            put(CELL_TYPE, JsonPrimitive(value.type.name.lowercase()))
-            put(SOURCE, format.encodeMultilineText(value.source))
+        val json =
+            buildJsonObject {
+                if (value.id != null) put(ID, JsonPrimitive(value.id))
+                put(CELL_TYPE, JsonPrimitive(value.type.name.lowercase()))
+                put(SOURCE, format.encodeMultilineText(value.source))
 
-            @Suppress("REDUNDANT_ELSE_IN_WHEN")
-            val metadata = when (value) {
-                is CodeCell -> format.encodeToJsonElement(value.metadata)
-                is MarkdownCell -> format.encodeToJsonElement(value.metadata)
-                is RawCell -> format.encodeToJsonElement(value.metadata)
-                else -> throw IllegalStateException("Impossible situation: there are no more types of cells")
-            }
-            put(METADATA, metadata)
+                @Suppress("REDUNDANT_ELSE_IN_WHEN")
+                val metadata =
+                    when (value) {
+                        is CodeCell -> format.encodeToJsonElement(value.metadata)
+                        is MarkdownCell -> format.encodeToJsonElement(value.metadata)
+                        is RawCell -> format.encodeToJsonElement(value.metadata)
+                        else -> throw IllegalStateException("Impossible situation: there are no more types of cells")
+                    }
+                put(METADATA, metadata)
 
-            if (value is CodeCell) {
-                put(OUTPUTS, format.encodeToJsonElement(value.outputs))
-                put(EXECUTION_COUNT, format.encodeToJsonElement(value.executionCount))
-            } else if (value is CellWithAttachments) {
-                put(ATTACHMENTS, format.encodeToJsonElement(value.attachments))
+                if (value is CodeCell) {
+                    put(OUTPUTS, format.encodeToJsonElement(value.outputs))
+                    put(EXECUTION_COUNT, format.encodeToJsonElement(value.executionCount))
+                } else if (value is CellWithAttachments) {
+                    put(ATTACHMENTS, format.encodeToJsonElement(value.attachments))
+                }
             }
-        }
 
         encoder.encodeJsonElement(json)
     }
