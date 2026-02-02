@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.jupyter.database.test.integration
 
-import io.kotest.matchers.should
+import io.kotest.matchers.string.shouldStartWith
 import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.DatabaseIntegrationTest
 import kotlin.test.Test
 
@@ -22,7 +22,7 @@ class H2Tests : DatabaseIntegrationTest() {
             )
             src
             """.trimIndent(),
-        ).renderedValue should { it.toString().startsWith("HikariDataSource") }
+        ).renderedValue.toString() shouldStartWith "HikariDataSource"
         execSuccess(
             """
             src.connection.use { conn ->
@@ -47,7 +47,7 @@ class H2Tests : DatabaseIntegrationTest() {
             )
             src
             """.trimIndent(),
-        ).renderedValue should { it.toString().startsWith("HikariDataSource") }
+        ).renderedValue.toString() shouldStartWith "HikariDataSource"
         execSuccess(
             """
             src.connection.use { conn ->

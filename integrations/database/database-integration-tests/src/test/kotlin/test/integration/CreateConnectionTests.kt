@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.jupyter.database.test.integration
 
-import io.kotest.matchers.should
+import io.kotest.matchers.string.shouldStartWith
 import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.DatabaseInfo
 import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.DatabaseIntegrationTest
 import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.createSpringApplicationFile
@@ -51,7 +51,7 @@ class CreateConnectionTests : DatabaseIntegrationTest() {
             )
             src
             """.trimIndent(),
-        ).renderedValue should { it.toString().startsWith("HikariDataSource") }
+        ).renderedValue.toString() shouldStartWith "HikariDataSource"
     }
 
     @Test
@@ -79,7 +79,7 @@ class CreateConnectionTests : DatabaseIntegrationTest() {
             }
             src
             """.trimIndent(),
-        ).renderedValue should { it.toString().startsWith("HikariDataSource") }
+        ).renderedValue.toString() shouldStartWith "HikariDataSource"
     }
 
     @Test
@@ -112,7 +112,7 @@ class CreateConnectionTests : DatabaseIntegrationTest() {
             """
             createDataSourceFromSpring("${path.absolutePathString()}")
         """,
-        ).renderedValue should { it.toString().startsWith("HikariDataSource") }
+        ).renderedValue.toString() shouldStartWith "HikariDataSource"
     }
 
     @Test
@@ -132,7 +132,7 @@ class CreateConnectionTests : DatabaseIntegrationTest() {
             val path = java.nio.file.Path.of("${path.absolutePathString()}")
             createDataSourceFromSpring(path)
         """,
-        ).renderedValue should { it.toString().startsWith("HikariDataSource") }
+        ).renderedValue.toString() shouldStartWith "HikariDataSource"
     }
 
     @Test
@@ -154,7 +154,7 @@ class CreateConnectionTests : DatabaseIntegrationTest() {
                 """
                 createDataSourceFromSpring("${path.absolutePathString()}")
                 """.trimIndent(),
-            ).renderedValue should { it.toString().startsWith("HikariDataSource") }
+            ).renderedValue.toString() shouldStartWith "HikariDataSource"
         }
     }
 
@@ -178,7 +178,7 @@ class CreateConnectionTests : DatabaseIntegrationTest() {
                 val path = java.nio.file.Path.of("${path.absolutePathString()}")
                 createDataSourceFromSpring(path)
                 """.trimIndent(),
-            ).renderedValue should { it.toString().startsWith("HikariDataSource") }
+            ).renderedValue.toString() shouldStartWith "HikariDataSource"
         }
     }
 }

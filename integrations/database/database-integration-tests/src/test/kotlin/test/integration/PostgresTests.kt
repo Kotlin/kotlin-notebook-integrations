@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.jupyter.database.test.integration
 
-import io.kotest.matchers.should
+import io.kotest.matchers.string.shouldStartWith
 import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.DatabaseInfo
 import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.DatabaseIntegrationTest
 import org.jetbrains.kotlinx.jupyter.database.test.integration.helpers.startTestContainer
@@ -38,6 +38,6 @@ class PostgresTests : DatabaseIntegrationTest() {
             )
             src
             """.trimIndent(),
-        ).renderedValue should { it.toString().startsWith("HikariDataSource") }
+        ).renderedValue.toString() shouldStartWith "HikariDataSource"
     }
 }
