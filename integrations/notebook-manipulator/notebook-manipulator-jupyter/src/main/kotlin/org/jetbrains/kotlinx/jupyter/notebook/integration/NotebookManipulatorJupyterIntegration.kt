@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.jupyter.parser.notebook.Cell
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
@@ -18,6 +19,12 @@ public class ManipulationResult<T>(
 ) {
     public val isCompleted: Boolean get() = deferred.isCompleted
 
+    public val asyncResult: Deferred<T> get() = deferred
+
+    /**
+     * If called in the cell where manipulation is initialized, may block infinitely.
+     * Use this method with care.
+     */
     public val result: T by lazy {
         runBlocking {
             deferred.await()
@@ -25,8 +32,13 @@ public class ManipulationResult<T>(
     }
 }
 
-public fun <T> manipulateNotebook(block: suspend NotebookManipulator.() -> T): ManipulationResult<T> =
-    ManipulationResult(scope.async { manipulator!!.block() })
+public fun <T> manipulateNotebook(block: suspend NotebookManipulator.() -> T): ManipulationResult<T> {
+    val myManipulator =
+        requireNotNull(manipulator) {
+            "Notebook Manipulator integration is not loaded yet"
+        }
+    return ManipulationResult(scope.async { myManipulator.block() })
+}
 
 public class NotebookManipulatorJupyterIntegration : JupyterIntegration() {
     override fun Builder.onLoaded() {
@@ -38,10 +50,16 @@ public class NotebookManipulatorJupyterIntegration : JupyterIntegration() {
 
         render<ManipulationResult<*>> {
             if (it.isCompleted) {
+                // This call may throw in case if manipulation was not successful, we're fine with that
                 it.result ?: "null"
             } else {
                 "Notebook manipulation is still in progress..."
             }
+        }
+
+        onShutdown {
+            manipulator = null
+            scope.cancel()
         }
     }
 }

@@ -4,6 +4,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
@@ -90,8 +91,8 @@ class NotebookManipulatorTest : AbstractNotebookManipulatorReplTest() {
 
         // Verify request params
         val params = msgEvent.data["params"]?.let { it as? JsonObject }
-        params?.get("start")?.jsonPrimitive?.content shouldBe "0"
-        params?.get("end")?.jsonPrimitive?.content shouldBe "2"
+        params?.get("start")?.jsonPrimitive?.int shouldBe 0
+        params?.get("end")?.jsonPrimitive?.int shouldBe 2
 
         // 4. Send response to simulate frontend
         sendResponse(
@@ -124,8 +125,8 @@ class NotebookManipulatorTest : AbstractNotebookManipulatorReplTest() {
         val requestId = msgEvent.shouldHaveRequestId()
 
         val params = msgEvent.data["params"]?.let { it as? JsonObject }
-        params?.get("start")?.jsonPrimitive?.content shouldBe "2"
-        params?.get("delete_count")?.jsonPrimitive?.content shouldBe "1"
+        params?.get("start")?.jsonPrimitive?.int shouldBe 2
+        params?.get("delete_count")?.jsonPrimitive?.int shouldBe 1
 
         // 4. Send response to unblock the operation
         sendResponse(

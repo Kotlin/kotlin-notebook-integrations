@@ -45,7 +45,6 @@ abstract class AbstractNotebookManipulatorReplTest(
     ) {
         val responseData =
             buildJsonObject {
-                put("method", if (status == "ok") "response" else "error_response")
                 put("request_id", requestId)
                 put("status", status)
                 if (result != null) {

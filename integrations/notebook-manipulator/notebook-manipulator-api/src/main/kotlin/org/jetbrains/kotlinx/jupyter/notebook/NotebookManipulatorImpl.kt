@@ -120,24 +120,23 @@ internal class NotebookManipulatorImpl(
         val deferred = CompletableDeferred<JsonElement>()
         pendingRequests[requestId] = deferred
 
-        try {
-            ensureCommOpened().send(json.encodeToJsonElement(request).jsonObject)
-
-            val result =
+        val result =
+            try {
+                ensureCommOpened().send(json.encodeToJsonElement(request).jsonObject)
                 try {
                     withTimeout(requestTimeout) { deferred.await() }
-                } catch (e: TimeoutCancellationException) {
+                } finally {
                     pendingRequests.remove(requestId)
-                    throw NotebookManipulatorException("Request timed out: ${e.message}", "TIMEOUT", e)
                 }
+            } catch (e: NotebookManipulatorException) {
+                throw e
+            } catch (e: TimeoutCancellationException) {
+                throw NotebookManipulatorException("Request timed out: ${e.message}", "TIMEOUT", e)
+            } catch (e: Exception) {
+                throw NotebookManipulatorException("Failed to send request: ${e.message}", cause = e)
+            }
 
-            return transform(result)
-        } catch (e: NotebookManipulatorException) {
-            throw e
-        } catch (e: Exception) {
-            pendingRequests.remove(requestId)
-            throw NotebookManipulatorException("Failed to send request: ${e.message}", cause = e)
-        }
+        return transform(result)
     }
 
     private suspend fun request(factory: (String) -> NotebookManipulatorMessage) {
