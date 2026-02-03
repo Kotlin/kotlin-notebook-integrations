@@ -9,6 +9,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import org.jetbrains.kotlinx.jupyter.protocol.comms.CommManagerImpl
@@ -86,8 +87,8 @@ abstract class AbstractWidgetReplTest(
         val data = json["data"].shouldBeInstanceOf<JsonObject>()
         val viewData = data["application/vnd.jupyter.widget-view+json"].shouldBeInstanceOf<JsonObject>()
         viewData["model_id"]?.jsonPrimitive?.content shouldBe expectedModelId
-        viewData["version_major"]?.jsonPrimitive?.content shouldBe "2"
-        viewData["version_minor"]?.jsonPrimitive?.content shouldBe "0"
+        viewData["version_major"]?.jsonPrimitive?.int shouldBe 2
+        viewData["version_minor"]?.jsonPrimitive?.int shouldBe 0
 
         val htmlData = data["text/html"].shouldBeInstanceOf<JsonPrimitive>().content
         htmlData shouldBe "$expectedModelName(id=$expectedModelId)"
