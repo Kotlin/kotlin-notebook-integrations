@@ -2,7 +2,7 @@
 # See this link for the minimum supported Java version IntelliJ can run with:
 # https://intellij-support.jetbrains.com/hc/en-us/articles/206544879-Selecting-the-JDK-version-the-IDE-will-run-under
 jvmTarget = "17"
-kotlin = "2.2.20"
+kotlin = "2.3.0"
 kotlin-jupyter = "0.15.3-802-1"
 publishPlugin = "2.2.0-dev-71"
 intellijPlatformGradlePlugin = "2.10.3"
