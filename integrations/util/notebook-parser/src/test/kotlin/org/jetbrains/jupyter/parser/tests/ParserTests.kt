@@ -2,12 +2,15 @@ package org.jetbrains.jupyter.parser.tests
 
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.jetbrains.jupyter.parser.JupyterParser
 import org.jetbrains.jupyter.parser.notebook.Cell
+import org.jetbrains.jupyter.parser.notebook.CodeCellMetadata
 import org.jetbrains.jupyter.parser.notebook.JupyterNotebook
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInfo
+import java.time.Instant
 
 @Suppress("TestFunctionName", "ktlint:standard:function-naming")
 class ParserTests {
@@ -55,7 +58,16 @@ class ParserTests {
     fun `40 puzzles`() = doTest()
 
     @Test
-    fun github() = doTest()
+    fun github() =
+        doTest { notebook ->
+            val firstCell = notebook.cells.first()
+            val metadata = firstCell.metadata.shouldBeInstanceOf<CodeCellMetadata>()
+
+            with(metadata) {
+                executeTime?.startTime shouldBe Instant.parse("2026-02-03T01:17:14.058219Z")
+                executeTime?.endTime shouldBe Instant.parse("2026-02-03T01:17:14.916725Z")
+            }
+        }
 
     @Test
     fun movies() = doTest()
