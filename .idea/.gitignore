@@ -8,3 +8,12 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+
+/libraries/Permanent_Script_Dependencies.xml
+
+/vcs.xml
+/compiler.xml
+/junie.xml
+/gradle.xml
+/kotlinc.xml
+/uiDesigner.xml

@@ -10,7 +10,6 @@ build/
 *.iml
 *.ipr
 out/
-.idea/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
