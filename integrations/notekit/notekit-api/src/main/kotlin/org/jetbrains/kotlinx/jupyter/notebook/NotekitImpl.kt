@@ -35,7 +35,7 @@ import org.jetbrains.kotlinx.jupyter.notebook.protocol.GetCellRangeRequest
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.GetNbFormatVersionRequest
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.GetNotebookMetadataRequest
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.NOTEKIT_PROTOCOL_TARGET
-import org.jetbrains.kotlinx.jupyter.notebook.protocol.NbFormatVersion
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.NotebookFormatVersion
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.NotekitMessage
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.STATUS_ERROR
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.STATUS_OK
@@ -123,10 +123,10 @@ internal class NotekitImpl(
         request { ExecuteCellRangeRequest(it, start, end) }
     }
 
-    override suspend fun getNbFormatVersion(): NbFormatVersion =
+    override suspend fun getNbFormatVersion(): NotebookFormatVersion =
         request(::GetNbFormatVersionRequest) { result ->
             val obj = result.jsonObject
-            NbFormatVersion(
+            NotebookFormatVersion(
                 major = obj.requireField(FIELD_NBFORMAT),
                 minor = obj.requireField(FIELD_NBFORMAT_MINOR),
             )

@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.jupyter.notebook
 import kotlinx.serialization.json.JsonObject
 import org.jetbrains.jupyter.parser.notebook.Cell
 import org.jetbrains.jupyter.parser.notebook.JupyterNotebook
-import org.jetbrains.kotlinx.jupyter.notebook.protocol.NbFormatVersion
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.NotebookFormatVersion
 
 /**
  * Main API for working with the current Jupyter notebook.
@@ -243,5 +243,5 @@ public interface Notekit {
      * @return The notebook format version
      * @throws NotekitException if the operation fails
      */
-    public suspend fun getNbFormatVersion(): NbFormatVersion
+    public suspend fun getNbFormatVersion(): NotebookFormatVersion
 }
