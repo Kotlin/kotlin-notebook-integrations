@@ -13,6 +13,7 @@ Each integration lives in the `integrations/` directory and has its own README.
 - [HTTP Utilities](integrations/http-util/README.md) — JSON/serialization helpers and Ktor HTTP client wrappers for notebooks.
 - [Database](integrations/database/README.md) — helpers for configuring JDBC DataSources and working with Databases.
 - [Widgets](integrations/widgets/README.md) — ipywidgets API for Kotlin notebooks.
+- [Notekit](integrations/notekit/README.md) — programmatic access to work with the current Jupyter notebook from Kotlin Notebook.
 
 ## Utilities
 
