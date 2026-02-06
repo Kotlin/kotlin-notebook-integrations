@@ -10,7 +10,7 @@ import kotlinx.serialization.json.JsonElement
  * Base interface for all notekit protocol messages.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@JsonClassDiscriminator("method")
+@JsonClassDiscriminator(FIELD_METHOD)
 @Serializable
 internal sealed interface NotekitMessage
 
@@ -33,9 +33,9 @@ internal data class ErrorInfo(
  * excluding code snippets generated under the hood).
  */
 @Serializable
-@SerialName("get_cell_count")
+@SerialName(METHOD_GET_CELL_COUNT)
 internal data class GetCellCountRequest(
-    @SerialName("request_id")
+    @SerialName(FIELD_REQUEST_ID)
     override val requestId: String,
 ) : NotekitRequest
 
@@ -43,9 +43,9 @@ internal data class GetCellCountRequest(
  * Request to get notebook metadata.
  */
 @Serializable
-@SerialName("get_notebook_metadata")
+@SerialName(METHOD_GET_NOTEBOOK_METADATA)
 internal data class GetNotebookMetadataRequest(
-    @SerialName("request_id")
+    @SerialName(FIELD_REQUEST_ID)
     override val requestId: String,
 ) : NotekitRequest
 
@@ -53,9 +53,9 @@ internal data class GetNotebookMetadataRequest(
  * Request to get a range of cells.
  */
 @Serializable
-@SerialName("get_cell_range")
+@SerialName(METHOD_GET_CELL_RANGE)
 internal data class GetCellRangeRequest(
-    @SerialName("request_id")
+    @SerialName(FIELD_REQUEST_ID)
     override val requestId: String,
     val start: Int,
     val end: Int,
@@ -65,12 +65,12 @@ internal data class GetCellRangeRequest(
  * Request to splice (modify) a range of cells.
  */
 @Serializable
-@SerialName("splice_cell_range")
+@SerialName(METHOD_SPLICE_CELL_RANGE)
 internal data class SpliceCellRangeRequest(
-    @SerialName("request_id")
+    @SerialName(FIELD_REQUEST_ID)
     override val requestId: String,
     val start: Int,
-    @SerialName("delete_count")
+    @SerialName(FIELD_DELETE_COUNT)
     val deleteCount: Int,
     val cells: List<JsonElement>,
 ) : NotekitRequest
@@ -79,9 +79,9 @@ internal data class SpliceCellRangeRequest(
  * Request to set notebook metadata.
  */
 @Serializable
-@SerialName("set_notebook_metadata")
+@SerialName(METHOD_SET_NOTEBOOK_METADATA)
 internal data class SetNotebookMetadataRequest(
-    @SerialName("request_id")
+    @SerialName(FIELD_REQUEST_ID)
     override val requestId: String,
     val metadata: JsonElement,
     val merge: Boolean = true,
@@ -91,10 +91,20 @@ internal data class SetNotebookMetadataRequest(
  * Request to execute a range of cells.
  */
 @Serializable
-@SerialName("execute_cell_range")
+@SerialName(METHOD_EXECUTE_CELL_RANGE)
 internal data class ExecuteCellRangeRequest(
-    @SerialName("request_id")
+    @SerialName(FIELD_REQUEST_ID)
     override val requestId: String,
     val start: Int,
     val end: Int,
+) : NotekitRequest
+
+/**
+ * Request to get the notebook format version.
+ */
+@Serializable
+@SerialName(METHOD_GET_NBFORMAT_VERSION)
+internal data class GetNbFormatVersionRequest(
+    @SerialName(FIELD_REQUEST_ID)
+    override val requestId: String,
 ) : NotekitRequest

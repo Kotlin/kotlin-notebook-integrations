@@ -7,32 +7,44 @@ import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_CELLS
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_COUNT
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_DELETE_COUNT
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_END
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_MERGE
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_METADATA
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_START
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.METHOD_GET_CELL_COUNT
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.METHOD_GET_CELL_RANGE
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.METHOD_GET_NOTEBOOK_METADATA
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.METHOD_SET_NOTEBOOK_METADATA
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.METHOD_SPLICE_CELL_RANGE
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.NOTEKIT_PROTOCOL_TARGET
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.STATUS_OK
 import org.junit.jupiter.api.Test
 
 class NotekitTest : AbstractNotekitReplTest() {
     @Test
     fun `should send correct getCellCount request and handle response`() {
-        resetEvents()
-
         // 1. Start async operation (runs in thread INSIDE REPL)
         val resultVar = runNotekit("getCellCount()")
 
         // 2. Verify comm events in order
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent(NOTEKIT_PROTOCOL_TARGET)
 
         val requestId =
             shouldHaveNextMessageEvent()
-                .shouldHaveMethod("get_cell_count")
+                .shouldHaveMethod(METHOD_GET_CELL_COUNT)
                 .shouldHaveRequestId()
 
         // 4. Send response to unblock the operation
         sendResponse(
             commId,
             requestId,
-            status = "ok",
+            status = STATUS_OK,
             result =
                 buildResult {
-                    put("count", 10)
+                    put(FIELD_COUNT, 10)
                 },
         )
 
@@ -43,27 +55,25 @@ class NotekitTest : AbstractNotekitReplTest() {
 
     @Test
     fun `should send correct getNotebookMetadata request`() {
-        resetEvents()
-
         // 1. Start async operation (runs in thread INSIDE REPL)
         val resultVar = runNotekit("getNotebookMetadata()")
 
         // 2. Verify request is sent correctly
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent(NOTEKIT_PROTOCOL_TARGET)
 
         val requestId =
             shouldHaveNextMessageEvent()
-                .shouldHaveMethod("get_notebook_metadata")
+                .shouldHaveMethod(METHOD_GET_NOTEBOOK_METADATA)
                 .shouldHaveRequestId()
 
         // 4. Send response with metadata
         sendResponse(
             commId,
             requestId,
-            status = "ok",
+            status = STATUS_OK,
             result =
                 buildResult {
-                    putJsonObject("metadata") {
+                    putJsonObject(FIELD_METADATA) {
                         put("kernelspec", "python3")
                     }
                 },
@@ -75,22 +85,20 @@ class NotekitTest : AbstractNotekitReplTest() {
 
     @Test
     fun `should send correct getCellRange request with start and end params`() {
-        resetEvents()
-
         // 1. Start async operation (runs in thread INSIDE REPL)
         val resultVar = runNotekit("getCellRange(0, 2)")
 
         // 2. Verify request is sent correctly
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent(NOTEKIT_PROTOCOL_TARGET)
 
         val msgEvent =
             shouldHaveNextMessageEvent()
-                .shouldHaveMethod("get_cell_range")
+                .shouldHaveMethod(METHOD_GET_CELL_RANGE)
         val requestId = msgEvent.shouldHaveRequestId()
 
         // Verify request params
-        msgEvent.data["start"]?.jsonPrimitive?.int shouldBe 0
-        msgEvent.data["end"]?.jsonPrimitive?.int shouldBe 2
+        msgEvent.data[FIELD_START]?.jsonPrimitive?.int shouldBe 0
+        msgEvent.data[FIELD_END]?.jsonPrimitive?.int shouldBe 2
 
         // 4. Send response to simulate frontend
         sendResponse(
@@ -99,7 +107,7 @@ class NotekitTest : AbstractNotekitReplTest() {
             status = "ok",
             result =
                 buildResult {
-                    put("cells", buildJsonArray {})
+                    put(FIELD_CELLS, buildJsonArray {})
                 },
         )
 
@@ -109,27 +117,25 @@ class NotekitTest : AbstractNotekitReplTest() {
 
     @Test
     fun `should send splice_cell_range with deleteCount when deleting cell`() {
-        resetEvents()
-
         // 1. Start async operation (runs in thread INSIDE REPL)
         val resultVar = runNotekit("deleteCell(2)")
 
         // 2. Verify comm events in order
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent(NOTEKIT_PROTOCOL_TARGET)
 
         val msgEvent =
             shouldHaveNextMessageEvent()
-                .shouldHaveMethod("splice_cell_range")
+                .shouldHaveMethod(METHOD_SPLICE_CELL_RANGE)
         val requestId = msgEvent.shouldHaveRequestId()
 
-        msgEvent.data["start"]?.jsonPrimitive?.int shouldBe 2
-        msgEvent.data["delete_count"]?.jsonPrimitive?.int shouldBe 1
+        msgEvent.data[FIELD_START]?.jsonPrimitive?.int shouldBe 2
+        msgEvent.data[FIELD_DELETE_COUNT]?.jsonPrimitive?.int shouldBe 1
 
         // 4. Send response to unblock the operation
         sendResponse(
             commId,
             requestId,
-            status = "ok",
+            status = STATUS_OK,
             result = buildResult {},
         )
 
@@ -139,8 +145,6 @@ class NotekitTest : AbstractNotekitReplTest() {
 
     @Test
     fun `should send correct setNotebookMetadata request with merge param`() {
-        resetEvents()
-
         // 1. Start async operation (runs in thread INSIDE REPL)
         execSuccess(
             """
@@ -157,22 +161,22 @@ class NotekitTest : AbstractNotekitReplTest() {
             )
 
         // 2. Verify comm events in order
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent(NOTEKIT_PROTOCOL_TARGET)
 
         val msgEvent =
             shouldHaveNextMessageEvent()
-                .shouldHaveMethod("set_notebook_metadata")
+                .shouldHaveMethod(METHOD_SET_NOTEBOOK_METADATA)
         val requestId = msgEvent.shouldHaveRequestId()
 
         // Verify metadata and merge params exist
-        msgEvent.data["metadata"].shouldNotBeNull()
-        msgEvent.data["merge"].shouldNotBeNull()
+        msgEvent.data[FIELD_METADATA].shouldNotBeNull()
+        msgEvent.data[FIELD_MERGE].shouldNotBeNull()
 
         // 4. Send response to unblock the operation
         sendResponse(
             commId,
             requestId,
-            status = "ok",
+            status = STATUS_OK,
             result = buildResult {},
         )
 
@@ -182,23 +186,21 @@ class NotekitTest : AbstractNotekitReplTest() {
 
     @Test
     fun `should open comm with correct target name`() {
-        resetEvents()
-
         // 1. Start async operation (runs in thread INSIDE REPL)
         val resultVar = runNotekit("getCellCount()")
 
         // 2. Verify comm was opened with correct target
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent(NOTEKIT_PROTOCOL_TARGET)
 
         // 4. Send response to complete the operation
         val requestId = shouldHaveNextMessageEvent().shouldHaveRequestId()
         sendResponse(
             commId,
             requestId,
-            status = "ok",
+            status = STATUS_OK,
             result =
                 buildResult {
-                    put("count", 5)
+                    put(FIELD_COUNT, 5)
                 },
         )
 

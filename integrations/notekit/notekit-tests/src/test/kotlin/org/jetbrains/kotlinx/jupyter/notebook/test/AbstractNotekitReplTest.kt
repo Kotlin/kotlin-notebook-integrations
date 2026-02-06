@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.jupyter.notebook.test
 
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.buildJsonObject
@@ -9,6 +10,12 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.jupyter.notebook.integration.NotekitResult
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_ERROR
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_METHOD
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_REQUEST_ID
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_RESULT
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_STATUS
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.STATUS_OK
 import org.jetbrains.kotlinx.jupyter.protocol.comms.CommManagerImpl
 import org.jetbrains.kotlinx.jupyter.test.util.AbstractCommReplTest
 import org.jetbrains.kotlinx.jupyter.test.util.CommEvent
@@ -27,12 +34,12 @@ abstract class AbstractNotekitReplTest(
     }
 
     protected fun CommEvent.Message.shouldHaveMethod(expectedMethod: String): CommEvent.Message {
-        data["method"]?.jsonPrimitive?.content shouldBe expectedMethod
+        data[FIELD_METHOD]?.jsonPrimitive?.content shouldBe expectedMethod
         return this
     }
 
     protected fun CommEvent.Message.shouldHaveRequestId(): String {
-        val requestId = data["request_id"]?.jsonPrimitive?.content
+        val requestId = data[FIELD_REQUEST_ID]?.jsonPrimitive?.content
         requestId.shouldNotBeNull()
         return requestId
     }
@@ -40,19 +47,19 @@ abstract class AbstractNotekitReplTest(
     protected fun sendResponse(
         commId: String,
         requestId: String,
-        status: String = "ok",
+        status: String = STATUS_OK,
         result: JsonObject? = null,
         error: JsonObject? = null,
     ) {
         val responseData =
             buildJsonObject {
-                put("request_id", requestId)
-                put("status", status)
+                put(FIELD_REQUEST_ID, requestId)
+                put(FIELD_STATUS, status)
                 if (result != null) {
-                    put("result", result)
+                    put(FIELD_RESULT, result)
                 }
                 if (error != null) {
-                    put("error", error)
+                    put(FIELD_ERROR, error)
                 }
             }
         sendCommMessage(commId, responseData)
@@ -74,5 +81,8 @@ abstract class AbstractNotekitReplTest(
     /**
      * Waits for the async operation to complete and returns the result.
      */
-    protected inline fun <reified T> awaitAsyncResult(result: NotekitResult<*>): T = result.result as T
+    protected inline fun <reified T> awaitAsyncResult(result: NotekitResult<*>): T =
+        runBlocking {
+            result.asyncResult.await() as T
+        }
 }

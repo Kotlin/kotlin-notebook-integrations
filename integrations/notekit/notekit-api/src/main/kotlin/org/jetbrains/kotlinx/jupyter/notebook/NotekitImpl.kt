@@ -13,6 +13,7 @@ import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.long
 import org.jetbrains.jupyter.parser.notebook.Cell
 import org.jetbrains.jupyter.parser.notebook.JupyterNotebook
 import org.jetbrains.jupyter.parser.notebook.Metadata
@@ -20,10 +21,24 @@ import org.jetbrains.kotlinx.jupyter.api.libraries.Comm
 import org.jetbrains.kotlinx.jupyter.api.libraries.CommManager
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.ErrorInfo
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.ExecuteCellRangeRequest
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_CELLS
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_COUNT
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_ERROR
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_METADATA
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_NBFORMAT
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_NBFORMAT_MINOR
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_REQUEST_ID
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_RESULT
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.FIELD_STATUS
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.GetCellCountRequest
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.GetCellRangeRequest
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.GetNbFormatVersionRequest
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.GetNotebookMetadataRequest
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.NOTEKIT_PROTOCOL_TARGET
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.NbFormatVersion
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.NotekitMessage
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.STATUS_ERROR
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.STATUS_OK
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.SetNotebookMetadataRequest
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.SpliceCellRangeRequest
 import java.util.concurrent.ConcurrentHashMap
@@ -47,7 +62,6 @@ internal class NotekitImpl(
         }
 
     private val logger = Logger.getLogger(NotekitImpl::class.java.name)
-    private val targetName = "jupyter.notebook.notekit.v1"
     private val requestIdCounter = AtomicLong(0)
     private val pendingRequests = ConcurrentHashMap<String, CompletableDeferred<JsonElement>>()
 
@@ -56,12 +70,12 @@ internal class NotekitImpl(
 
     override suspend fun getCellCount(): Int =
         request(::GetCellCountRequest) { result ->
-            result.jsonObject.requireField<Int>("count")
+            result.jsonObject.requireField<Int>(FIELD_COUNT)
         }
 
     override suspend fun getNotebookMetadata(): JsonObject =
         request(::GetNotebookMetadataRequest) { result ->
-            result.jsonObject.requireJsonObject("metadata")
+            result.jsonObject.requireJsonObject(FIELD_METADATA)
         }
 
     override suspend fun getCellRange(
@@ -69,18 +83,19 @@ internal class NotekitImpl(
         end: Int,
     ): List<Cell> =
         request({ GetCellRangeRequest(it, start, end) }) { result ->
-            result.jsonObject.requireJsonArray("cells").map { json.decodeFromJsonElement<Cell>(it) }
+            result.jsonObject.requireJsonArray(FIELD_CELLS).map { json.decodeFromJsonElement<Cell>(it) }
         }
 
     override suspend fun getNotebook(): JupyterNotebook {
         val notebookMetadata = getNotebookMetadata()
         val cells = getAllCells()
         val metadata = json.decodeFromJsonElement<Metadata>(notebookMetadata)
+        val nbFormatVersion = getNbFormatVersion()
 
         return JupyterNotebook(
             metadata = metadata,
-            nbformatMinor = 5,
-            nbformat = 4,
+            nbformatMinor = nbFormatVersion.minor,
+            nbformat = nbFormatVersion.major,
             cells = cells,
         )
     }
@@ -108,6 +123,15 @@ internal class NotekitImpl(
         request { ExecuteCellRangeRequest(it, start, end) }
     }
 
+    override suspend fun getNbFormatVersion(): NbFormatVersion =
+        request(::GetNbFormatVersionRequest) { result ->
+            val obj = result.jsonObject
+            NbFormatVersion(
+                major = obj.requireField(FIELD_NBFORMAT),
+                minor = obj.requireField(FIELD_NBFORMAT_MINOR),
+            )
+        }
+
     private suspend fun <T> request(
         factory: (String) -> NotekitMessage,
         transform: (JsonElement) -> T,
@@ -128,9 +152,9 @@ internal class NotekitImpl(
             } catch (e: NotekitException) {
                 throw e
             } catch (e: TimeoutCancellationException) {
-                throw NotekitException("Request timed out: ${e.message}", "TIMEOUT", e)
+                throw NotekitException("Request timed out: ${e.message}", NotekitErrorCode.TIMEOUT, e)
             } catch (e: Exception) {
-                throw NotekitException("Failed to send request: ${e.message}", cause = e)
+                throw NotekitException("Failed to send request: ${e.message}", NotekitErrorCode.COMM_ERROR, e)
             }
 
         return transform(result)
@@ -146,7 +170,7 @@ internal class NotekitImpl(
 
             val newComm =
                 commManager.openComm(
-                    targetName,
+                    NOTEKIT_PROTOCOL_TARGET,
                     buildJsonObject {},
                     buildJsonObject {},
                     emptyList(),
@@ -163,26 +187,36 @@ internal class NotekitImpl(
     private fun handleResponse(data: JsonObject) {
         runCatching {
             val requestId =
-                data["request_id"]?.jsonPrimitive?.content ?: run {
-                    logger.log(Level.WARNING, "Response missing request_id field. Data: $data")
+                data[FIELD_REQUEST_ID]?.jsonPrimitive?.content ?: run {
+                    logger.log(Level.WARNING, "Response missing $FIELD_REQUEST_ID field. Data: $data")
                     return
                 }
 
             val deferred = pendingRequests.remove(requestId) ?: return
 
-            when (data["status"]?.jsonPrimitive?.content) {
-                "ok" ->
-                    data["result"]?.let(deferred::complete)
-                        ?: deferred.completeExceptionally(NotekitException("Response missing result field"))
-                "error" -> {
+            when (data[FIELD_STATUS]?.jsonPrimitive?.content) {
+                STATUS_OK ->
+                    data[FIELD_RESULT]?.let(deferred::complete)
+                        ?: deferred.completeExceptionally(
+                            NotekitException(
+                                "Response missing $FIELD_RESULT field",
+                                NotekitErrorCode.INVALID_RESPONSE,
+                            ),
+                        )
+                STATUS_ERROR -> {
                     val error =
-                        data["error"]?.jsonObject?.let { json.decodeFromJsonElement<ErrorInfo>(it) }
-                            ?: ErrorInfo("Response has error status but missing error field", "UNKNOWN")
-                    deferred.completeExceptionally(NotekitException(error.message, error.code))
+                        data[FIELD_ERROR]?.jsonObject?.let { json.decodeFromJsonElement<ErrorInfo>(it) }
+                            ?: ErrorInfo("Response has error status but missing $FIELD_ERROR field", "UNKNOWN")
+                    deferred.completeExceptionally(
+                        NotekitException(
+                            error.message,
+                            NotekitErrorCode.fromString(error.code),
+                        ),
+                    )
                 }
                 else ->
                     deferred.completeExceptionally(
-                        NotekitException("Unknown response status: ${data["status"]}"),
+                        NotekitException("Unknown response status: ${data[FIELD_STATUS]}", NotekitErrorCode.INVALID_RESPONSE),
                     )
             }
         }.onFailure { e ->
@@ -200,14 +234,15 @@ internal class NotekitImpl(
         this[field]?.jsonPrimitive?.let {
             when (T::class) {
                 Int::class -> it.int as T
+                Long::class -> it.long as T
                 String::class -> it.content as T
-                else -> throw NotekitException("Unsupported field type: ${T::class}")
+                else -> throw NotekitException("Unsupported field type: ${T::class}", NotekitErrorCode.INVALID_RESPONSE)
             }
-        } ?: throw NotekitException("Invalid response: missing '$field' field")
+        } ?: throw NotekitException("Invalid response: missing '$field' field", NotekitErrorCode.INVALID_RESPONSE)
 
     private fun JsonObject.requireJsonObject(field: String): JsonObject =
-        this[field]?.jsonObject ?: throw NotekitException("Invalid response: missing '$field' field")
+        this[field]?.jsonObject ?: throw NotekitException("Invalid response: missing '$field' field", NotekitErrorCode.INVALID_RESPONSE)
 
     private fun JsonObject.requireJsonArray(field: String): List<JsonElement> =
-        this[field]?.jsonArray ?: throw NotekitException("Invalid response: missing '$field' field")
+        this[field]?.jsonArray ?: throw NotekitException("Invalid response: missing '$field' field", NotekitErrorCode.INVALID_RESPONSE)
 }

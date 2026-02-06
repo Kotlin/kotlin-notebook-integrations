@@ -319,6 +319,30 @@ Executes a range of cells in the notebook.
 }
 ```
 
+### 7. Get Notebook Format Version
+
+Returns the notebook format version (nbformat major and minor version numbers).
+
+**Request:**
+```json
+{
+  "method": "get_nbformat_version",
+  "request_id": "req-007"
+}
+```
+
+**Response (success):**
+```json
+{
+  "request_id": "req-007",
+  "status": "ok",
+  "result": {
+    "nbformat": 4,
+    "nbformat_minor": 5
+  }
+}
+```
+
 ## Error Codes
 
 | Code                    | Description                                              |

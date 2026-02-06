@@ -12,33 +12,35 @@ import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.notebook.Notekit
 import org.jetbrains.kotlinx.jupyter.notebook.createNotekit
 
-private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+private const val NOT_LOADED_YET_MESSAGE = "Notekit integration is not loaded yet"
+
+private var scope: CoroutineScope? = null
 private var notekit: Notekit? = null
 
+/**
+ * Wraps the result of notekit block execution, providing access to the result via [asyncResult]
+ * and allowing a result to be rendered in the notebook when it's ready.
+ */
 public class NotekitResult<T>(
-    private val deferred: Deferred<T>,
+    public val asyncResult: Deferred<T>,
 ) {
-    public val isCompleted: Boolean get() = deferred.isCompleted
-
-    public val asyncResult: Deferred<T> get() = deferred
-
-    /**
-     * If called in the cell where the operation is initiated, may block infinitely.
-     * Use this method with care.
-     */
-    public val result: T by lazy {
-        runBlocking {
-            deferred.await()
-        }
-    }
+    public val isCompleted: Boolean get() = asyncResult.isCompleted
 }
 
+/**
+ * Read, write, or execute the current notebook by calling Notekit methods
+ */
 public fun <T> notekit(block: suspend Notekit.() -> T): NotekitResult<T> {
     val myNotekit =
         requireNotNull(notekit) {
-            "Notekit integration is not loaded yet"
+            NOT_LOADED_YET_MESSAGE
         }
-    return NotekitResult(scope.async { myNotekit.block() })
+    val myScope =
+        requireNotNull(scope) {
+            NOT_LOADED_YET_MESSAGE
+        }
+
+    return NotekitResult(myScope.async { myNotekit.block() })
 }
 
 public class NotekitJupyterIntegration : JupyterIntegration() {
@@ -47,12 +49,15 @@ public class NotekitJupyterIntegration : JupyterIntegration() {
         importPackage<Notekit>()
         importPackage<Cell>()
 
+        scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
         notekit = createNotekit(notebook.commManager)
 
         render<NotekitResult<*>> {
             if (it.isCompleted) {
-                // This call may throw in case if operation was not successful, we're fine with that
-                it.result ?: "null"
+                runBlocking {
+                    // This call may throw in case if operation was not successful, we're fine with that
+                    it.asyncResult.await() ?: "null"
+                }
             } else {
                 "Notekit operation is still in progress..."
             }
@@ -60,7 +65,8 @@ public class NotekitJupyterIntegration : JupyterIntegration() {
 
         onShutdown {
             notekit = null
-            scope.cancel()
+            scope?.cancel()
+            scope = null
         }
     }
 }

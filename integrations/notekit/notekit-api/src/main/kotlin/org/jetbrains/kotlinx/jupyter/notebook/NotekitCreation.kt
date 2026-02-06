@@ -8,7 +8,7 @@ import kotlin.time.Duration.Companion.seconds
  * Creates a new instance of [Notekit].
  *
  * @param commManager The comm manager to use for communication with the frontend
- * @param requestTimeout The timeout for requests
+ * @param requestTimeout The timeout for requests made to the `commManager`
  * @return A new Notekit instance
  */
 public fun createNotekit(

@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.jupyter.notebook
 import kotlinx.serialization.json.JsonObject
 import org.jetbrains.jupyter.parser.notebook.Cell
 import org.jetbrains.jupyter.parser.notebook.JupyterNotebook
+import org.jetbrains.kotlinx.jupyter.notebook.protocol.NbFormatVersion
 
 /**
  * Main API for working with the current Jupyter notebook.
@@ -147,15 +148,16 @@ public interface Notekit {
      * Replaces a range of cells with new cells.
      *
      * @param start The starting index (inclusive, 0-based)
-     * @param deleteCount The number of cells to delete
+     * @param end The ending index (exclusive, 0-based)
      * @param cells The cells to insert at the start position
      * @throws NotekitException if the operation fails or parameters are invalid
      */
     public suspend fun replaceCells(
         start: Int,
-        deleteCount: Int,
+        end: Int,
         cells: List<Cell>,
     ) {
+        val deleteCount = end - start
         spliceCells(start, deleteCount, cells)
     }
 
@@ -234,4 +236,12 @@ public interface Notekit {
         val count = getCellCount()
         executeCellRange(0, count)
     }
+
+    /**
+     * Returns the notebook format version (nbformat major and minor).
+     *
+     * @return The notebook format version
+     * @throws NotekitException if the operation fails
+     */
+    public suspend fun getNbFormatVersion(): NbFormatVersion
 }
