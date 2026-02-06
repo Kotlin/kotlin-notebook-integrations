@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.jupyter.notebook.protocol
 
-public const val NOTEKIT_PROTOCOL_TARGET: String = "jupyter.notebook.notekit.v1"
+public const val NOTEKIT_PROTOCOL_TARGET: String = "jupyter.notekit.v1"
 
 // Response fields
 public const val FIELD_REQUEST_ID: String = "request_id"
