@@ -26,10 +26,10 @@ projectStructure {
             project("widgets-generator")
             project("widgets-tests")
         }
-        folder("notebook-manipulator") {
-            project("notebook-manipulator-api")
-            project("notebook-manipulator-jupyter")
-            project("notebook-manipulator-tests")
+        folder("notekit") {
+            project("notekit-api")
+            project("notekit-jupyter")
+            project("notekit-tests")
         }
         folder("util") {
             project("test-util")
