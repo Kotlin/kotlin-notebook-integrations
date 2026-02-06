@@ -14,7 +14,7 @@ The Notekit protocol enables programmatic operations on Jupyter notebooks from k
 
 All messages follow a standard structure:
 
-```json
+```json5
 {
   "method": "<method-name>",
   "request_id": "<unique-request-id>",
@@ -26,10 +26,10 @@ All messages follow a standard structure:
 
 All responses follow a standard structure:
 
-```json
+```json5
 {
   "request_id": "<same-as-request>",
-  "status": "ok" | "error",
+  "status": "ok|error",
   "result": {
     // method-specific result (only present when status is "ok")
   },
@@ -44,7 +44,8 @@ All responses follow a standard structure:
 
 ### 1. Get Cell Count
 
-Returns the total number of cells in the current notebook.
+Returns the total number of real notebook cells (including not executed,
+excluding code snippets generated under the hood).
 
 **Request:**
 ```json
@@ -78,7 +79,7 @@ Returns the metadata of the current notebook.
 ```
 
 **Response (success):**
-```json
+```json5
 {
   "request_id": "req-002",
   "status": "ok",
@@ -103,7 +104,7 @@ Returns the metadata of the current notebook.
 Returns information about a range of cells in the notebook.
 
 **Request:**
-```json
+```json5
 {
   "method": "get_cell_range",
   "request_id": "req-003",
@@ -115,14 +116,14 @@ Returns information about a range of cells in the notebook.
 ```
 
 **Response (success):**
-```json
+```json5
 {
   "request_id": "req-003",
   "status": "ok",
   "result": {
     "cells": [
       {
-        "cell_type": "code" | "markdown" | "raw",
+        "cell_type": "code|markdown|raw",
         "source": "print(\"Hello, World!\")",  // string or array of strings
         "metadata": {
           // cell-specific metadata
@@ -130,7 +131,7 @@ Returns information about a range of cells in the notebook.
         "execution_count": 1,  // only for code cells, may be null
         "outputs": [           // only for code cells
           {
-            "output_type": "stream" | "execute_result" | "display_data" | "error",
+            "output_type": "stream|execute_result|display_data|error",
             // ... output-specific fields
           }
         ]
@@ -170,7 +171,7 @@ Returns information about a range of cells in the notebook.
 Modifies a range of cells in the notebook (delete, insert, or replace).
 
 **Request:**
-```json
+```json5
 {
   "method": "splice_cell_range",
   "request_id": "req-004",
@@ -206,7 +207,7 @@ Modifies a range of cells in the notebook (delete, insert, or replace).
 - Replace cell at index 5: `{"start": 5, "delete_count": 1, "cells": [...]}`
 
 **Response (success):**
-```json
+```json5
 {
   "request_id": "req-004",
   "status": "ok",
@@ -236,7 +237,7 @@ Modifies a range of cells in the notebook (delete, insert, or replace).
 Updates the metadata of the current notebook.
 
 **Request:**
-```json
+```json5
 {
   "method": "set_notebook_metadata",
   "request_id": "req-005",
@@ -279,7 +280,7 @@ Updates the metadata of the current notebook.
 Executes a range of cells in the notebook.
 
 **Request:**
-```json
+```json5
 {
   "method": "execute_cell_range",
   "request_id": "req-006",
@@ -337,17 +338,17 @@ Executes a range of cells in the notebook.
 
 ## Error Codes
 
-| Code | Description |
-|------|-------------|
-| `INVALID_RANGE` | The specified cell range is invalid (e.g., start > end) |
-| `OUT_OF_BOUNDS` | The specified cell range exceeds the notebook boundaries |
-| `INVALID_SPLICE_PARAMS` | The splice parameters are invalid |
-| `INVALID_METADATA` | The provided metadata is invalid or malformed |
-| `INVALID_CELL_DATA` | The provided cell data is invalid or malformed |
-| `EXECUTION_FAILED` | Cell execution failed |
-| `UNKNOWN_METHOD` | The requested method is not recognized |
-| `INTERNAL_ERROR` | An internal error occurred on the frontend |
-| `NO_ACTIVE_NOTEBOOK` | No active notebook is available |
+| Code                    | Description                                              |
+|-------------------------|----------------------------------------------------------|
+| `INVALID_RANGE`         | The specified cell range is invalid (e.g., start > end)  |
+| `OUT_OF_BOUNDS`         | The specified cell range exceeds the notebook boundaries |
+| `INVALID_SPLICE_PARAMS` | The splice parameters are invalid                        |
+| `INVALID_METADATA`      | The provided metadata is invalid or malformed            |
+| `INVALID_CELL_DATA`     | The provided cell data is invalid or malformed           |
+| `EXECUTION_FAILED`      | Cell execution failed                                    |
+| `UNKNOWN_METHOD`        | The requested method is not recognized                   |
+| `INTERNAL_ERROR`        | An internal error occurred on the frontend               |
+| `NO_ACTIVE_NOTEBOOK`    | No active notebook is available                          |
 
 ## Communication Flow
 

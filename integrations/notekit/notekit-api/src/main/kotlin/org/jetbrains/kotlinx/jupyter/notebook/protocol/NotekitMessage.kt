@@ -29,7 +29,8 @@ internal data class ErrorInfo(
 )
 
 /**
- * Request to get the total number of cells in the notebook.
+ * Request to get the total number of real notebook cells (including not executed,
+ * excluding code snippets generated under the hood).
  */
 @Serializable
 @SerialName("get_cell_count")

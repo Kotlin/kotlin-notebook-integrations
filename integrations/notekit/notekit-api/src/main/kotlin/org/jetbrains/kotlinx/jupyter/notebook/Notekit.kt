@@ -13,7 +13,8 @@ import org.jetbrains.jupyter.parser.notebook.JupyterNotebook
  */
 public interface Notekit {
     /**
-     * Returns the total number of cells in the current notebook.
+     * Returns the total number of real notebook cells (including not executed,
+     * excluding code snippets generated under the hood).
      *
      * @return The cell count
      * @throws NotekitException if the operation fails

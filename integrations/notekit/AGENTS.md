@@ -23,7 +23,8 @@ See [PROTOCOL.md](PROTOCOL.md) for the complete protocol specification.
     - Requests: `{ "method": "<method-name>", "request_id": "<unique-id>", "params": {...} }`
     - Responses: `{ "request_id": "<same-id>", "status": "ok"|"error", "result": {...}, "error": {...} }`
 - **Methods**:
-    - `get_cell_count`: Returns the total number of cells.
+    - `get_cell_count`: Returns the total number of real notebook cells (including not executed,
+      excluding code snippets generated under the hood).
     - `get_notebook_metadata`: Returns notebook metadata.
     - `get_cell_range`: Returns a range of cells (start inclusive, end exclusive).
     - `splice_cell_range`: Modifies cells (delete, insert, or replace).

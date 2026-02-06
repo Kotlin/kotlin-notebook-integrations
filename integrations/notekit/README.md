@@ -1,10 +1,12 @@
 # Notekit Integration
 
-This integration provides programmatic access to work with the current Jupyter notebook from Kotlin kernel code. It uses the Jupyter Comms protocol to communicate with the frontend.
+This integration provides programmatic access to work with the current Jupyter notebook from Kotlin kernel code. It uses
+the Jupyter Comms protocol to communicate with the frontend.
 
 ## Overview
 
 The Notekit integration enables you to:
+
 - Query notebook structure (cell count, metadata, cells)
 - Read cell content and metadata
 - Insert, delete, and replace cells
@@ -13,7 +15,8 @@ The Notekit integration enables you to:
 
 ## Usage
 
-After loading the integration, use the `notekit { }` DSL to access the Notekit API. All operations inside the block are suspend functions.
+After loading the integration, use the `notekit { }` DSL to access the Notekit API. All operations inside the block are
+suspend functions.
 
 ```kotlin
 %use notekit
@@ -84,11 +87,13 @@ notekit { executeCellRange(0, 3) }
 
 ### Notekit
 
-The main interface for working with notebooks. All methods are suspend functions and should be called within the `notekit { }` block.
+The main interface for working with notebooks. All methods are suspend functions and should be called within the
+`notekit { }` block.
 
 #### Query Operations
 
-- `getCellCount(): Int` - Returns the total number of cells
+- `getCellCount(): Int` - Returns the total number of real notebook cells (including not executed,
+  excluding code snippets generated under the hood)
 - `getNotebookMetadata(): Map<String, Any?>` - Returns notebook metadata
 - `getCell(index: Int): Cell` - Returns a single cell
 - `getCellRange(start: Int, end: Int): List<Cell>` - Returns a range of cells (start inclusive, end exclusive)
@@ -123,6 +128,7 @@ Use the `org.jetbrains.jupyter.parser.notebook` package types to create cells:
 - `RawCell(id, source, metadata)` - A raw cell
 
 Each cell type has a corresponding metadata class:
+
 - `CodeCellMetadata(tags)` - Metadata for code cells
 - `MarkdownCellMetadata(tags)` - Metadata for markdown cells
 - `RawCellMetadata(tags)` - Metadata for raw cells
@@ -131,7 +137,8 @@ When creating new cells, use `id = null` (the frontend will assign a proper ID).
 
 ## Protocol
 
-The integration communicates with the frontend using the `jupyter.notekit.v1` comm target. See [PROTOCOL.md](PROTOCOL.md) for the complete protocol specification.
+The integration communicates with the frontend using the `jupyter.notekit.v1` comm target.
+See [PROTOCOL.md](PROTOCOL.md) for the complete protocol specification.
 
 ## Requirements
 
