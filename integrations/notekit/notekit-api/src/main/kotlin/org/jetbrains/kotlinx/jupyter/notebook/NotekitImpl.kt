@@ -62,9 +62,9 @@ internal class NotekitImpl(
             result.jsonObject.requireField<Int>("count")
         }
 
-    override suspend fun getNotebookMetadata(): Map<String, Any?> =
+    override suspend fun getNotebookMetadata(): JsonObject =
         request(::GetNotebookMetadataRequest) { result ->
-            jsonToMap(result.jsonObject.requireJsonObject("metadata"))
+            result.jsonObject.requireJsonObject("metadata")
         }
 
     override suspend fun getCellRange(
@@ -76,9 +76,9 @@ internal class NotekitImpl(
         }
 
     override suspend fun getNotebook(): JupyterNotebook {
-        val metadataMap = getNotebookMetadata()
+        val notebookMetadata = getNotebookMetadata()
         val cells = getAllCells()
-        val metadata = json.decodeFromJsonElement<Metadata>(mapToJson(metadataMap))
+        val metadata = json.decodeFromJsonElement<Metadata>(notebookMetadata)
 
         return JupyterNotebook(
             metadata = metadata,
@@ -98,10 +98,10 @@ internal class NotekitImpl(
     }
 
     override suspend fun setNotebookMetadata(
-        metadata: Map<String, Any?>,
+        metadata: JsonObject,
         merge: Boolean,
     ) {
-        request { SetNotebookMetadataRequest(it, SetNotebookMetadataParams(mapToJson(metadata), merge)) }
+        request { SetNotebookMetadataRequest(it, SetNotebookMetadataParams(metadata, merge)) }
     }
 
     override suspend fun executeCellRange(

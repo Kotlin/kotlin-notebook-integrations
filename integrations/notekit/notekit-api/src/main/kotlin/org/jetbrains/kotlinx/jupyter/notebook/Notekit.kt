@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.jupyter.notebook
 
+import kotlinx.serialization.json.JsonObject
 import org.jetbrains.jupyter.parser.notebook.Cell
 import org.jetbrains.jupyter.parser.notebook.JupyterNotebook
 
@@ -25,7 +26,7 @@ public interface Notekit {
      * @return The notebook metadata
      * @throws NotekitException if the operation fails
      */
-    public suspend fun getNotebookMetadata(): Map<String, Any?>
+    public suspend fun getNotebookMetadata(): JsonObject
 
     /**
      * Returns a range of cells from the current notebook.
@@ -197,7 +198,7 @@ public interface Notekit {
      * @throws NotekitException if the operation fails
      */
     public suspend fun setNotebookMetadata(
-        metadata: Map<String, Any?>,
+        metadata: JsonObject,
         merge: Boolean = true,
     )
 

@@ -7,6 +7,7 @@ import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.jupyter.notebook.integration.NotekitResult
 import org.jetbrains.kotlinx.jupyter.protocol.comms.CommManagerImpl
 import org.jetbrains.kotlinx.jupyter.test.util.AbstractCommReplTest
@@ -59,7 +60,9 @@ abstract class AbstractNotekitReplTest(
 
     protected fun buildResult(builder: JsonObjectBuilder.() -> Unit): JsonObject = buildJsonObject(builder)
 
-    protected fun runNotekit(code: String): NotekitResult<*> =
+    protected fun runNotekit(
+        @Language("kotlin") code: String,
+    ): NotekitResult<*> =
         execRaw(
             """
             notekit {

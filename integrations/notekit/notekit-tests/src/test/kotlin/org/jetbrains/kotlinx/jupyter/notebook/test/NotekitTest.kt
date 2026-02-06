@@ -151,7 +151,19 @@ class NotekitTest : AbstractNotekitReplTest() {
         resetEvents()
 
         // 1. Start async operation (runs in thread INSIDE REPL)
-        val resultVar = runNotekit("setNotebookMetadata(mapOf(\"key\" to \"value\"), merge = true)")
+        execSuccess(
+            """
+            import kotlinx.serialization.json.JsonPrimitive
+            import kotlinx.serialization.json.buildJsonObject
+            """.trimIndent(),
+        )
+
+        val resultVar =
+            runNotekit(
+                """
+                setNotebookMetadata(buildJsonObject{ put("key", JsonPrimitive("value")) }, merge = true)
+                """.trimIndent(),
+            )
 
         // 2. Verify comm events in order
         val (commId) = shouldHaveNextOpenEvent("jupyter.notekit.v1")
