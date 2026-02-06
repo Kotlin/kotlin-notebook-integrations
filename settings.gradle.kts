@@ -26,6 +26,11 @@ projectStructure {
             project("widgets-generator")
             project("widgets-tests")
         }
+        folder("notekit") {
+            project("notekit-api")
+            project("notekit-jupyter")
+            project("notekit-tests")
+        }
         folder("util") {
             project("test-util")
             project("notebook-parser")

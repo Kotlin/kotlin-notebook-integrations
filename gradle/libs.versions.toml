@@ -30,6 +30,7 @@ mssqlDriver = "13.2.0.jre11"
 oracleDriver = "23.9.0.25.07"
 
 kotlinx-serialization = "1.9.0"
+kotlinx-coroutines = "1.10.2"
 jvm-toolchain = "11"
 kotlinpoet = "2.1.0"
 dataframe = "0.15.0"
@@ -43,6 +44,7 @@ kotlin-jupyter-testkit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyt
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm", version.ref = "kotlinx-serialization" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
 
 dataframe = { module = "org.jetbrains.kotlinx:dataframe", version.ref = "dataframe" }
