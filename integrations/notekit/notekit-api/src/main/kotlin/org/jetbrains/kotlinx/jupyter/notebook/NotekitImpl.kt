@@ -18,16 +18,13 @@ import org.jetbrains.jupyter.parser.notebook.JupyterNotebook
 import org.jetbrains.jupyter.parser.notebook.Metadata
 import org.jetbrains.kotlinx.jupyter.api.libraries.Comm
 import org.jetbrains.kotlinx.jupyter.api.libraries.CommManager
-import org.jetbrains.kotlinx.jupyter.notebook.protocol.CellRangeParams
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.ErrorInfo
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.ExecuteCellRangeRequest
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.GetCellCountRequest
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.GetCellRangeRequest
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.GetNotebookMetadataRequest
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.NotekitMessage
-import org.jetbrains.kotlinx.jupyter.notebook.protocol.SetNotebookMetadataParams
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.SetNotebookMetadataRequest
-import org.jetbrains.kotlinx.jupyter.notebook.protocol.SpliceCellRangeParams
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.SpliceCellRangeRequest
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
@@ -50,7 +47,7 @@ internal class NotekitImpl(
         }
 
     private val logger = Logger.getLogger(NotekitImpl::class.java.name)
-    private val targetName = "jupyter.notekit.v1"
+    private val targetName = "jupyter.notebook.notekit.v1"
     private val requestIdCounter = AtomicLong(0)
     private val pendingRequests = ConcurrentHashMap<String, CompletableDeferred<JsonElement>>()
 
@@ -71,7 +68,7 @@ internal class NotekitImpl(
         start: Int,
         end: Int,
     ): List<Cell> =
-        request({ GetCellRangeRequest(it, CellRangeParams(start, end)) }) { result ->
+        request({ GetCellRangeRequest(it, start, end) }) { result ->
             result.jsonObject.requireJsonArray("cells").map { json.decodeFromJsonElement<Cell>(it) }
         }
 
@@ -94,21 +91,21 @@ internal class NotekitImpl(
         cells: List<Cell>,
     ) {
         val cellsJson = cells.map { json.encodeToJsonElement(it) }
-        request { SpliceCellRangeRequest(it, SpliceCellRangeParams(start, deleteCount, cellsJson)) }
+        request { SpliceCellRangeRequest(it, start, deleteCount, cellsJson) }
     }
 
     override suspend fun setNotebookMetadata(
         metadata: JsonObject,
         merge: Boolean,
     ) {
-        request { SetNotebookMetadataRequest(it, SetNotebookMetadataParams(metadata, merge)) }
+        request { SetNotebookMetadataRequest(it, metadata, merge) }
     }
 
     override suspend fun executeCellRange(
         start: Int,
         end: Int,
     ) {
-        request { ExecuteCellRangeRequest(it, CellRangeParams(start, end)) }
+        request { ExecuteCellRangeRequest(it, start, end) }
     }
 
     private suspend fun <T> request(

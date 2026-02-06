@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.jupyter.notebook.test
 
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
@@ -19,7 +18,7 @@ class NotekitTest : AbstractNotekitReplTest() {
         val resultVar = runNotekit("getCellCount()")
 
         // 2. Verify comm events in order
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
 
         val requestId =
             shouldHaveNextMessageEvent()
@@ -50,7 +49,7 @@ class NotekitTest : AbstractNotekitReplTest() {
         val resultVar = runNotekit("getNotebookMetadata()")
 
         // 2. Verify request is sent correctly
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
 
         val requestId =
             shouldHaveNextMessageEvent()
@@ -82,7 +81,7 @@ class NotekitTest : AbstractNotekitReplTest() {
         val resultVar = runNotekit("getCellRange(0, 2)")
 
         // 2. Verify request is sent correctly
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
 
         val msgEvent =
             shouldHaveNextMessageEvent()
@@ -90,9 +89,8 @@ class NotekitTest : AbstractNotekitReplTest() {
         val requestId = msgEvent.shouldHaveRequestId()
 
         // Verify request params
-        val params = msgEvent.data["params"]?.let { it as? JsonObject }
-        params?.get("start")?.jsonPrimitive?.int shouldBe 0
-        params?.get("end")?.jsonPrimitive?.int shouldBe 2
+        msgEvent.data["start"]?.jsonPrimitive?.int shouldBe 0
+        msgEvent.data["end"]?.jsonPrimitive?.int shouldBe 2
 
         // 4. Send response to simulate frontend
         sendResponse(
@@ -117,29 +115,22 @@ class NotekitTest : AbstractNotekitReplTest() {
         val resultVar = runNotekit("deleteCell(2)")
 
         // 2. Verify comm events in order
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
 
         val msgEvent =
             shouldHaveNextMessageEvent()
                 .shouldHaveMethod("splice_cell_range")
         val requestId = msgEvent.shouldHaveRequestId()
 
-        val params = msgEvent.data["params"]?.let { it as? JsonObject }
-        params?.get("start")?.jsonPrimitive?.int shouldBe 2
-        params?.get("delete_count")?.jsonPrimitive?.int shouldBe 1
+        msgEvent.data["start"]?.jsonPrimitive?.int shouldBe 2
+        msgEvent.data["delete_count"]?.jsonPrimitive?.int shouldBe 1
 
         // 4. Send response to unblock the operation
         sendResponse(
             commId,
             requestId,
             status = "ok",
-            result =
-                buildResult {
-                    putJsonObject("affected_range") {
-                        put("start", 2)
-                        put("end", 2)
-                    }
-                },
+            result = buildResult {},
         )
 
         // 5. Wait for completion
@@ -166,16 +157,16 @@ class NotekitTest : AbstractNotekitReplTest() {
             )
 
         // 2. Verify comm events in order
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
 
         val msgEvent =
             shouldHaveNextMessageEvent()
                 .shouldHaveMethod("set_notebook_metadata")
         val requestId = msgEvent.shouldHaveRequestId()
 
-        // Verify params exist (detailed validation of merge param is not critical for this test)
-        val params = msgEvent.data["params"]?.let { it as? JsonObject }
-        params.shouldNotBeNull()
+        // Verify metadata and merge params exist
+        msgEvent.data["metadata"].shouldNotBeNull()
+        msgEvent.data["merge"].shouldNotBeNull()
 
         // 4. Send response to unblock the operation
         sendResponse(
@@ -197,7 +188,7 @@ class NotekitTest : AbstractNotekitReplTest() {
         val resultVar = runNotekit("getCellCount()")
 
         // 2. Verify comm was opened with correct target
-        val (commId) = shouldHaveNextOpenEvent("jupyter.notekit.v1")
+        val (commId) = shouldHaveNextOpenEvent("jupyter.notebook.notekit.v1")
 
         // 4. Send response to complete the operation
         val requestId = shouldHaveNextMessageEvent().shouldHaveRequestId()

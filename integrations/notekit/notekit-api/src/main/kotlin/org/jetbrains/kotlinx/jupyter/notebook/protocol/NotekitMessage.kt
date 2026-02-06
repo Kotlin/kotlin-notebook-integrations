@@ -57,14 +57,9 @@ internal data class GetNotebookMetadataRequest(
 internal data class GetCellRangeRequest(
     @SerialName("request_id")
     override val requestId: String,
-    val params: CellRangeParams,
-) : NotekitRequest
-
-@Serializable
-internal data class CellRangeParams(
     val start: Int,
     val end: Int,
-)
+) : NotekitRequest
 
 /**
  * Request to splice (modify) a range of cells.
@@ -74,16 +69,11 @@ internal data class CellRangeParams(
 internal data class SpliceCellRangeRequest(
     @SerialName("request_id")
     override val requestId: String,
-    val params: SpliceCellRangeParams,
-) : NotekitRequest
-
-@Serializable
-internal data class SpliceCellRangeParams(
     val start: Int,
     @SerialName("delete_count")
     val deleteCount: Int,
     val cells: List<JsonElement>,
-)
+) : NotekitRequest
 
 /**
  * Request to set notebook metadata.
@@ -93,14 +83,9 @@ internal data class SpliceCellRangeParams(
 internal data class SetNotebookMetadataRequest(
     @SerialName("request_id")
     override val requestId: String,
-    val params: SetNotebookMetadataParams,
-) : NotekitRequest
-
-@Serializable
-internal data class SetNotebookMetadataParams(
     val metadata: JsonElement,
     val merge: Boolean = true,
-)
+) : NotekitRequest
 
 /**
  * Request to execute a range of cells.
@@ -110,5 +95,6 @@ internal data class SetNotebookMetadataParams(
 internal data class ExecuteCellRangeRequest(
     @SerialName("request_id")
     override val requestId: String,
-    val params: CellRangeParams,
+    val start: Int,
+    val end: Int,
 ) : NotekitRequest

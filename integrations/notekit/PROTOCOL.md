@@ -104,19 +104,17 @@ Returns the metadata of the current notebook.
 Returns information about a range of cells in the notebook.
 
 **Request:**
-```json5
+```json
 {
   "method": "get_cell_range",
   "request_id": "req-003",
-  "params": {
-    "start": 0,  // inclusive, 0-based
-    "end": 5     // exclusive, 0-based
-  }
+  "start": 0,
+  "end": 5
 }
 ```
 
 **Response (success):**
-```json5
+```json
 {
   "request_id": "req-003",
   "status": "ok",
@@ -124,19 +122,11 @@ Returns information about a range of cells in the notebook.
     "cells": [
       {
         "cell_type": "code|markdown|raw",
-        "source": "print(\"Hello, World!\")",  // string or array of strings
-        "metadata": {
-          // cell-specific metadata
-        },
-        "execution_count": 1,  // only for code cells, may be null
-        "outputs": [           // only for code cells
-          {
-            "output_type": "stream|execute_result|display_data|error",
-            // ... output-specific fields
-          }
-        ]
+        "source": "print(\"Hello, World!\")",
+        "metadata": {},
+        "execution_count": 1,
+        "outputs": []
       }
-      // ... more cells
     ]
   }
 }
@@ -171,26 +161,24 @@ Returns information about a range of cells in the notebook.
 Modifies a range of cells in the notebook (delete, insert, or replace).
 
 **Request:**
-```json5
+```json
 {
   "method": "splice_cell_range",
   "request_id": "req-004",
-  "params": {
-    "start": 2,      // inclusive, 0-based index where to start modification
-    "delete_count": 1,  // number of cells to delete starting from 'start'
-    "cells": [       // cells to insert at 'start' position (after deletion)
-      {
-        "cell_type": "code",
-        "source": "val x = 42",
-        "metadata": {}
-      },
-      {
-        "cell_type": "markdown",
-        "source": "# New Section",
-        "metadata": {}
-      }
-    ]
-  }
+  "start": 2,
+  "delete_count": 1,
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": "val x = 42",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "# New Section",
+      "metadata": {}
+    }
+  ]
 }
 ```
 
@@ -237,20 +225,17 @@ Modifies a range of cells in the notebook (delete, insert, or replace).
 Updates the metadata of the current notebook.
 
 **Request:**
-```json5
+```json
 {
   "method": "set_notebook_metadata",
   "request_id": "req-005",
-  "params": {
-    "metadata": {
-      "custom_field": "custom_value",
-      "kernelspec": {
-        "name": "kotlin"
-      }
-      // ... metadata fields to set/update
-    },
-    "merge": true  // if true, merge with existing metadata; if false, replace entirely
-  }
+  "metadata": {
+    "custom_field": "custom_value",
+    "kernelspec": {
+      "name": "kotlin"
+    }
+  },
+  "merge": true
 }
 ```
 
@@ -280,14 +265,12 @@ Updates the metadata of the current notebook.
 Executes a range of cells in the notebook.
 
 **Request:**
-```json5
+```json
 {
   "method": "execute_cell_range",
   "request_id": "req-006",
-  "params": {
-    "start": 0,  // inclusive, 0-based
-    "end": 5     // exclusive, 0-based
-  }
+  "start": 0,
+  "end": 5
 }
 ```
 
