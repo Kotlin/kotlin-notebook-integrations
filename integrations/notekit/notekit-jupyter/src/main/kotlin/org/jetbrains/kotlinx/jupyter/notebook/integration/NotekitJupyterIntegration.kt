@@ -8,6 +8,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.jupyter.parser.notebook.Cell
+import org.jetbrains.jupyter.parser.notebook.CodeCell
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.notebook.Notekit
 import org.jetbrains.kotlinx.jupyter.notebook.createNotekit
@@ -48,6 +49,10 @@ public class NotekitJupyterIntegration : JupyterIntegration() {
         importPackage<NotekitJupyterIntegration>()
         importPackage<Notekit>()
         importPackage<Cell>()
+
+        // We import this class separately to increase its priority against
+        // same-named class from the kernel API
+        import<CodeCell>()
 
         scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
         notekit = createNotekit(notebook.commManager)
