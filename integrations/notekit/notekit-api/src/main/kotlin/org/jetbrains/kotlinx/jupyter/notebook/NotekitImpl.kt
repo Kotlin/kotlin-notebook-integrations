@@ -132,6 +132,14 @@ internal class NotekitImpl(
             )
         }
 
+    override fun close() {
+        synchronized(commLock) {
+            comm?.close()
+            comm = null
+            pendingRequests.clear()
+        }
+    }
+
     private suspend fun <T> request(
         factory: (String) -> NotekitMessage,
         transform: (JsonElement) -> T,

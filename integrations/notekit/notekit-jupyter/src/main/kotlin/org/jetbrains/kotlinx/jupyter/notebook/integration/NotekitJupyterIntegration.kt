@@ -69,6 +69,7 @@ public class NotekitJupyterIntegration : JupyterIntegration() {
         }
 
         onShutdown {
+            notekit?.close()
             notekit = null
             scope?.cancel()
             scope = null

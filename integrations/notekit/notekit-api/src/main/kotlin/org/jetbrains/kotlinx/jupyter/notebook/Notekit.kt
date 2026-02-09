@@ -4,6 +4,7 @@ import kotlinx.serialization.json.JsonObject
 import org.jetbrains.jupyter.parser.notebook.Cell
 import org.jetbrains.jupyter.parser.notebook.JupyterNotebook
 import org.jetbrains.kotlinx.jupyter.notebook.protocol.NotebookFormatVersion
+import java.io.Closeable
 
 /**
  * Main API for working with the current Jupyter notebook.
@@ -12,7 +13,7 @@ import org.jetbrains.kotlinx.jupyter.notebook.protocol.NotebookFormatVersion
  * including cells and metadata. All methods are suspend functions to allow
  * asynchronous execution.
  */
-public interface Notekit {
+public interface Notekit : Closeable {
     /**
      * Returns the total number of real notebook cells (including not executed,
      * excluding code snippets generated under the hood).
