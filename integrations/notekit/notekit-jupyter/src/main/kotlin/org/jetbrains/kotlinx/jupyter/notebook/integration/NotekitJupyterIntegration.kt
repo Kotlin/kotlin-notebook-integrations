@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.jupyter.notebook.integration
 
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -54,7 +55,14 @@ public class NotekitJupyterIntegration : JupyterIntegration() {
         // same-named class from the kernel API
         import<CodeCell>()
 
-        scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+        scope =
+            run {
+                val exceptionHandler =
+                    CoroutineExceptionHandler { _, exception ->
+                        exception.printStackTrace(System.err)
+                    }
+                CoroutineScope(Dispatchers.Default + SupervisorJob() + exceptionHandler)
+            }
         notekit = createNotekit(notebook.commManager)
 
         render<NotekitResult<*>> {
