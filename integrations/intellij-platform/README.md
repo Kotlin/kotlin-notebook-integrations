@@ -1,7 +1,8 @@
-# Kotlin Notebook IntelliJ Platform Integration
-
 [![JetBrains official project](https://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin experimental stability](https://img.shields.io/badge/project-experimental-kotlin.svg?colorA=555555&colorB=AC29EC&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
+[![Maven Central](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/kotlin-jupyter-intellij-platform?color=blue&label=Maven%20Central)](https://central.sonatype.com/artifact/org.jetbrains.kotlinx/kotlin-jupyter-intellij-platform)
+
+# Kotlin Notebook IntelliJ Platform Integration
 
 This integration enables direct experimentation with IntelliJ Platform APIs within the active IntelliJ IDEA runtime, eliminating traditional plugin development barriers.
 

@@ -1,5 +1,6 @@
 [![JetBrains official project](https://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin Alpha Stability](https://kotl.in/badges/alpha.svg)](https://kotlinlang.org/docs/components-stability.html)
+[![Maven Central](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/kotlin-jupyter-database?color=blue&label=Maven%20Central)](https://central.sonatype.com/artifact/org.jetbrains.kotlinx/kotlin-jupyter-database)
 
 # Database Connection Helpers
 
