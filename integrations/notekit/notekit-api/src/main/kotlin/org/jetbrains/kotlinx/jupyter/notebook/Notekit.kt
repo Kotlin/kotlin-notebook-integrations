@@ -173,7 +173,7 @@ public interface Notekit : Closeable {
         index: Int,
         cell: Cell,
     ) {
-        replaceCells(index, 1, listOf(cell))
+        replaceCells(index, index + 1, listOf(cell))
     }
 
     /**
