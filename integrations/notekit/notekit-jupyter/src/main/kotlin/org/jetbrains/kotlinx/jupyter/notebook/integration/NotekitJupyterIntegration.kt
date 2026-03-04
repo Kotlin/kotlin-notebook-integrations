@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.jupyter.notebook.Notekit
 import org.jetbrains.kotlinx.jupyter.notebook.createNotekit
 
 private const val NOT_LOADED_YET_MESSAGE = "Notekit integration is not loaded yet"
+private const val OPERATION_IN_PROGRESS_MESSAGE = "Notekit operation is still in progress..."
 
 private var scope: CoroutineScope? = null
 private var notekit: Notekit? = null
@@ -27,7 +28,19 @@ public class NotekitResult<T>(
     public val asyncResult: Deferred<T>,
 ) {
     public val isCompleted: Boolean get() = asyncResult.isCompleted
+
+    override fun toString(): String = render().toString()
 }
+
+private fun NotekitResult<*>.render(): Any =
+    if (isCompleted) {
+        runBlocking {
+            // This call may throw in case if operation was not successful, we're fine with that
+            asyncResult.await() ?: "null"
+        }
+    } else {
+        OPERATION_IN_PROGRESS_MESSAGE
+    }
 
 /**
  * Read, write, or execute the current notebook by calling Notekit methods
@@ -65,16 +78,7 @@ public class NotekitJupyterIntegration : JupyterIntegration() {
             }
         notekit = createNotekit(notebook.commManager)
 
-        render<NotekitResult<*>> {
-            if (it.isCompleted) {
-                runBlocking {
-                    // This call may throw in case if operation was not successful, we're fine with that
-                    it.asyncResult.await() ?: "null"
-                }
-            } else {
-                "Notekit operation is still in progress..."
-            }
-        }
+        render<NotekitResult<*>> { it.render() }
 
         onShutdown {
             notekit?.close()
