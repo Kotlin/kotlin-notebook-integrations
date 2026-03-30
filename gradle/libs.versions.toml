@@ -6,9 +6,9 @@ kotlin = "2.3.0"
 kotlin-jupyter = "0.15.3-802-1"
 publishPlugin = "2.2.0-dev-71"
 intellijPlatformGradlePlugin = "2.10.3"
-intellijPlatform = "253-EAP-SNAPSHOT" # TODO: lower to 2025.1.3 GA whenever released with required changes
-intellijPluginRepositoryRestClient = "2.0.46"
-intellijStructure = "3.307"
+intellijPlatform = "261-EAP-SNAPSHOT" # Remember to update MINIMAL_SUPPORTED_IDE_VERSION when updating this
+intellijPluginRepositoryRestClient = "2.0.50"
+intellijStructure = "3.323"
 buildconfig = "5.7.0" # https://github.com/gmazzo/gradle-buildconfig-plugin
 hikari = "7.0.2" # https://github.com/brettwooldridge/HikariCP
 # See this link for the minimum supported Java version IntelliJ can run with:
