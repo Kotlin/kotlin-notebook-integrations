@@ -8,8 +8,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class DriverLoaderTests {
-    // ── ClasspathDriverLoader ──────────────────────────────────────────────
-
     @Test
     fun classpathLoader_shouldLoadDriver_alwaysReturnsFalse() {
         val loader = ClasspathDriverLoader(listOf("mydb"))
@@ -30,8 +28,6 @@ class DriverLoaderTests {
         assertEquals(emptyList(), loader.names)
         assertFalse(loader.shouldLoadDriver("jdbc:anything://host/db"))
     }
-
-    // ── ExternalDependencyDriverLoader ─────────────────────────────────────
 
     @Test
     fun externalLoader_shouldLoadDriver_trueForMatchingUrl() {
@@ -60,7 +56,6 @@ class DriverLoaderTests {
             listOf("postgres"),
             listOf("org.postgresql:postgresql:42.0.0"),
         )
-        // raw "postgres://..." without the jdbc: prefix should not match
         assertFalse(loader.shouldLoadDriver("postgres://localhost/mydb"))
     }
 

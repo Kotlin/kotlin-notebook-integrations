@@ -144,8 +144,6 @@ class SpringHikariTests : JupyterReplTestCase() {
         assertEquals("default:username", config.username)
     }
 
-    // ── Field aliases ───────────────────────────────────────────────────────
-
     @Test
     fun parsePropertiesFile_jdbcUrlAlias() {
         val file = createTestFile("test.properties")
@@ -172,8 +170,6 @@ class SpringHikariTests : JupyterReplTestCase() {
         val config = SpringHikari.fromFile(file)
         assertEquals("admin", config.username)
     }
-
-    // ── Hikari properties ───────────────────────────────────────────────────
 
     @Test
     fun parsePropertiesFile_hikariMaximumPoolSize() {
@@ -240,8 +236,6 @@ class SpringHikariTests : JupyterReplTestCase() {
         assertEquals(120_000L, config.connectionTimeout)
     }
 
-    // ── Data-source properties ──────────────────────────────────────────────
-
     @Test
     fun parsePropertiesFile_dataSourceProperties_springStyle() {
         val file = createTestFile("test.properties")
@@ -267,8 +261,6 @@ class SpringHikariTests : JupyterReplTestCase() {
         val config = SpringHikari.fromFile(file)
         assertEquals("60", config.dataSourceProperties.getProperty("socketTimeout"))
     }
-
-    // ── YAML ────────────────────────────────────────────────────────────────
 
     @Test
     fun parseYamlFile_hikariMaximumPoolSize() {
