@@ -144,6 +144,148 @@ class SpringHikariTests : JupyterReplTestCase() {
         assertEquals("default:username", config.username)
     }
 
+    // ── Field aliases ───────────────────────────────────────────────────────
+
+    @Test
+    fun parsePropertiesFile_jdbcUrlAlias() {
+        val file = createTestFile("test.properties")
+        file.writeText(
+            """
+            spring.datasource.jdbc-url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.username=postgres
+            """.trimIndent(),
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals("jdbc:postgresql://localhost:5432/postgres", config.jdbcUrl)
+        assertEquals("postgres", config.username)
+    }
+
+    @Test
+    fun parsePropertiesFile_userAlias() {
+        val file = createTestFile("test.properties")
+        file.writeText(
+            """
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.user=admin
+            """.trimIndent(),
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals("admin", config.username)
+    }
+
+    // ── Hikari properties ───────────────────────────────────────────────────
+
+    @Test
+    fun parsePropertiesFile_hikariMaximumPoolSize() {
+        val file = createTestFile("test.properties")
+        file.writeText(
+            """
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.hikari.maximum-pool-size=20
+            """.trimIndent(),
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals(20, config.maximumPoolSize)
+    }
+
+    @Test
+    fun parsePropertiesFile_hikariAutoCommit_boolean() {
+        val file = createTestFile("test.properties")
+        file.writeText(
+            """
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.hikari.auto-commit=false
+            """.trimIndent(),
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals(false, config.isAutoCommit)
+    }
+
+    @Test
+    fun parsePropertiesFile_hikariConnectionTimeout_milliseconds() {
+        val file = createTestFile("test.properties")
+        file.writeText(
+            """
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.hikari.connection-timeout=5000
+            """.trimIndent(),
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals(5000L, config.connectionTimeout)
+    }
+
+    @Test
+    fun parsePropertiesFile_hikariConnectionTimeout_durationSeconds() {
+        val file = createTestFile("test.properties")
+        file.writeText(
+            """
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.hikari.connection-timeout=5s
+            """.trimIndent(),
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals(5_000L, config.connectionTimeout)
+    }
+
+    @Test
+    fun parsePropertiesFile_hikariConnectionTimeout_durationMinutes() {
+        val file = createTestFile("test.properties")
+        file.writeText(
+            """
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.hikari.connection-timeout=2m
+            """.trimIndent(),
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals(120_000L, config.connectionTimeout)
+    }
+
+    // ── Data-source properties ──────────────────────────────────────────────
+
+    @Test
+    fun parsePropertiesFile_dataSourceProperties_springStyle() {
+        val file = createTestFile("test.properties")
+        file.writeText(
+            """
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.properties.socketTimeout=30
+            """.trimIndent(),
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals("30", config.dataSourceProperties.getProperty("socketTimeout"))
+    }
+
+    @Test
+    fun parsePropertiesFile_dataSourceProperties_hikariStyle() {
+        val file = createTestFile("test.properties")
+        file.writeText(
+            """
+            spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+            spring.datasource.hikari.data-source-properties.socketTimeout=60
+            """.trimIndent(),
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals("60", config.dataSourceProperties.getProperty("socketTimeout"))
+    }
+
+    // ── YAML ────────────────────────────────────────────────────────────────
+
+    @Test
+    fun parseYamlFile_hikariMaximumPoolSize() {
+        val file = createTestFile("test.yaml")
+        file.writeText(
+            """
+            spring:
+              datasource:
+                url: jdbc:postgresql://localhost:5432/postgres
+                hikari:
+                  maximum-pool-size: 15
+            """.trimIndent(),
+        )
+        val config = SpringHikari.fromFile(file)
+        assertEquals(15, config.maximumPoolSize)
+    }
+
     private fun createTestFile(fileType: String): Path {
         val temp = kotlin.io.path.createTempFile(suffix = ".$fileType")
         temp.toFile().deleteOnExit()
